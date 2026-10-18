@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias - TINELLERS FC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>tailwind.config = { theme: { extend: { colors: { tinellers: { dark: '#0a0f24', card: '#0f172a', red: '#dc2626', goldLight: '#f59e0b' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] } } } }</script>
+    <style>body { background-color: #0a0f24; color: #f8fafc; font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="bg-tinellers-dark border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+            <a href="index.html" class="flex items-center gap-3">
+                <i class="fa-solid fa-arrow-left text-slate-400 hover:text-white mr-2"></i>
+                <span class="font-display font-black text-2xl text-white">TINELLERS <span class="text-tinellers-red">FC</span></span>
+            </a>
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
+                <a href="index.html" class="text-slate-400 hover:text-white">Inicio</a>
+                <a href="quienes-somos.html" class="text-slate-400 hover:text-white">Quiénes Somos</a>
+                <a href="noticias.html" class="text-tinellers-goldLight">Noticias</a>
+                <a href="partidos.html" class="text-slate-400 hover:text-white">Partidos</a>
+                <a href="estadisticas.html" class="text-slate-400 hover:text-white">Estadísticas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="px-2.5 py-1 bg-tinellers-red text-white font-black text-xs uppercase rounded">Diario Oficial TFC</span>
+            <h1 class="font-display text-4xl sm:text-5xl font-black uppercase text-white mt-2">Noticias & "HERE WE GO!"</h1>
+            <p class="text-slate-400 text-sm mt-3">Crónicas oficiales y anuncios destacados del club.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Noticia 1 -->
+            <article class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden p-6 flex flex-col justify-between">
+                <div>
+                    <span class="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Victoria Oficial</span>
+                    <h3 class="font-display font-bold text-2xl text-white mt-4 mb-2">Balkans FC 2 - 3 TINELLERS FC</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">Debut soñado a domicilio. Goles de <strong class="text-white">Alfa Umaro</strong>, <strong class="text-white">Luis Nuñez</strong> y <strong class="text-white">Oscar Piero Malasquez</strong>. Gran actuación de <strong class="text-tinellers-goldLight">Oscar Piero</strong> llevándose el MVP del encuentro.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+                    <span>18 de Octubre, 2026</span>
+                    <span class="text-emerald-400 font-bold">Ganado</span>
+                </div>
+            </article>
+
+            <!-- Noticia 2 -->
+            <article class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden p-6 flex flex-col justify-between">
+                <div>
+                    <span class="bg-tinellers-red text-white text-[10px] font-black px-2.5 py-1 rounded uppercase">Estructura</span>
+                    <h3 class="font-display font-bold text-2xl text-white mt-4 mb-2">Franklin Jiménez y Capitanes al Mando</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">El fundador Franklin Jiménez lidera la dirección respaldado por los capitanes Luis Nuñez, Esteban Morales y Arian Burguillo.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+                    <span>Temporada 2026</span>
+                    <span class="text-tinellers-goldLight font-bold">Oficial</span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="bg-tinellers-dark border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <a href="index.html" class="text-tinellers-goldLight hover:underline font-bold">← Volver a la página de inicio</a>
+    </footer>
+</body>
+</html>

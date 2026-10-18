@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiénes Somos - TINELLERS FC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>tailwind.config = { theme: { extend: { colors: { tinellers: { dark: '#0a0f24', card: '#0f172a', red: '#dc2626', goldLight: '#f59e0b' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] } } } }</script>
+    <style>body { background-color: #0a0f24; color: #f8fafc; font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="bg-tinellers-dark border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+            <a href="index.html" class="flex items-center gap-3">
+                <i class="fa-solid fa-arrow-left text-slate-400 hover:text-white mr-2"></i>
+                <span class="font-display font-black text-2xl text-white">TINELLERS <span class="text-tinellers-red">FC</span></span>
+            </a>
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
+                <a href="index.html" class="text-slate-400 hover:text-white">Inicio</a>
+                <a href="quienes-somos.html" class="text-tinellers-goldLight">Quiénes Somos</a>
+                <a href="noticias.html" class="text-slate-400 hover:text-white">Noticias</a>
+                <a href="partidos.html" class="text-slate-400 hover:text-white">Partidos</a>
+                <a href="estadisticas.html" class="text-slate-400 hover:text-white">Estadísticas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-tinellers-goldLight font-bold text-xs uppercase tracking-widest">Identidad & Liderazgo</span>
+            <h1 class="font-display text-4xl sm:text-5xl font-black uppercase text-white mt-2">¿Quiénes Somos?</h1>
+            <p class="text-slate-400 text-sm mt-3">La historia, los fundadores y la filosofía detrás de TINELLERS FC.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-tinellers-card border border-slate-800 p-8 rounded-2xl">
+                <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3 class="font-display font-bold text-xl text-white mb-3">Fundación 2026</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">Fundado en 2026 por <strong class="text-white">Franklin Jiménez Santana</strong> junto a los capitanes <strong class="text-white">Luis Nuñez, Esteban Morales y Arian Burguillo</strong>.</p>
+            </div>
+            <div class="bg-tinellers-card border border-slate-800 p-8 rounded-2xl">
+                <div class="w-12 h-12 bg-red-600/20 text-red-400 rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-beer-mug-empty"></i></div>
+                <h3 class="font-display font-bold text-xl text-white mb-3">El Tercer Tiempo</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">"El escudo, la cerveza y el césped". Dejarlo todo en la cancha cada domingo y celebrar la unión como hermanos después del pitido final.</p>
+            </div>
+            <div class="bg-tinellers-card border border-slate-800 p-8 rounded-2xl">
+                <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center text-xl mb-6"><i class="fa-solid fa-calendar-day"></i></div>
+                <h3 class="font-display font-bold text-xl text-white mb-3">Cita Dominguera</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">Nuestra cita oficial es todos los domingos a las 19:00 horas. Competencia con rigor táctico y mentalidad ganadora constante.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-tinellers-dark border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <a href="index.html" class="text-tinellers-goldLight hover:underline font-bold">← Volver a la página de inicio</a>
+    </footer>
+</body>
+</html>

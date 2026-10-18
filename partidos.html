@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidos & Resultados - TINELLERS FC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>tailwind.config = { theme: { extend: { colors: { tinellers: { dark: '#0a0f24', card: '#0f172a', red: '#dc2626', goldLight: '#f59e0b' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] } } } }</script>
+    <style>body { background-color: #0a0f24; color: #f8fafc; font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="bg-tinellers-dark border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+            <a href="index.html" class="flex items-center gap-3">
+                <i class="fa-solid fa-arrow-left text-slate-400 hover:text-white mr-2"></i>
+                <span class="font-display font-black text-2xl text-white">TINELLERS <span class="text-tinellers-red">FC</span></span>
+            </a>
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
+                <a href="index.html" class="text-slate-400 hover:text-white">Inicio</a>
+                <a href="quienes-somos.html" class="text-slate-400 hover:text-white">Quiénes Somos</a>
+                <a href="noticias.html" class="text-slate-400 hover:text-white">Noticias</a>
+                <a href="partidos.html" class="text-tinellers-goldLight">Partidos</a>
+                <a href="estadisticas.html" class="text-slate-400 hover:text-white">Estadísticas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow space-y-8">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <span class="text-tinellers-goldLight font-bold text-xs uppercase tracking-widest">Calendario Oficial (Domingos 19:00 HS)</span>
+            <h1 class="font-display text-4xl sm:text-5xl font-black uppercase text-white mt-2">Partidos & Resultados</h1>
+            <p class="text-slate-400 text-sm mt-3">Seguimiento de nuestros encuentros de liga municipal en Ciudad Lineal.</p>
+        </div>
+
+        <!-- PRÓXIMO PARTIDO -->
+        <div class="bg-tinellers-card border-2 border-tinellers-goldLight/50 p-6 rounded-2xl shadow-xl">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 text-xs font-bold text-tinellers-goldLight uppercase">
+                <span><i class="fa-solid fa-clock mr-1"></i> Jornada 2 • Próximo Encuentro</span>
+                <span>25/10/2026 • 19:00 HS</span>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 py-6">
+                <!-- Local -->
+                <div class="flex items-center gap-4 w-full md:w-1/3 justify-end text-right">
+                    <span class="font-display font-black text-xl text-white">TINELLERS FC</span>
+                    <div class="w-12 h-12 rounded-full bg-slate-800 border border-tinellers-goldLight flex items-center justify-center font-bold text-tinellers-goldLight text-sm">TFC</div>
+                </div>
+
+                <!-- VS Badge -->
+                <div class="px-4 py-2 bg-slate-900 border border-slate-700 rounded-xl font-black text-slate-400 tracking-widest">
+                    VS
+                </div>
+
+                <!-- Visitante -->
+                <div class="flex items-center gap-4 w-full md:w-1/3 justify-start text-left">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white text-sm">BP</div>
+                    <span class="font-display font-black text-xl text-slate-200">La Banda del Patio</span>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 text-xs text-slate-400 flex flex-col sm:flex-row justify-between gap-2">
+                <span><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> Sede: IDB Almudena: F7: 1 - Ciudad Lineal</span>
+                <span class="text-tinellers-goldLight font-semibold">¡A por los 3 puntos!</span>
+            </div>
+        </div>
+
+        <!-- PARTIDOS JUGADOS (HISTORIAL) -->
+        <div class="mt-12">
+            <h3 class="font-display font-bold text-xl text-white mb-4">Historial de Resultados</h3>
+            <div class="bg-tinellers-card border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-xs font-bold text-emerald-400 uppercase">
+                    <i class="fa-solid fa-circle-check"></i> Jornada 1 • 18 Oct 2026
+                </div>
+                <div class="flex items-center gap-6">
+                    <span class="font-bold text-slate-300">Balkans FC</span>
+                    <span class="font-display font-black text-2xl bg-emerald-600/20 border border-emerald-500 text-white px-4 py-1 rounded-xl">2 - 3</span>
+                    <span class="font-bold text-white">TINELLERS FC</span>
+                </div>
+                <div class="text-xs text-slate-400 text-right">
+                    <p class="text-tinellers-goldLight font-bold">MVP: Oscar Piero</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-tinellers-dark border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <a href="index.html" class="text-tinellers-goldLight hover:underline font-bold">← Volver a la página de inicio</a>
+    </footer>
+</body>
+</html>
