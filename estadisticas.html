@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,150 +7,326 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>tailwind.config = { theme: { extend: { colors: { tinellers: { dark: '#0a0f24', card: '#0f172a', red: '#dc2626', goldLight: '#f59e0b' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] } } } }</script>
-    <style>body { background-color: #0a0f24; color: #f8fafc; font-family: 'Inter', sans-serif; }</style>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fc: {
+                            navy: '#09122c',
+                            blue: '#004d98',
+                            red: '#a50044',
+                            yellow: '#edbb00',
+                            darkCard: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
-    <header class="bg-tinellers-dark border-b border-slate-800">
+<body class="min-h-screen flex flex-col justify-between selection:bg-fc-blue selection:text-white">
+
+    <!-- HEADER INSTITUCIONAL UNIFICADO -->
+    <header class="sticky top-0 z-50 bg-slate-100/95 backdrop-blur-md border-b border-slate-300 shadow-sm">
+        <div class="bg-gradient-to-r from-fc-blue via-fc-navy to-fc-red px-4 py-1 text-center text-[11px] font-black tracking-widest text-white uppercase flex items-center justify-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-fc-yellow animate-ping"></span>
+            <span>TINELLERS FC • EST. 2026 • "EL ESCUDO, LA CERVEZA Y EL CÉSPED"</span>
+        </div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-            <a href="index.html" class="flex items-center gap-3">
-                <i class="fa-solid fa-arrow-left text-slate-400 hover:text-white mr-2"></i>
-                <span class="font-display font-black text-2xl text-white">TINELLERS <span class="text-tinellers-red">FC</span></span>
+            <a href="index.html" class="flex items-center gap-3.5 group">
+                <div class="w-12 h-12 flex items-center justify-center transform group-hover:scale-105 transition duration-300">
+                    <img src="escudo.png" alt="Escudo TINELLERS FC" class="w-full h-full object-contain drop-shadow-md">
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-black text-xl sm:text-2xl text-fc-navy tracking-tight group-hover:text-fc-blue transition-colors">
+                        TINELLERS <span class="text-fc-red">FC</span>
+                    </span>
+                    <span class="text-[9px] tracking-widest text-slate-500 font-bold uppercase -mt-1">Sitio Oficial</span>
+                </div>
             </a>
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
-                <a href="index.html" class="text-slate-400 hover:text-white">Inicio</a>
-                <a href="quienes-somos.html" class="text-slate-400 hover:text-white">Quiénes Somos</a>
-                <a href="noticias.html" class="text-slate-400 hover:text-white">Noticias</a>
-                <a href="partidos.html" class="text-slate-400 hover:text-white">Partidos</a>
-                <a href="estadisticas.html" class="text-tinellers-goldLight">Estadísticas</a>
+
+            <!-- Navegación con opción Estadísticas activa -->
+            <nav class="hidden md:flex items-center space-x-1.5 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/60 shadow-inner">
+                <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Inicio</a>
+                <a href="quienes-somos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Quiénes Somos</a>
+                <a href="noticias.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Noticias</a>
+                <a href="partidos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Partidos</a>
+                <a href="estadisticas.html" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-fc-blue shadow-md transition">Estadísticas</a>
             </nav>
+
+            <div class="md:hidden">
+                <button id="menu-btn" class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-b border-slate-300 px-6 py-5 space-y-2 shadow-2xl">
+            <a href="index.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Inicio</a>
+            <a href="quienes-somos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Quiénes Somos</a>
+            <a href="noticias.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Noticias</a>
+            <a href="partidos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Partidos</a>
+            <a href="estadisticas.html" class="block px-4 py-3 rounded-xl text-white font-bold bg-fc-blue">Estadísticas</a>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow space-y-8">
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <span class="text-tinellers-goldLight font-bold text-xs uppercase tracking-widest">Rendimiento de Plantilla</span>
-            <h1 class="font-display text-4xl sm:text-5xl font-black uppercase text-white mt-2">Tablas Estadísticas</h1>
-            <p class="text-slate-400 text-sm mt-3">Goles, asistencias, paradas de portería y premios MVP actualizados.</p>
+    <!-- CONTENIDO PRINCIPAL: ESTADÍSTICAS -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow space-y-12">
+        <div class="text-center max-w-3xl mx-auto">
+            <span class="text-fc-blue font-bold text-xs uppercase tracking-widest bg-blue-100/80 px-3.5 py-1.5 rounded-full border border-blue-200">Plantilla Oficial 2026</span>
+            <h1 class="font-display text-3xl sm:text-5xl font-black uppercase text-fc-navy mt-3">Centro de Estadísticas</h1>
+            <p class="text-slate-600 text-sm mt-3">Rendimiento avanzado y estadísticas de la plantilla unificadas al estilo profesional.</p>
         </div>
 
-        <!-- Tabla Goleadores -->
-        <div class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-            <div class="p-4 bg-slate-900 border-b border-slate-800 font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-futbol text-red-500"></i> Máximos Goleadores
+        <!-- TARJETAS DESTACADAS (LÍDERES) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-red relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-2xl bg-red-100 text-fc-red flex items-center justify-center"><i class="fa-solid fa-futbol"></i></div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pichichi</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-fc-navy">Alfa Junior Umaro</h3>
+                <p class="text-xs text-slate-500 mb-4">Dorsal #4</p>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-fc-red">3</span>
+                    <span class="text-xs text-slate-500 uppercase font-semibold">Goles</span>
+                </div>
             </div>
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900/50 text-xs text-slate-400 uppercase border-b border-slate-800">
-                    <tr>
-                        <th class="p-4 text-center">Pos</th>
-                        <th class="p-4">Jugador</th>
-                        <th class="p-4 text-center">Dorsal</th>
-                        <th class="p-4 text-center">Goles</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800">
-                    <tr><td class="p-4 text-center font-bold text-tinellers-goldLight">1</td><td class="p-4 font-bold text-white">Alfa Umaro</td><td class="p-4 text-center font-black text-tinellers-goldLight">#4</td><td class="p-4 text-center font-black text-lg text-red-500">3</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">2</td><td class="p-4 font-bold text-white">Alejandro Cuevas</td><td class="p-4 text-center font-black text-tinellers-goldLight">#90</td><td class="p-4 text-center font-black text-lg text-red-500">2</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">3</td><td class="p-4 font-bold text-white">Oscar Piero Malasquez</td><td class="p-4 text-center font-black text-tinellers-goldLight">#16</td><td class="p-4 text-center font-black text-lg text-red-500">2</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">4</td><td class="p-4 font-bold text-white">Luis Nuñez</td><td class="p-4 text-center font-black text-tinellers-goldLight">#6</td><td class="p-4 text-center font-black text-lg text-red-500">1</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">5</td><td class="p-4 font-bold text-white">Junior De Jesus</td><td class="p-4 text-center font-black text-tinellers-goldLight">#22</td><td class="p-4 text-center font-black text-lg text-red-500">1</td></tr>
-                </tbody>
-            </table>
+
+            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-blue relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-100 text-fc-blue flex items-center justify-center"><i class="fa-solid fa-hands-holding-circle"></i></div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Máx. Asistente</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-fc-navy">Alfa / Luis</h3>
+                <p class="text-xs text-slate-500 mb-4">Dorsal #4 / #6</p>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-fc-blue">2</span>
+                    <span class="text-xs text-slate-500 uppercase font-semibold">Asistencias</span>
+                </div>
+            </div>
+
+            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-emerald-500 relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center"><i class="fa-solid fa-shield-cat"></i></div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Paradas Récord</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-fc-navy">Arian Burguillo</h3>
+                <p class="text-xs text-slate-500 mb-4">Dorsal #1</p>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-emerald-600">12</span>
+                    <span class="text-xs text-slate-500 uppercase font-semibold">Total Paradas</span>
+                </div>
+            </div>
+
+            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-yellow relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center"><i class="fa-solid fa-crown"></i></div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Premios MVP</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-fc-navy">Oscar / Arian</h3>
+                <p class="text-xs text-slate-500 mb-4">Galardones</p>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-3xl font-black text-amber-600">1 c/u</span>
+                    <span class="text-xs text-slate-500 uppercase font-semibold">MVPs</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Tabla Asistidores -->
-        <div class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-            <div class="p-4 bg-slate-900 border-b border-slate-800 font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-hands-holding-circle text-blue-500"></i> Máximos Asistidores
+        <!-- TABLA MAESTRA UNIFICADA DE LA PLANTILLA -->
+        <div class="fc-card rounded-3xl overflow-hidden shadow-xl border border-slate-300">
+            <div class="p-6 bg-slate-200/70 border-b border-slate-300 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-display font-bold text-xl text-fc-navy">Estadísticas de la Plantilla</h2>
+                    <p class="text-xs text-slate-600">Rendimiento acumulado y disciplinario</p>
+                </div>
+                <span class="text-xs bg-white text-fc-blue px-3.5 py-1.5 rounded-xl border border-slate-300 font-bold shadow-sm">
+                    <i class="fa-solid fa-futbol mr-1.5"></i> Temporada 2026
+                </span>
             </div>
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900/50 text-xs text-slate-400 uppercase border-b border-slate-800">
-                    <tr>
-                        <th class="p-4 text-center">Pos</th>
-                        <th class="p-4">Jugador</th>
-                        <th class="p-4 text-center">Dorsal</th>
-                        <th class="p-4 text-center">Asistencias</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800">
-                    <tr><td class="p-4 text-center font-bold text-tinellers-goldLight">1</td><td class="p-4 font-bold text-white">Alfa Umaro</td><td class="p-4 text-center font-black text-tinellers-goldLight">#4</td><td class="p-4 text-center font-black text-lg text-blue-500">2</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">2</td><td class="p-4 font-bold text-white">Luis Nuñez</td><td class="p-4 text-center font-black text-tinellers-goldLight">#6</td><td class="p-4 text-center font-black text-lg text-blue-500">2</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">3</td><td class="p-4 font-bold text-white">Esteban Morales</td><td class="p-4 text-center font-black text-tinellers-goldLight">#8</td><td class="p-4 text-center font-black text-lg text-blue-500">1</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">4</td><td class="p-4 font-bold text-white">Alejandro Cuevas</td><td class="p-4 text-center font-black text-tinellers-goldLight">#90</td><td class="p-4 text-center font-black text-lg text-blue-500">1</td></tr>
-                    <tr><td class="p-4 text-center font-bold text-slate-300">5</td><td class="p-4 font-bold text-white">Eloy Marte Guerrero</td><td class="p-4 text-center font-black text-tinellers-goldLight">#14</td><td class="p-4 text-center font-black text-lg text-blue-500">1</td></tr>
-                </tbody>
-            </table>
-        </div>
 
-        <!-- Tabla Portería: Paradas por Jornada -->
-        <div class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-            <div class="p-4 bg-slate-900 border-b border-slate-800 font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-shield-cat text-emerald-400"></i> Paradas de Portería por Jornada
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-100 text-xs text-slate-600 uppercase border-b border-slate-300">
+                        <tr>
+                            <th class="p-4 text-center">Dorsal</th>
+                            <th class="p-4">Jugador</th>
+                            <th class="p-4 text-center">PJ</th>
+                            <th class="p-4 text-center">Goles</th>
+                            <th class="p-4 text-center">Asist.</th>
+                            <th class="p-4 text-center">Paradas</th>
+                            <th class="p-4 text-center">MVPs</th>
+                            <th class="p-4 text-center">Tarjetas</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-slate-700">
+                        <!-- Alfa Junior Umaro -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#4</td>
+                            <td class="p-4 font-bold text-fc-navy">Alfa Junior Umaro</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center font-black text-fc-red">3</td>
+                            <td class="p-4 text-center font-black text-fc-blue">2</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Alejandro Cuevas -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#90</td>
+                            <td class="p-4 font-bold text-fc-navy">Alejandro Cuevas</td>
+                            <td class="p-4 text-center font-semibold">1</td>
+                            <td class="p-4 text-center font-black text-fc-red">2</td>
+                            <td class="p-4 text-center font-black text-fc-blue">1</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Piero Malasquez -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#16</td>
+                            <td class="p-4 font-bold text-fc-navy">Piero Malasquez</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center font-black text-fc-red">2</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center font-bold text-amber-600">1 <i class="fa-solid fa-crown text-xs ml-1"></i></td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Luis Núñez -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#6</td>
+                            <td class="p-4 font-bold text-fc-navy">Luis Núñez</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center font-black text-fc-red">1</td>
+                            <td class="p-4 text-center font-black text-fc-blue">2</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Junior De Jesus -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#22</td>
+                            <td class="p-4 font-bold text-fc-navy">Junior De Jesus</td>
+                            <td class="p-4 text-center font-semibold">1</td>
+                            <td class="p-4 text-center font-black text-fc-red">1</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Esteban Morales -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#8</td>
+                            <td class="p-4 font-bold text-fc-navy">Esteban Morales</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center font-black text-fc-blue">1</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center"><span class="inline-block w-4 h-5 bg-yellow-400 rounded-sm shadow-sm border border-yellow-500" title="Tarjeta Amarilla"></span></td>
+                        </tr>
+                        <!-- Eloy Marte -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#14</td>
+                            <td class="p-4 font-bold text-fc-navy">Eloy Marte</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center font-black text-fc-blue">1</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Arian Burguillo -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#1</td>
+                            <td class="p-4 font-bold text-fc-navy flex items-center gap-2">Arian Burguillo <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-bold">Portero</span></td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center font-black text-emerald-700">12 <span class="text-[10px] text-slate-500 font-normal">(3 J1 + 9 J2)</span></td>
+                            <td class="p-4 text-center font-bold text-amber-600">1 <i class="fa-solid fa-crown text-xs ml-1"></i></td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Jefferson Marte -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#10</td>
+                            <td class="p-4 font-bold text-slate-600">Jefferson Marte</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Sebas Rodriguez Yañez -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#11</td>
+                            <td class="p-4 font-bold text-slate-600">Sebas Rodriguez Yañez</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Nacho Escalante -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#23</td>
+                            <td class="p-4 font-bold text-slate-600">Nacho Escalante</td>
+                            <td class="p-4 text-center font-semibold">2</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                        <!-- Fidel Escalante -->
+                        <tr class="hover:bg-slate-100/80 transition">
+                            <td class="p-4 text-center font-black text-fc-blue">#25</td>
+                            <td class="p-4 font-bold text-slate-600 flex items-center gap-2">Fidel Escalante <span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded font-bold">Sancionado J2</span></td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">0</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                            <td class="p-4 text-center text-slate-400">-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900/50 text-xs text-slate-400 uppercase border-b border-slate-800">
-                    <tr>
-                        <th class="p-4 text-center">Pos</th>
-                        <th class="p-4">Portero</th>
-                        <th class="p-4 text-center">Dorsal</th>
-                        <th class="p-4 text-center">Jornada</th>
-                        <th class="p-4 text-center">Paradas</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800">
-                    <tr>
-                        <td class="p-4 text-center font-bold text-tinellers-goldLight">1</td>
-                        <td class="p-4 font-bold text-white">Arian Burguillo Santana</td>
-                        <td class="p-4 text-center font-black text-tinellers-goldLight">#1</td>
-                        <td class="p-4 text-center text-slate-300">Jornada 2</td>
-                        <td class="p-4 text-center font-black text-lg text-emerald-400">9</td>
-                    </tr>
-                    <tr>
-                        <td class="p-4 text-center font-bold text-slate-300">2</td>
-                        <td class="p-4 font-bold text-white">Arian Burguillo Santana</td>
-                        <td class="p-4 text-center font-black text-tinellers-goldLight">#1</td>
-                        <td class="p-4 text-center text-slate-300">Jornada 1</td>
-                        <td class="p-4 text-center font-black text-lg text-emerald-400">3</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tabla MVPs -->
-        <div class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-            <div class="p-4 bg-slate-900 border-b border-slate-800 font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-star text-amber-400"></i> Máximos MVPs
-            </div>
-            <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900/50 text-xs text-slate-400 uppercase border-b border-slate-800">
-                    <tr>
-                        <th class="p-4 text-center">Pos</th>
-                        <th class="p-4">Jugador</th>
-                        <th class="p-4 text-center">Dorsal</th>
-                        <th class="p-4 text-center">Premios MVP</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-800">
-                    <tr>
-                        <td class="p-4 text-center font-bold text-tinellers-goldLight"><i class="fa-solid fa-crown text-amber-400"></i> 1</td>
-                        <td class="p-4 font-bold text-white">Oscar Piero Malasquez</td>
-                        <td class="p-4 text-center font-black text-tinellers-goldLight">#16</td>
-                        <td class="p-4 text-center font-black text-lg text-amber-400">1</td>
-                    </tr>
-                    <tr>
-                        <td class="p-4 text-center font-bold text-tinellers-goldLight"><i class="fa-solid fa-crown text-amber-400"></i> 2</td>
-                        <td class="p-4 font-bold text-white">Arian Burguillo Santana</td>
-                        <td class="p-4 text-center font-black text-tinellers-goldLight">#1</td>
-                        <td class="p-4 text-center font-black text-lg text-amber-400">1</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </main>
 
-<footer class="bg-tinellers-dark border-t border-slate-800 py-8 text-center text-xs text-slate-400 space-y-1">
-    <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
-    <p>Sitio web oficial creado y desarrollado por <span class="text-tinellers-goldLight font-semibold">Franklin Jiménez Santana</span>.</p>
-</footer>
+    <!-- FOOTER OFICIAL UNIFICADO -->
+    <footer class="bg-fc-navy text-slate-400 py-12 border-t border-slate-800 text-xs mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-fc-blue"></span>
+                <span class="w-3 h-3 rounded-full bg-white"></span>
+                <span class="w-3 h-3 rounded-full bg-fc-red"></span>
+                <span class="font-display font-bold text-white text-sm tracking-wider uppercase">TINELLERS FC</span>
+            </div>
+            <div class="text-center md:text-right space-y-1">
+                <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
+                <p>Sitio web oficial creado y desarrollado por <span class="text-fc-yellow font-semibold">Franklin Jiménez Santana</span>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

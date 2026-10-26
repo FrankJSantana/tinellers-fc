@@ -1,0 +1,68 @@
+/* ==========================================
+   TINELLERS FC - Estilos Oficiales (Blanco Difuminado & Azul)
+   ========================================== */
+
+   :root {
+    --fc-bg: #edf2f7;         /* Blanco helado difuminado con tinte azul */
+    --fc-navy: #09122c;       /* Azul marino profundo */
+    --fc-blue: #004d98;       /* Azul institucional */
+    --fc-red: #a50044;        /* Grana / Rojo oficial */
+    --fc-yellow: #edbb00;     /* Dorado / Amarillo */
+    --fc-card: #f8fafc;       /* Tarjetas en blanco suavizado */
+}
+
+body {
+    background-color: var(--fc-bg);
+    color: var(--fc-navy);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+.font-display {
+    font-display: swap;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* HERO CON AZUL PROFUNDO Y DEGRADADO */
+.fc-hero {
+    background: radial-gradient(circle at 80% 20%, rgba(0, 77, 152, 0.45) 0%, transparent 50%),
+                radial-gradient(circle at 10% 80%, rgba(165, 0, 68, 0.25) 0%, transparent 45%),
+                linear-gradient(135deg, #09122c 0%, #040814 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Transición suave entre Hero y Cuerpo */
+.fc-hero-seamless {
+    background: linear-gradient(180deg, rgba(9, 18, 44, 0) 0%, var(--fc-bg) 100%);
+}
+
+/* Tarjetas en blanco difuminado armónico */
+.fc-card {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    transition: all 0.3s ease;
+}
+
+.fc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px -5px rgba(0, 77, 152, 0.15);
+    border-color: var(--fc-blue);
+    background-color: #ffffff;
+}
+
+.fc-dark-box {
+    background-color: var(--fc-navy);
+    color: #ffffff;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #edf2f7;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}

@@ -7,153 +7,239 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        tinellers: {
-                            dark: '#0a0f24', card: '#0f172a', navy: '#1e293b',
-                            blue: '#1e3a8a', blueGlow: '#2563eb', red: '#dc2626',
-                            redGlow: '#ef4444', gold: '#d97706', goldLight: '#f59e0b', slate: '#94a3b8'
+                        fc: {
+                            navy: '#09122c',
+                            blue: '#004d98',
+                            red: '#a50044',
+                            yellow: '#edbb00',
+                            darkCard: '#0f172a'
                         }
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
-    <style>
-        body { background-color: #0a0f24; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .stadium-bg { background: linear-gradient(180deg, rgba(10, 15, 36, 0.85) 0%, rgba(10, 15, 36, 0.98) 100%), radial-gradient(circle at 50% 30%, rgba(30, 58, 138, 0.3) 0%, transparent 70%); }
-        .hero-banner { background: linear-gradient(0deg, rgba(10,15,36,1) 0%, rgba(10,15,36,0.4) 60%, rgba(10,15,36,0.85) 100%), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3); }
-    </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-tinellers-red selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-fc-blue selection:text-white">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-50 bg-tinellers-dark/95 backdrop-blur-md border-b border-slate-800">
-        <div class="bg-gradient-to-r from-tinellers-blue via-tinellers-dark to-tinellers-red px-4 py-1 text-center text-xs font-semibold tracking-wider text-white uppercase flex items-center justify-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-tinellers-goldLight animate-ping"></span>
-            <span>TINELLERS FC • EST. 2026 • "El escudo, la cerveza y el césped"</span>
+    <!-- HEADER INSTITUCIONAL CON ESCUDO (escudo.png) Y EST. 2026 -->
+    <header class="sticky top-0 z-50 bg-slate-100/95 backdrop-blur-md border-b border-slate-300 shadow-sm">
+        <div class="bg-gradient-to-r from-fc-blue via-fc-navy to-fc-red px-4 py-1 text-center text-[11px] font-black tracking-widest text-white uppercase flex items-center justify-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-fc-yellow animate-ping"></span>
+            <span>TINELLERS FC • EST. 2026 • "EL ESCUDO, LA CERVEZA Y EL CÉSPED"</span>
         </div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-            <a href="index.html" class="flex items-center gap-3 group">
-                <div class="w-12 h-12 flex items-center justify-center">
-                    <svg viewBox="0 0 100 120" class="w-full h-full">
-                        <path d="M50 5 L90 20 L85 85 L50 115 L15 85 L10 20 Z" fill="#0b1120" stroke="#dc2626" stroke-width="4"/>
-                        <path d="M50 10 L85 23 L80 82 L50 108 L20 82 L15 23 Z" fill="#1e293b" stroke="#1e3a8a" stroke-width="3"/>
-                        <text x="50" y="75" font-family="Montserrat" font-weight="900" font-size="28" fill="#ffffff" text-anchor="middle">TFC</text>
-                    </svg>
+            <a href="index.html" class="flex items-center gap-3.5 group">
+                <div class="w-12 h-12 flex items-center justify-center transform group-hover:scale-105 transition duration-300">
+                    <img src="escudo.png" alt="Escudo TINELLERS FC" class="w-full h-full object-contain drop-shadow-md">
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-display font-black text-2xl text-white group-hover:text-tinellers-goldLight transition-colors">TINELLERS <span class="text-tinellers-red">FC</span></span>
-                    <span class="text-[10px] tracking-widest text-slate-400 font-semibold uppercase -mt-1">Sitio Oficial</span>
+                    <span class="font-display font-black text-xl sm:text-2xl text-fc-navy tracking-tight group-hover:text-fc-blue transition-colors">
+                        TINELLERS <span class="text-fc-red">FC</span>
+                    </span>
+                    <span class="text-[9px] tracking-widest text-slate-500 font-bold uppercase -mt-1">Sitio Oficial</span>
                 </div>
             </a>
-            <nav class="hidden md:flex items-center space-x-1">
-                <a href="index.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-tinellers-goldLight bg-slate-800/60">Inicio</a>
-                <a href="quienes-somos.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition">Quiénes Somos</a>
-                <a href="noticias.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition">Noticias</a>
-                <a href="partidos.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition">Partidos & Resultados</a>
-                <a href="estadisticas.html" class="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800/50 transition">Estadísticas</a>
+
+            <nav class="hidden md:flex items-center space-x-1.5 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/60 shadow-inner">
+                <a href="index.html" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-fc-blue shadow-md transition">Inicio</a>
+                <a href="quienes-somos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Quiénes Somos</a>
+                <a href="noticias.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Noticias</a>
+                <a href="partidos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Partidos</a>
+                <a href="estadisticas.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Estadísticas</a>
             </nav>
+
             <div class="md:hidden">
-                <button id="menu-btn" class="text-slate-300 hover:text-white text-2xl"><i class="fa-solid fa-bars"></i></button>
+                <button id="menu-btn" class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
             </div>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden bg-tinellers-dark border-b border-slate-800 px-4 py-4 space-y-2">
-            <a href="index.html" class="block px-3 py-2 rounded text-white font-medium bg-slate-800">Inicio</a>
-            <a href="quienes-somos.html" class="block px-3 py-2 rounded text-slate-300 hover:bg-slate-800">Quiénes Somos</a>
-            <a href="noticias.html" class="block px-3 py-2 rounded text-slate-300 hover:bg-slate-800">Noticias</a>
-            <a href="partidos.html" class="block px-3 py-2 rounded text-slate-300 hover:bg-slate-800">Partidos & Resultados</a>
-            <a href="estadisticas.html" class="block px-3 py-2 rounded text-slate-300 hover:bg-slate-800">Estadísticas</a>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-b border-slate-300 px-6 py-5 space-y-2 shadow-2xl">
+            <a href="index.html" class="block px-4 py-3 rounded-xl text-white font-bold bg-fc-blue">Inicio</a>
+            <a href="quienes-somos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Quiénes Somos</a>
+            <a href="noticias.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Noticias</a>
+            <a href="partidos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Partidos</a>
+            <a href="estadisticas.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Estadísticas</a>
         </div>
     </header>
 
-    <!-- HERO PORTADA -->
-    <main class="flex-grow stadium-bg">
-        <section class="hero-banner py-24 lg:py-36 border-b border-slate-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    <div class="lg:col-span-7 space-y-6">
-                        <span class="inline-block px-3 py-1 rounded-full bg-tinellers-red text-white text-xs font-black uppercase tracking-widest">TEMPORADA 2026 • DOMINGOS 19:00 HS</span>
-                        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase text-white leading-tight">
-                            BARRER EL CÉSPED, <span class="text-tinellers-goldLight">BRINDAR CON GLORIA.</span>
-                        </h1>
-                        <p class="text-slate-300 text-lg max-w-xl">
-                            Bienvenido al portal oficial de TINELLERS FC. Pasión inquebrantable, rigor competitivo y hermandad en cada jornada.
-                        </p>
-                        <div class="flex flex-wrap gap-4 pt-4 justify-center sm:justify-start">
-                            <a href="partidos.html" class="bg-tinellers-red hover:bg-red-700 text-white font-bold px-6 py-3.5 rounded-xl shadow-lg transition">Ver Partidos</a>
-                            <a href="estadisticas.html" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3.5 rounded-xl border border-slate-600 transition">Ver Estadísticas</a>
-                        </div>
+    <!-- CUERPO PRINCIPAL -->
+    <main class="flex-grow">
+        
+        <!-- HERO BANNER -->
+        <section class="fc-hero pt-24 pb-36 text-white relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="max-w-3xl space-y-6">
+                    <div class="inline-flex items-center gap-2 bg-blue-500/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-blue-300 border border-blue-400/30 shadow">
+                        <span class="w-2 h-2 rounded-full bg-fc-yellow animate-ping"></span> MÓDULO OFICIAL • LIGA 2026
                     </div>
-                    <!-- Tarjeta Último Partido Resumen -->
-<!-- Tarjeta Último Partido Resumen -->
-<div class="lg:col-span-5">
-    <div class="bg-tinellers-card border border-slate-700 p-6 rounded-3xl shadow-2xl relative">
-        <div class="absolute -top-3 right-6 bg-emerald-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">Último Resultado</div>
-        <span class="text-xs font-bold text-tinellers-goldLight uppercase tracking-wider">Jornada 2 • Octubre 2026</span>
-        <div class="flex items-center justify-between my-6">
-            <div class="text-center">
-                <p class="font-bold text-white text-sm">TINELLERS FC</p>
-                <span class="text-3xl font-black text-tinellers-goldLight">6</span>
-            </div>
-            <span class="text-slate-500 font-black text-xl">VS</span>
-            <div class="text-center">
-                <p class="font-bold text-slate-300 text-sm">La Banda del Patio</p>
-                <span class="text-3xl font-black text-white">2</span>
-            </div>
-        </div>
-        <div class="border-t border-slate-800 pt-4 text-xs text-slate-400 flex justify-between items-center">
-            <span>MVP: Arian Burguillo</span>
-            <a href="partidos.html" class="text-tinellers-blueGlow hover:underline font-bold">Ver detalles →</a>
-        </div>
-    </div>
-</div>
+                    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-none text-white">
+                        BARRER EL CÉSPED, <br>
+                        <span class="text-fc-red">BRINDAR CON GLORIA.</span>
+                    </h1>
+                    <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal leading-relaxed">
+                        Pasión, hermandad y rigor competitivo. Consulta los resultados en directo, crónicas y estadísticas oficiales de la plantilla.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <a href="partidos.html" class="bg-fc-red hover:bg-red-800 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-futbol"></i> Ver Próximos Partidos
+                        </a>
+                        <a href="estadisticas.html" class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold px-8 py-4 rounded-xl border border-white/20 transition flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar"></i> Centro de Estadísticas
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ACCESOS RÁPIDOS A VENTANAS -->
-        <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="font-display text-3xl font-black uppercase text-white">Secciones Oficiales del Club</h2>
-                <div class="w-16 h-1 bg-tinellers-red mx-auto mt-2 rounded"></div>
+        <!-- MÓDULO DE INFORMACIÓN DESTACADA (PRÓXIMO PARTIDO PRIMERO) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 mb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                
+                <!-- 1. Tarjeta Próximo Partido (Cocidos Madrileños FC vs Tinellers FC - 08/11/2026) -->
+                <!-- 1. Tarjeta Próximo Partido (Cocidos Madrileños FC vs Tinellers FC - 08/11/2026) -->
+                <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-red flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-bold text-fc-red uppercase tracking-wider">Próximo Partido</span>
+                            <span class="bg-amber-200/80 text-amber-900 border border-amber-300 text-[10px] font-black px-3 py-0.5 rounded-full uppercase">08/11/2026</span>
+                        </div>
+                        <div class="bg-slate-200/60 p-4 rounded-2xl flex items-center justify-between mb-4 border border-slate-300/80 text-slate-900">
+                            <div class="text-center flex-1">
+                                <p class="font-bold text-xs">Cocidos Madrileños</p>
+                                <span class="text-xs text-slate-500">Local</span>
+                            </div>
+                            <span class="font-black text-sm text-fc-red px-2">VS</span>
+                            <div class="text-center flex-1">
+                                <p class="font-bold text-xs">TINELLERS FC</p>
+                                <span class="text-xs text-slate-500">Visitante</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-200">
+                        <span><i class="fa-solid fa-location-dot"></i> Polideportivo Ciudad Lineal</span>
+                        <a href="partidos.html" class="font-bold text-fc-blue hover:underline">Ver previa →</a>
+                    </div>
+                </div>
+
+                <!-- 2. Tarjeta Último Partido -->
+                <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-blue flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-bold text-fc-blue uppercase tracking-wider">Último Resultado</span>
+                            <span class="bg-emerald-200/80 text-emerald-900 border border-emerald-300 text-[10px] font-black px-3 py-0.5 rounded-full uppercase">Jornada 2</span>
+                        </div>
+                        <div class="bg-slate-900 text-white p-4 rounded-2xl flex items-center justify-between mb-4 shadow-inner">
+                            <div class="text-center flex-1">
+                                <p class="font-bold text-xs">TINELLERS FC</p>
+                                <span class="text-3xl font-black text-fc-yellow">6</span>
+                            </div>
+                            <span class="text-slate-500 font-bold text-sm">VS</span>
+                            <div class="text-center flex-1">
+                                <p class="font-bold text-xs text-slate-300">La Banda del Patio</p>
+                                <span class="text-3xl font-black text-white">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-200">
+                        <span><i class="fa-solid fa-star text-fc-yellow"></i> MVP: Arian Burguillo</span>
+                        <a href="partidos.html" class="font-bold text-fc-blue hover:underline">Crónica →</a>
+                    </div>
+                </div>
+
+                <!-- 3. Tarjeta Rendimiento Global -->
+                <div class="fc-dark-box rounded-3xl p-6 shadow-xl text-white flex flex-col justify-between border-t-4 border-fc-yellow">
+                    <div>
+                        <span class="text-xs font-bold text-fc-yellow uppercase tracking-wider">Rendimiento Global</span>
+                        <h3 class="font-display font-bold text-xl mt-1">Líderes de la Plantilla</h3>
+                        <p class="text-slate-400 text-xs mt-2">Consulta la tabla maestra con los jugadores registrados y sus estadísticas.</p>
+                    </div>
+                    <div class="pt-4">
+                        <a href="estadisticas.html" class="block w-full py-3 bg-fc-blue hover:bg-blue-700 text-center rounded-xl font-bold text-xs uppercase tracking-wider transition shadow text-white">
+                            Ver Tabla Completa →
+                        </a>
+                    </div>
+                </div>
+
             </div>
+        </section>
+
+        <!-- SECCIÓN DE ACCESOS RÁPIDOS -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <span class="text-fc-blue font-bold text-xs uppercase tracking-widest bg-blue-100/80 px-3.5 py-1.5 rounded-full border border-blue-200">Club Oficial</span>
+                    <h2 class="font-display text-3xl font-black uppercase text-fc-navy mt-2">Áreas del Tinellers FC</h2>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="quienes-somos.html" class="bg-tinellers-card border border-slate-800 p-6 rounded-2xl card-hover group">
-                    <div class="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
-                    <h3 class="font-display font-bold text-lg text-white mb-1">Quiénes Somos</h3>
-                    <p class="text-slate-400 text-xs">Historia, directiva y capitanes fundadores.</p>
+                <a href="quienes-somos.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100/70 text-fc-blue flex items-center justify-center text-xl mb-4 group-hover:bg-fc-blue group-hover:text-white transition duration-300">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-fc-blue transition">Quiénes Somos</h3>
+                    <p class="text-slate-600 text-xs">Historia, directiva y capitanes fundadores.</p>
                 </a>
-                <a href="noticias.html" class="bg-tinellers-card border border-slate-800 p-6 rounded-2xl card-hover group">
-                    <div class="w-12 h-12 rounded-xl bg-red-600/20 text-red-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition"><i class="fa-solid fa-newspaper"></i></div>
-                    <h3 class="font-display font-bold text-lg text-white mb-1">Noticias & Fichajes</h3>
-                    <p class="text-slate-400 text-xs">Comunicados oficiales y formato Here We Go.</p>
+
+                <a href="noticias.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-red-100/70 text-fc-red flex items-center justify-center text-xl mb-4 group-hover:bg-fc-red group-hover:text-white transition duration-300">
+                        <i class="fa-solid fa-newspaper"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-fc-red transition">Noticias & Fichajes</h3>
+                    <p class="text-slate-600 text-xs">Comunicados oficiales y formato Here We Go.</p>
                 </a>
-                <a href="partidos.html" class="bg-tinellers-card border border-slate-800 p-6 rounded-2xl card-hover group">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition"><i class="fa-solid fa-calendar-days"></i></div>
-                    <h3 class="font-display font-bold text-lg text-white mb-1">Partidos & Resultados</h3>
-                    <p class="text-slate-400 text-xs">Calendario dominguero y marcadores.</p>
+
+                <a href="partidos.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-100/70 text-amber-700 flex items-center justify-center text-xl mb-4 group-hover:bg-amber-500 group-hover:text-white transition duration-300">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-amber-600 transition">Partidos & Resultados</h3>
+                    <p class="text-slate-600 text-xs">Calendario dominguero y marcadores en vivo.</p>
                 </a>
-                <a href="estadisticas.html" class="bg-tinellers-card border border-slate-800 p-6 rounded-2xl card-hover group">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition"><i class="fa-solid fa-trophy"></i></div>
-                    <h3 class="font-display font-bold text-lg text-white mb-1">Estadísticas</h3>
-                    <p class="text-slate-400 text-xs">Goleadores, asistencias y MVPs de la plantilla.</p>
+
+                <a href="estadisticas.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center text-xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition duration-300">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-emerald-600 transition">Estadísticas</h3>
+                    <p class="text-slate-600 text-xs">Goleadores, asistencias y MVPs de la plantilla.</p>
                 </a>
             </div>
         </section>
+
     </main>
 
-<!-- FOOTER CON DERECHOS DE AUTOR -->
-<footer class="bg-tinellers-dark border-t border-slate-800 py-8 text-center text-xs text-slate-400 space-y-1">
-    <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
-    <p>Sitio web oficial creado y desarrollado por <span class="text-tinellers-goldLight font-semibold">Franklin Jiménez Santana</span>.</p>
-</footer>
+    <!-- FOOTER OFICIAL -->
+    <footer class="bg-fc-navy text-slate-400 py-12 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-fc-blue"></span>
+                <span class="w-3 h-3 rounded-full bg-white"></span>
+                <span class="w-3 h-3 rounded-full bg-fc-red"></span>
+                <span class="font-display font-bold text-white text-sm tracking-wider uppercase">TINELLERS FC</span>
+            </div>
+            <div class="text-center md:text-right space-y-1">
+                <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
+                <p>Sitio web oficial creado y desarrollado por <span class="text-fc-yellow font-semibold">Franklin Jiménez Santana</span>.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         document.getElementById('menu-btn').addEventListener('click', () => {

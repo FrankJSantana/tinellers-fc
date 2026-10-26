@@ -1,84 +1,172 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noticias - TINELLERS FC</title>
+    <title>Noticias & Comunicados - TINELLERS FC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>tailwind.config = { theme: { extend: { colors: { tinellers: { dark: '#0a0f24', card: '#0f172a', red: '#dc2626', goldLight: '#f59e0b' } }, fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Montserrat', 'sans-serif'] } } } }</script>
-    <style>body { background-color: #0a0f24; color: #f8fafc; font-family: 'Inter', sans-serif; }</style>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fc: {
+                            navy: '#09122c',
+                            blue: '#004d98',
+                            red: '#a50044',
+                            yellow: '#edbb00',
+                            darkCard: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
-    <header class="bg-tinellers-dark border-b border-slate-800">
+<body class="min-h-screen flex flex-col justify-between selection:bg-fc-blue selection:text-white">
+
+    <!-- HEADER INSTITUCIONAL UNIFICADO -->
+    <header class="sticky top-0 z-50 bg-slate-100/95 backdrop-blur-md border-b border-slate-300 shadow-sm">
+        <div class="bg-gradient-to-r from-fc-blue via-fc-navy to-fc-red px-4 py-1 text-center text-[11px] font-black tracking-widest text-white uppercase flex items-center justify-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-fc-yellow animate-ping"></span>
+            <span>TINELLERS FC • EST. 2026 • "EL ESCUDO, LA CERVEZA Y EL CÉSPED"</span>
+        </div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-            <a href="index.html" class="flex items-center gap-3">
-                <i class="fa-solid fa-arrow-left text-slate-400 hover:text-white mr-2"></i>
-                <span class="font-display font-black text-2xl text-white">TINELLERS <span class="text-tinellers-red">FC</span></span>
+            <a href="index.html" class="flex items-center gap-3.5 group">
+                <div class="w-12 h-12 flex items-center justify-center transform group-hover:scale-105 transition duration-300">
+                    <img src="escudo.png" alt="Escudo TINELLERS FC" class="w-full h-full object-contain drop-shadow-md">
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-black text-xl sm:text-2xl text-fc-navy tracking-tight group-hover:text-fc-blue transition-colors">
+                        TINELLERS <span class="text-fc-red">FC</span>
+                    </span>
+                    <span class="text-[9px] tracking-widest text-slate-500 font-bold uppercase -mt-1">Sitio Oficial</span>
+                </div>
             </a>
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
-                <a href="index.html" class="text-slate-400 hover:text-white">Inicio</a>
-                <a href="quienes-somos.html" class="text-slate-400 hover:text-white">Quiénes Somos</a>
-                <a href="noticias.html" class="text-tinellers-goldLight">Noticias</a>
-                <a href="partidos.html" class="text-slate-400 hover:text-white">Partidos</a>
-                <a href="estadisticas.html" class="text-slate-400 hover:text-white">Estadísticas</a>
+
+            <!-- Navegación con opción Noticias activa -->
+            <nav class="hidden md:flex items-center space-x-1.5 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/60 shadow-inner">
+                <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Inicio</a>
+                <a href="quienes-somos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Quiénes Somos</a>
+                <a href="noticias.html" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-fc-blue shadow-md transition">Noticias</a>
+                <a href="partidos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Partidos</a>
+                <a href="estadisticas.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Estadísticas</a>
             </nav>
+
+            <div class="md:hidden">
+                <button id="menu-btn" class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-b border-slate-300 px-6 py-5 space-y-2 shadow-2xl">
+            <a href="index.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Inicio</a>
+            <a href="quienes-somos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Quiénes Somos</a>
+            <a href="noticias.html" class="block px-4 py-3 rounded-xl text-white font-bold bg-fc-blue">Noticias</a>
+            <a href="partidos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Partidos</a>
+            <a href="estadisticas.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Estadísticas</a>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <span class="px-2.5 py-1 bg-tinellers-red text-white font-black text-xs uppercase rounded">Diario Oficial TFC</span>
-            <h1 class="font-display text-4xl sm:text-5xl font-black uppercase text-white mt-2">Noticias & "HERE WE GO!"</h1>
-            <p class="text-slate-400 text-sm mt-3">Crónicas oficiales y anuncios destacados del club.</p>
+    <!-- CONTENIDO PRINCIPAL NOTICIAS -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+        
+        <!-- Título principal -->
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-fc-blue font-bold text-xs uppercase tracking-widest bg-blue-100/80 px-3.5 py-1.5 rounded-full border border-blue-200">Diario Oficial TFC</span>
+            <h1 class="font-display text-3xl sm:text-5xl font-black uppercase text-fc-navy mt-3">Noticias & Comunicados</h1>
+            <p class="text-slate-600 text-sm mt-3">Crónicas oficiales, comunicados disciplinarios y anuncios destacados del club.</p>
         </div>
 
+        <!-- Grid de Noticias -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Noticia Jornada 2 (Nueva) -->
-            <article class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden p-6 flex flex-col justify-between">
+            
+            <!-- 1. Noticia Jornada 2 (Goleada) -->
+            <article class="fc-card rounded-3xl p-7 shadow-lg border-t-4 border-fc-blue flex flex-col justify-between">
                 <div>
-                    <span class="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Goleada Jornada 2</span>
-                    <h3 class="font-display font-bold text-2xl text-white mt-4 mb-2">TINELLERS FC 6 - 2 La Banda del Patio</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">Exhibición coral del equipo. Goles de <strong class="text-white">Alfa Umaro</strong> (2), <strong class="text-white">Alejandro Cuevas</strong> (2), <strong class="text-white">Oscar Piero</strong> (1) y <strong class="text-white">Junior De Jesus</strong> (1). Espectacular actuación bajo palos de <strong class="text-tinellers-goldLight">Arian Burguillo</strong> llevándose un merecidísimo MVP.</p>
+                    <span class="bg-emerald-200/80 text-emerald-900 border border-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase">Goleada Jornada 2</span>
+                    <h3 class="font-display font-bold text-xl text-fc-navy mt-4 mb-2">TINELLERS FC 6 - 2 La Banda del Patio</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Exhibición coral del equipo. Goles de <strong class="text-fc-navy">Alfa Umaro</strong> (2), <strong class="text-fc-navy">Alejandro Cuevas</strong> (2), <strong class="text-fc-navy">Oscar Piero</strong> (1) y <strong class="text-fc-navy">Junior De Jesus</strong> (1). Espectacular actuación bajo palos de <strong class="text-fc-yellow font-black">Arian Burguillo</strong> llevándose un merecidísimo MVP.</p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+                <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
                     <span>Octubre, 2026</span>
-                    <span class="text-emerald-400 font-bold">Victoria</span>
+                    <span class="text-emerald-700 font-bold">Victoria</span>
                 </div>
             </article>
 
-            <!-- Noticia 1 (Jornada 1) -->
-            <article class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden p-6 flex flex-col justify-between">
+            <!-- 2. Sanción a Fidel Escalante -->
+            <article class="fc-card rounded-3xl p-7 shadow-lg border-t-4 border-fc-red flex flex-col justify-between">
                 <div>
-                    <span class="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Victoria Oficial</span>
-                    <h3 class="font-display font-bold text-2xl text-white mt-4 mb-2">Balkans FC 2 - 3 TINELLERS FC</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">Debut soñado a domicilio. Goles de <strong class="text-white">Alfa Umaro</strong>, <strong class="text-white">Luis Nuñez</strong> y <strong class="text-white">Oscar Piero Malasquez</strong>. Gran actuación de <strong class="text-tinellers-goldLight">Oscar Piero</strong> llevándose el MVP del encuentro.</p>
+                    <span class="bg-red-100 text-fc-red border border-red-200 text-[10px] font-black px-3 py-1 rounded-full uppercase">Comunicado Disciplinario</span>
+                    <h3 class="font-display font-bold text-xl text-fc-navy mt-4 mb-2">Sanción Interna a Fidel Escalante</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Tras su ausencia sin aviso previo estando convocado, la dirección deportiva y el cuerpo técnico han decidido sancionar a <strong class="text-fc-navy">Fidel Escalante</strong> (#25). No disputó la Jornada 2 y su regreso se producirá arrancando desde el banquillo en la Jornada 3.</p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+                <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                    <span>Medida Disciplinaria</span>
+                    <span class="text-fc-red font-bold">Sancionado</span>
+                </div>
+            </article>
+
+            <!-- 3. Noticia Jornada 1 (Victoria) -->
+            <article class="fc-card rounded-3xl p-7 shadow-lg border-t-4 border-fc-blue flex flex-col justify-between">
+                <div>
+                    <span class="bg-emerald-200/80 text-emerald-900 border border-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase">Victoria Oficial</span>
+                    <h3 class="font-display font-bold text-xl text-fc-navy mt-4 mb-2">Balkans FC 2 - 3 TINELLERS FC</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Debut soñado a domicilio. Goles de <strong class="text-fc-navy">Alfa Umaro</strong>, <strong class="text-fc-navy">Luis Nuñez</strong> y <strong class="text-fc-navy">Oscar Piero Malasquez</strong>. Gran actuación de <strong class="text-fc-yellow font-black">Oscar Piero</strong> llevándose el MVP del encuentro.</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
                     <span>18 de Octubre, 2026</span>
-                    <span class="text-emerald-400 font-bold">Ganado</span>
+                    <span class="text-emerald-700 font-bold">Ganado</span>
                 </div>
             </article>
 
-            <!-- Noticia 2 -->
-            <article class="bg-tinellers-card border border-slate-800 rounded-2xl overflow-hidden p-6 flex flex-col justify-between">
+            <!-- 4. Noticia Estructura -->
+            <article class="fc-card rounded-3xl p-7 shadow-lg border-t-4 border-fc-yellow flex flex-col justify-between">
                 <div>
-                    <span class="bg-tinellers-red text-white text-[10px] font-black px-2.5 py-1 rounded uppercase">Estructura</span>
-                    <h3 class="font-display font-bold text-2xl text-white mt-4 mb-2">Franklin Jiménez y Capitanes al Mando</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">El fundador Franklin Jiménez lidera la dirección respaldado por los capitanes Luis Nuñez, Esteban Morales y Arian Burguillo.</p>
+                    <span class="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black px-3 py-1 rounded-full uppercase">Estructura</span>
+                    <h3 class="font-display font-bold text-xl text-fc-navy mt-4 mb-2">Franklin Jiménez y Capitanes al Mando</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">El fundador Franklin Jiménez lidera la dirección respaldado por los capitanes Luis Nuñez, Esteban Morales y Arian Burguillo.</p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between">
+                <div class="mt-6 pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
                     <span>Temporada 2026</span>
-                    <span class="text-tinellers-goldLight font-bold">Oficial</span>
+                    <span class="text-fc-blue font-bold">Oficial</span>
                 </div>
             </article>
+
         </div>
     </main>
 
-<footer class="bg-tinellers-dark border-t border-slate-800 py-8 text-center text-xs text-slate-400 space-y-1">
-    <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
-    <p>Sitio web oficial creado y desarrollado por <span class="text-tinellers-goldLight font-semibold">Franklin Jiménez Santana</span>.</p>
-</footer>
+    <!-- FOOTER OFICIAL UNIFICADO -->
+    <footer class="bg-fc-navy text-slate-400 py-12 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-fc-blue"></span>
+                <span class="w-3 h-3 rounded-full bg-white"></span>
+                <span class="w-3 h-3 rounded-full bg-fc-red"></span>
+                <span class="font-display font-bold text-white text-sm tracking-wider uppercase">TINELLERS FC</span>
+            </div>
+            <div class="text-center md:text-right space-y-1">
+                <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
+                <p>Sitio web oficial creado y desarrollado por <span class="text-fc-yellow font-semibold">Franklin Jiménez Santana</span>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
