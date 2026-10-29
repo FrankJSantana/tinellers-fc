@@ -36,39 +36,42 @@
 <main id="main">
 <section class="page-head" aria-labelledby="h1">
   <div class="wrap ph-grid">
-    <div><h1 id="h1" data-r>Quiniela</h1><p class="ph-sub" data-r>Jornada 3: Cocidos Madrileños FC contra Tinellers FC, domingo 8 de noviembre a las 19:00. Solo por diversión, sin dinero de por medio.</p></div>
+    <div><h1 id="h1" data-r>Quiniela</h1><p class="ph-sub" data-r>Una apuesta por persona en cada jornada. Las apuestas se cierran 24 horas antes del partido. Solo por diversión, sin dinero de por medio.</p></div>
     <div class="ph-crest" data-r><img class="" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC: dos jarras de cerveza brindando bajo el nombre del club" width="900" height="997"></div>
   </div>
 </section>
 
 <section class="section section--tight" id="partido" aria-labelledby="h-partido">
-  <div class="wrap"><div class="sec-head" data-r><h2 id="h-partido">Partido de la jornada</h2><p class="meta">Jornada 3 · Liga municipal de fútbol 7</p></div></div>
+  <div class="wrap"><div class="sec-head" data-r><h2 id="h-partido">Partido de la jornada</h2><p class="meta" id="q-meta">Jornada 3 · Liga municipal de fútbol 7</p></div></div>
   <div class="match match--compact">
-    <div class="mp mp--home" data-r><img class="mp-crest" src="img/escudo-cocidos.svg" alt="Escudo de Cocidos Madrileños FC" width="212" height="252"><p class="mp-name"><b>Cocidos Madrileños FC</b><span>Local</span></p></div>
+    <div class="mp mp--home" data-r><img class="mp-crest" id="q-home-crest" src="img/escudo-cocidos.svg" alt="Escudo de Cocidos Madrileños FC" width="212" height="252"><p class="mp-name"><b id="q-home-name">Cocidos Madrileños FC</b><span>Local</span></p></div>
     <div class="seam" data-r>
-      <p class="seam-date">Domingo 8 nov</p>
-      <p class="seam-time">19:00</p>
-      <p class="seam-venue">IDB Almudena, F7: 1 · Ciudad Lineal</p>
-      <div class="count" data-kickoff="2026-11-08T19:00:00+01:00" role="timer" aria-label="Tiempo hasta el inicio del partido">
+      <p class="seam-date" id="q-date">Domingo 8 nov</p>
+      <p class="seam-time" id="q-time">19:00</p>
+      <p class="seam-venue" id="q-venue">IDB Almudena, F7: 1 · Ciudad Lineal</p>
+      <p class="count-label" id="q-count-label">Cierre de apuestas en</p>
+      <div class="count" id="q-count" role="timer" aria-label="Tiempo hasta el cierre de apuestas">
         <div><b data-u="d">–</b><span>días</span></div>
         <div><b data-u="h">–</b><span>horas</span></div>
         <div><b data-u="m">–</b><span>min</span></div>
         <div><b data-u="s">–</b><span>seg</span></div>
       </div>
     </div>
-    <div class="mp mp--away" data-r><img class="mp-crest" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC" width="900" height="997"><p class="mp-name"><b>Tinellers FC</b><span>Visitante</span></p></div>
+    <div class="mp mp--away" data-r><img class="mp-crest" id="q-away-crest" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC" width="900" height="997"><p class="mp-name"><b id="q-away-name">Tinellers FC</b><span>Visitante</span></p></div>
   </div>
 </section>
 
 <section class="section" aria-labelledby="h-apostar">
   <div class="wrap">
     <div class="sec-head" data-r><h2 id="h-apostar">Haz tu apuesta</h2><p class="meta">Una apuesta por persona y jornada</p></div>
+    <div class="jornadas" id="jornadas" role="tablist" aria-label="Jornadas"></div>
+    <p class="cierre" id="cierre-info" role="status"></p>
     <div class="bet-layout">
       <div class="bet-left">
         <section id="auth-section" class="card card--blue" aria-labelledby="h-auth" data-r>
           <div id="auth-logged-out">
             <h3 id="h-auth">Entra para apostar</h3>
-            <p class="hint">Puedes cambiar tu apuesta hasta el partido.</p>
+            <p class="hint">Puedes cambiar tu apuesta hasta 24 horas antes del partido.</p>
             <div id="buttonDiv"></div>
             <form id="local-login" class="hidden form-gap" novalidate>
               <label for="local-name" class="sr-only">Tu nombre o apodo</label>
@@ -112,7 +115,7 @@
       </div>
 
       <section class="bets" aria-labelledby="h-list" data-r>
-        <div class="sec-head"><h3 id="h-list">Apuestas registradas</h3><span id="apuestas-count" class="meta num">0 apuestas</span></div>
+        <div class="sec-head"><h3 id="h-list">Apuestas registradas <span id="lista-jornada"></span></h3><span id="apuestas-count" class="meta num">0 apuestas</span></div>
         <div class="table-scroll">
           <table class="data">
             <thead><tr><th scope="col">Apostante</th><th scope="col">Jugador</th><th scope="col">Categoría</th><th scope="col">Predicción</th></tr></thead>

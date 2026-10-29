@@ -1,22 +1,45 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Quiniela: cualquiera puede ver las apuestas; cada persona solo crea o cambia la suya
-    // (el documento lleva su id de usuario) y solo antes del inicio del partido.
-    match /quinielas/{jornada}/apuestas/{uid} {
+
+    // Correos que pueden activar jornadas (los mismos que ADMINS en js/quiniela.js)
+    function esAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
+    }
+
+    // Una ficha por jornada con su hora de cierre (24 h antes del partido).
+    // La crea la web automáticamente cuando el administrador entra en la quiniela.
+    match /quinielas/{jornada} {
       allow read: if true;
-      allow create, update: if request.auth != null
-        && request.auth.uid == uid
-        && jornada == 'j3'
-        && request.time < timestamp.date(2026, 11, 8) + duration.value(18, 'h')
-        && request.resource.data.keys().hasOnly(['nombre', 'avatar', 'jugador', 'categoria', 'prediccion', 'jornada', 'actualizada'])
-        && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 80
-        && request.resource.data.avatar is string && request.resource.data.avatar.size() <= 500
-        && request.resource.data.jugador is string && request.resource.data.jugador.size() <= 60
-        && request.resource.data.categoria in ['goles', 'asistencias', 'tarjetas']
-        && request.resource.data.prediccion in ['0', '1', '2', '3+', 'Ninguna', 'Amarilla', 'Doble amarilla', 'Roja']
-        && request.resource.data.jornada == 3;
-      allow delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if esAdmin()
+        && request.resource.data.keys().hasOnly(['n', 'partido', 'inicio', 'cierre'])
+        && request.resource.data.n is int
+        && jornada == 'j' + string(request.resource.data.n)
+        && request.resource.data.cierre is timestamp
+        && request.resource.data.inicio is timestamp;
+      allow delete: if esAdmin();
+
+      // Apuestas: cualquiera las ve; cada persona solo crea o cambia la suya
+      // y solo antes del cierre de esa jornada.
+      match /apuestas/{uid} {
+        function ficha() { return get(/databases/$(database)/documents/quinielas/$(jornada)).data; }
+        allow read: if true;
+        allow create, update: if request.auth != null
+          && request.auth.uid == uid
+          && exists(/databases/$(database)/documents/quinielas/$(jornada))
+          && request.time < ficha().cierre
+          && request.resource.data.keys().hasOnly(['nombre', 'avatar', 'jugador', 'categoria', 'prediccion', 'jornada', 'actualizada'])
+          && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 80
+          && request.resource.data.avatar is string && request.resource.data.avatar.size() <= 500
+          && request.resource.data.jugador is string && request.resource.data.jugador.size() <= 60
+          && request.resource.data.categoria in ['goles', 'asistencias', 'tarjetas']
+          && request.resource.data.prediccion in ['0', '1', '2', '3+', 'Ninguna', 'Amarilla', 'Doble amarilla', 'Roja']
+          && request.resource.data.jornada == ficha().n;
+        allow delete: if request.auth != null && request.auth.uid == uid
+          && request.time < ficha().cierre;
+      }
     }
   }
 }
