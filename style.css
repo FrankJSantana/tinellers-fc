@@ -541,3 +541,64 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .count-label + .count { margin-top: 8px; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
+
+/* ==========================================================
+   Noticias: portada con noticia principal y columna lateral,
+   después la temporada en orden cronológico
+   ========================================================== */
+.portada-sec { padding-block: clamp(40px, 4vw, 64px) clamp(48px, 6vw, 96px); }
+.portada { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.lead { grid-column: 1 / 9; display: flex; flex-direction: column; background: var(--white); color: inherit; text-decoration: none; }
+.lead-img { display: block; overflow: hidden; aspect-ratio: 3 / 2; background: var(--navy); }
+.lead-img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transition: transform 700ms var(--ease); }
+.lead-text { display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 3vw, 40px); }
+.lead h3 { font-size: var(--s-head); line-height: 0.95; text-transform: uppercase; transition: color 160ms; }
+.lead-sub { font-size: var(--s-lead); line-height: 1.35; }
+.lead:hover h3, .rail a:hover strong { color: var(--red); }
+.lead:hover .lead-img img { transform: scale(1.03); }
+.rail { grid-column: 9 / 13; display: flex; flex-direction: column; gap: var(--gap); }
+.rail-head { background: var(--navy); color: var(--white); padding: 18px 20px; font-size: var(--s-lead); text-transform: uppercase; }
+.rail ul { display: flex; flex-direction: column; gap: var(--gap); flex: 1; }
+.rail li { flex: 1; }
+.rail a { height: 100%; display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px 18px 14px 14px; background: var(--white); color: inherit; text-decoration: none; transition: background-color 160ms; }
+.rail a:active { background: var(--paper-2); }
+.rail img { width: 88px; height: 88px; object-fit: cover; }
+.rail img.rail-crest { object-fit: contain; padding: 10px; background: var(--navy); }
+.rail strong { display: block; font-family: var(--display); font-weight: 700; font-size: 1.3125rem; line-height: 1.05; text-transform: uppercase; transition: color 160ms; }
+.rail .meta { display: block; margin-top: 6px; font-size: var(--s-small); }
+.stream-head { padding-top: clamp(48px, 6vw, 96px); background: var(--paper); }
+.stream-head .sec-head { margin-bottom: 0; }
+
+.article--photo { padding-top: clamp(40px, 5vw, 72px); }
+.story-photo { margin-bottom: clamp(40px, 5vw, 72px); }
+.story-photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 45%; }
+.story-photo figcaption { margin-top: 14px; max-width: 60ch; font-size: var(--s-body); color: var(--muted); }
+
+.mvp { color: var(--white); }
+.mvp.mvp--blue, .article.mvp--blue:nth-of-type(even) { background: var(--blue-deep); }
+.mvp.mvp--red, .article.mvp--red:nth-of-type(even) { background: var(--red-deep); }
+.mvp .meta { color: var(--on-dark); }
+.mvp-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 32px var(--gap); align-items: center; }
+.mvp-photo { grid-column: 1 / 6; }
+.mvp-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.mvp-text { grid-column: 7 / 13; max-width: 60ch; font-size: var(--s-lead); line-height: 1.5; }
+.mvp-text h2 { font-size: var(--s-head); }
+.mvp-text p + p { margin-top: 1em; }
+.ficha { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); margin: 32px 0; }
+.ficha div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; background: rgba(255, 255, 255, 0.12); padding: 16px; }
+.ficha dt { font-size: var(--s-small); color: var(--on-dark); }
+.ficha dd { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(2.5rem, 1.6rem + 2.6vw, 4.5rem); line-height: 0.9; font-variant-numeric: tabular-nums; }
+.mvp-text .ficha-note { font-size: var(--s-small); color: var(--on-dark); }
+
+@media (max-width: 900px) {
+    .lead, .rail { grid-column: 1 / -1; }
+    .mvp-photo { grid-column: 1 / -1; max-width: 520px; }
+    .mvp-text { grid-column: 1 / -1; }
+}
+@media (max-width: 700px) {
+    .story-photo img { aspect-ratio: 3 / 2; }
+    .rail a { grid-template-columns: 72px minmax(0, 1fr); }
+    .rail img { width: 72px; height: 72px; }
+    .ficha { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .lead-img img { transition: none; } }
