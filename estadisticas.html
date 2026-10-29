@@ -1,332 +1,216 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estadísticas - TINELLERS FC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        fc: {
-                            navy: '#09122c',
-                            blue: '#004d98',
-                            red: '#a50044',
-                            yellow: '#edbb00',
-                            darkCard: '#0f172a'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Montserrat', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estadísticas · Tinellers FC</title>
+<meta name="description" content="Goleadores, asistentes, paradas y MVP de la plantilla de Tinellers FC en la temporada 2026.">
+<meta name="theme-color" content="#070d26">
+<link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-fc-blue selection:text-white">
+<body id="top">
+<a class="sr-only skip" href="#main">Saltar al contenido</a>
+<header class="site-head">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="Tinellers FC, inicio"><img src="img/escudo-tinellers-96.webp" alt="" width="96" height="106"><span>Tinellers FC</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="partidos.html">Partidos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="estadisticas.html" aria-current="page">Estadísticas</a>
+      <a href="quienes-somos.html">Club</a>
+      <a class="btn" href="apuestas.html">Quiniela</a>
+    </nav>
+    <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Inicio</a>
+    <a href="partidos.html">Partidos</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="estadisticas.html" aria-current="page">Estadísticas</a>
+    <a href="quienes-somos.html">Club</a>
+    <a class="btn" href="apuestas.html">Quiniela</a>
+  </div>
+</header>
+<main id="main">
+<section class="page-head" aria-labelledby="h1">
+  <div class="wrap ph-grid">
+    <div><h1 id="h1" data-r>Estadísticas</h1><p class="ph-sub" data-r>Goles, asistencias, paradas y MVP de la plantilla tras dos jornadas de la temporada 2026.</p></div>
+    <div class="ph-crest" data-r><img class="" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC: dos jarras de cerveza brindando bajo el nombre del club" width="900" height="997"></div>
+  </div>
+</section>
 
-    <!-- HEADER INSTITUCIONAL UNIFICADO -->
-    <header class="sticky top-0 z-50 bg-slate-100/95 backdrop-blur-md border-b border-slate-300 shadow-sm">
-        <div class="bg-gradient-to-r from-fc-blue via-fc-navy to-fc-red px-4 py-1 text-center text-[11px] font-black tracking-widest text-white uppercase flex items-center justify-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-fc-yellow animate-ping"></span>
-            <span>TINELLERS FC • EST. 2026 • "EL ESCUDO, LA CERVEZA Y EL CÉSPED"</span>
-        </div>
+<section class="section section--white" aria-labelledby="h-lideres">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-lideres">Líderes de la plantilla</h2><p class="meta">Dorsal tras el nombre</p></div>
+    <table class="lineup lineup--3">
+      <caption class="sr-only">Líderes estadísticos de Tinellers FC</caption>
+      <thead class="sr-only"><tr><th scope="col">Categoría</th><th scope="col">Jugador</th><th scope="col">Cifra</th></tr></thead>
+      <tbody>
+      <tr data-r><td class="c-cat">Máximo goleador</td><td class="c-match"><span class="team us"><img src="img/escudo-tinellers-96.webp" alt="" width="34" height="38">Alfa Junior Umaro · 4</span></td><td class="c-date">3 goles</td></tr>
+      <tr data-r><td class="c-cat">Más asistencias</td><td class="c-match">Alfa Junior Umaro · 4 y Luis Núñez · 6</td><td class="c-date">2 cada uno</td></tr>
+      <tr data-r><td class="c-cat">Más paradas</td><td class="c-match">Arian Burguillo · 1</td><td class="c-date">12 paradas</td></tr>
+      <tr data-r><td class="c-cat">Premios MVP</td><td class="c-match">Piero Malasquez · 16 y Arian Burguillo · 1</td><td class="c-date">1 cada uno</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section" aria-labelledby="h-tabla">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-tabla">Estadísticas de la plantilla</h2><p class="meta">Pulsa una columna para ordenar</p></div>
+    <div class="table-scroll" data-r>
+      <table class="data" data-sort>
+        <caption class="sr-only">Estadísticas individuales de la temporada 2026</caption>
+        <thead><tr>
+          <th scope="col"><button type="button">Dorsal</button></th><th scope="col"><button type="button">Jugador</button></th><th scope="col"><button type="button" aria-label="Partidos jugados">PJ</button></th><th scope="col"><button type="button">Goles</button></th><th scope="col"><button type="button" aria-label="Asistencias">Asist.</button></th><th scope="col"><button type="button">Paradas</button></th><th scope="col"><button type="button">MVP</button></th><th scope="col"><button type="button">Tarjetas</button></th>
+        </tr></thead>
+        <tbody>
+      <tr data-r>
+        <td class="dorsal num" data-v="4">4</td>
+        <td class="player">Alfa Junior Umaro</td>
+        <td class="num" data-v="2">2</td>
+        <td class="hi num" data-v="3">3</td><td class="hi num" data-v="2">2</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="90">90</td>
+        <td class="player">Alejandro Cuevas</td>
+        <td class="num" data-v="1">1</td>
+        <td class="hi num" data-v="2">2</td><td class="hi num" data-v="1">1</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="16">16</td>
+        <td class="player">Piero Malasquez</td>
+        <td class="num" data-v="2">2</td>
+        <td class="hi num" data-v="2">2</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="hi num" data-v="1">1</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="6">6</td>
+        <td class="player">Luis Núñez</td>
+        <td class="num" data-v="2">2</td>
+        <td class="hi num" data-v="1">1</td><td class="hi num" data-v="2">2</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="22">22</td>
+        <td class="player">Junior De Jesus</td>
+        <td class="num" data-v="1">1</td>
+        <td class="hi num" data-v="1">1</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="8">8</td>
+        <td class="player">Esteban Morales</td>
+        <td class="num" data-v="2">2</td>
+        <td class="zero num" data-v="0">–</td><td class="hi num" data-v="1">1</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="1"><span class="yellow" role="img" aria-label="Una tarjeta amarilla"></span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="14">14</td>
+        <td class="player">Eloy Marte</td>
+        <td class="num" data-v="2">2</td>
+        <td class="zero num" data-v="0">–</td><td class="hi num" data-v="1">1</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="1">1</td>
+        <td class="player">Arian Burguillo<span class="tag">Portero</span></td>
+        <td class="num" data-v="2">2</td>
+        <td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="hi num" data-v="12">12</td><td class="hi num" data-v="1">1</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="10">10</td>
+        <td class="player">Jefferson Marte</td>
+        <td class="num" data-v="2">2</td>
+        <td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="11">11</td>
+        <td class="player">Sebas Rodriguez Yañez</td>
+        <td class="num" data-v="2">2</td>
+        <td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="23">23</td>
+        <td class="player">Nacho Escalante</td>
+        <td class="num" data-v="2">2</td>
+        <td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+      <tr data-r>
+        <td class="dorsal num" data-v="25">25</td>
+        <td class="player">Fidel Escalante<span class="tag tag--red">Sancionado J2</span></td>
+        <td class="num" data-v="0">0</td>
+        <td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td><td class="zero num" data-v="0">–</td>
+        <td data-v="0"><span class="zero">–</span></td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section class="goals" aria-labelledby="h-goals">
+  <div class="wrap goals-grid">
+    <div class="goals-left">
+      <div data-r>
+        <h2 id="h-goals">Goles de la temporada</h2>
+        <p class="note">Nueve goles en dos jornadas, repartidos entre cinco jugadores. Cuatro encajados.</p>
+      </div>
+      <div data-r>
+        <p class="total-num">9</p>
+        <p class="total-cap">goles a favor tras la jornada 2</p>
+      </div>
+    </div>
+    <div class="slip" data-r>
+      <table>
+        <caption class="sr-only">Goleadores por jornada</caption>
+        <tbody>
+          <tr><th scope="rowgroup" colspan="2">Jornada 1 · Balkans FC 2–3</th></tr>
+          <tr><td class="lead">Alfa Junior Umaro</td><td>1</td></tr>
+          <tr><td class="lead">Luis Núñez</td><td>1</td></tr>
+          <tr><td class="lead">Piero Malasquez</td><td>1</td></tr>
+          <tr><th scope="rowgroup" colspan="2">Jornada 2 · La Banda del Patio 6–2</th></tr>
+          <tr><td class="lead">Alfa Junior Umaro</td><td>2</td></tr>
+          <tr><td class="lead">Alejandro Cuevas</td><td>2</td></tr>
+          <tr><td class="lead">Piero Malasquez</td><td>1</td></tr>
+          <tr><td class="lead">Junior De Jesus</td><td>1</td></tr>
+          <tr class="sum-gap"><td colspan="2"></td></tr>
+          <tr class="sum"><td class="lead">Total</td><td>9</td></tr>
+        </tbody>
+      </table>
+      <a class="more slip-link" href="estadisticas.html">Estadísticas completas <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-            <a href="index.html" class="flex items-center gap-3.5 group">
-                <div class="w-12 h-12 flex items-center justify-center transform group-hover:scale-105 transition duration-300">
-                    <img src="escudo.png" alt="Escudo TINELLERS FC" class="w-full h-full object-contain drop-shadow-md">
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-display font-black text-xl sm:text-2xl text-fc-navy tracking-tight group-hover:text-fc-blue transition-colors">
-                        TINELLERS <span class="text-fc-red">FC</span>
-                    </span>
-                    <span class="text-[9px] tracking-widest text-slate-500 font-bold uppercase -mt-1">Sitio Oficial</span>
-                </div>
-            </a>
+<section class="cta" aria-labelledby="h-quiniela">
+  <a class="word-band" href="apuestas.html">
+    <p class="wb-note">Quiniela de la jornada 3: elige jugador, categoría y predicción. Solo por diversión, sin dinero.</p>
+    <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 36 L34 14 M16 13 H35 V32" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square"/></svg>
+    <h2 id="h-quiniela">Apuesta</h2>
+  </a>
+</section>
 
-            <!-- Navegación con opción Estadísticas activa -->
-            <nav class="hidden md:flex items-center space-x-1.5 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/60 shadow-inner">
-                <a href="index.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Inicio</a>
-                <a href="quienes-somos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Quiénes Somos</a>
-                <a href="noticias.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Noticias</a>
-                <a href="partidos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Partidos</a>
-                <a href="estadisticas.html" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-fc-blue shadow-md transition">Estadísticas</a>
-            </nav>
-
-            <div class="md:hidden">
-                <button id="menu-btn" class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
-            </div>
-        </div>
-
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-b border-slate-300 px-6 py-5 space-y-2 shadow-2xl">
-            <a href="index.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Inicio</a>
-            <a href="quienes-somos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Quiénes Somos</a>
-            <a href="noticias.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Noticias</a>
-            <a href="partidos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Partidos</a>
-            <a href="estadisticas.html" class="block px-4 py-3 rounded-xl text-white font-bold bg-fc-blue">Estadísticas</a>
-        </div>
-    </header>
-
-    <!-- CONTENIDO PRINCIPAL: ESTADÍSTICAS -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow space-y-12">
-        <div class="text-center max-w-3xl mx-auto">
-            <span class="text-fc-blue font-bold text-xs uppercase tracking-widest bg-blue-100/80 px-3.5 py-1.5 rounded-full border border-blue-200">Plantilla Oficial 2026</span>
-            <h1 class="font-display text-3xl sm:text-5xl font-black uppercase text-fc-navy mt-3">Centro de Estadísticas</h1>
-            <p class="text-slate-600 text-sm mt-3">Rendimiento avanzado y estadísticas de la plantilla unificadas al estilo profesional.</p>
-        </div>
-
-        <!-- TARJETAS DESTACADAS (LÍDERES) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-red relative overflow-hidden">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-2xl bg-red-100 text-fc-red flex items-center justify-center"><i class="fa-solid fa-futbol"></i></div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Pichichi</span>
-                </div>
-                <h3 class="font-display font-bold text-lg text-fc-navy">Alfa Junior Umaro</h3>
-                <p class="text-xs text-slate-500 mb-4">Dorsal #4</p>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-fc-red">3</span>
-                    <span class="text-xs text-slate-500 uppercase font-semibold">Goles</span>
-                </div>
-            </div>
-
-            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-blue relative overflow-hidden">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-100 text-fc-blue flex items-center justify-center"><i class="fa-solid fa-hands-holding-circle"></i></div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Máx. Asistente</span>
-                </div>
-                <h3 class="font-display font-bold text-lg text-fc-navy">Alfa / Luis</h3>
-                <p class="text-xs text-slate-500 mb-4">Dorsal #4 / #6</p>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-fc-blue">2</span>
-                    <span class="text-xs text-slate-500 uppercase font-semibold">Asistencias</span>
-                </div>
-            </div>
-
-            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-emerald-500 relative overflow-hidden">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center"><i class="fa-solid fa-shield-cat"></i></div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Paradas Récord</span>
-                </div>
-                <h3 class="font-display font-bold text-lg text-fc-navy">Arian Burguillo</h3>
-                <p class="text-xs text-slate-500 mb-4">Dorsal #1</p>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-emerald-600">12</span>
-                    <span class="text-xs text-slate-500 uppercase font-semibold">Total Paradas</span>
-                </div>
-            </div>
-
-            <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-yellow relative overflow-hidden">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center"><i class="fa-solid fa-crown"></i></div>
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Premios MVP</span>
-                </div>
-                <h3 class="font-display font-bold text-lg text-fc-navy">Oscar / Arian</h3>
-                <p class="text-xs text-slate-500 mb-4">Galardones</p>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-3xl font-black text-amber-600">1 c/u</span>
-                    <span class="text-xs text-slate-500 uppercase font-semibold">MVPs</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABLA MAESTRA UNIFICADA DE LA PLANTILLA -->
-        <div class="fc-card rounded-3xl overflow-hidden shadow-xl border border-slate-300">
-            <div class="p-6 bg-slate-200/70 border-b border-slate-300 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div>
-                    <h2 class="font-display font-bold text-xl text-fc-navy">Estadísticas de la Plantilla</h2>
-                    <p class="text-xs text-slate-600">Rendimiento acumulado y disciplinario</p>
-                </div>
-                <span class="text-xs bg-white text-fc-blue px-3.5 py-1.5 rounded-xl border border-slate-300 font-bold shadow-sm">
-                    <i class="fa-solid fa-futbol mr-1.5"></i> Temporada 2026
-                </span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-slate-100 text-xs text-slate-600 uppercase border-b border-slate-300">
-                        <tr>
-                            <th class="p-4 text-center">Dorsal</th>
-                            <th class="p-4">Jugador</th>
-                            <th class="p-4 text-center">PJ</th>
-                            <th class="p-4 text-center">Goles</th>
-                            <th class="p-4 text-center">Asist.</th>
-                            <th class="p-4 text-center">Paradas</th>
-                            <th class="p-4 text-center">MVPs</th>
-                            <th class="p-4 text-center">Tarjetas</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 text-slate-700">
-                        <!-- Alfa Junior Umaro -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#4</td>
-                            <td class="p-4 font-bold text-fc-navy">Alfa Junior Umaro</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center font-black text-fc-red">3</td>
-                            <td class="p-4 text-center font-black text-fc-blue">2</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Alejandro Cuevas -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#90</td>
-                            <td class="p-4 font-bold text-fc-navy">Alejandro Cuevas</td>
-                            <td class="p-4 text-center font-semibold">1</td>
-                            <td class="p-4 text-center font-black text-fc-red">2</td>
-                            <td class="p-4 text-center font-black text-fc-blue">1</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Piero Malasquez -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#16</td>
-                            <td class="p-4 font-bold text-fc-navy">Piero Malasquez</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center font-black text-fc-red">2</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center font-bold text-amber-600">1 <i class="fa-solid fa-crown text-xs ml-1"></i></td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Luis Núñez -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#6</td>
-                            <td class="p-4 font-bold text-fc-navy">Luis Núñez</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center font-black text-fc-red">1</td>
-                            <td class="p-4 text-center font-black text-fc-blue">2</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Junior De Jesus -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#22</td>
-                            <td class="p-4 font-bold text-fc-navy">Junior De Jesus</td>
-                            <td class="p-4 text-center font-semibold">1</td>
-                            <td class="p-4 text-center font-black text-fc-red">1</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Esteban Morales -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#8</td>
-                            <td class="p-4 font-bold text-fc-navy">Esteban Morales</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center font-black text-fc-blue">1</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center"><span class="inline-block w-4 h-5 bg-yellow-400 rounded-sm shadow-sm border border-yellow-500" title="Tarjeta Amarilla"></span></td>
-                        </tr>
-                        <!-- Eloy Marte -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#14</td>
-                            <td class="p-4 font-bold text-fc-navy">Eloy Marte</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center font-black text-fc-blue">1</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Arian Burguillo -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#1</td>
-                            <td class="p-4 font-bold text-fc-navy flex items-center gap-2">Arian Burguillo <span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded font-bold">Portero</span></td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center font-black text-emerald-700">12 <span class="text-[10px] text-slate-500 font-normal">(3 J1 + 9 J2)</span></td>
-                            <td class="p-4 text-center font-bold text-amber-600">1 <i class="fa-solid fa-crown text-xs ml-1"></i></td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Jefferson Marte -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#10</td>
-                            <td class="p-4 font-bold text-slate-600">Jefferson Marte</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Sebas Rodriguez Yañez -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#11</td>
-                            <td class="p-4 font-bold text-slate-600">Sebas Rodriguez Yañez</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Nacho Escalante -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#23</td>
-                            <td class="p-4 font-bold text-slate-600">Nacho Escalante</td>
-                            <td class="p-4 text-center font-semibold">2</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                        <!-- Fidel Escalante -->
-                        <tr class="hover:bg-slate-100/80 transition">
-                            <td class="p-4 text-center font-black text-fc-blue">#25</td>
-                            <td class="p-4 font-bold text-slate-600 flex items-center gap-2">Fidel Escalante <span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded font-bold">Sancionado J2</span></td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">0</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                            <td class="p-4 text-center text-slate-400">-</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER OFICIAL UNIFICADO -->
-    <footer class="bg-fc-navy text-slate-400 py-12 border-t border-slate-800 text-xs mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-3">
-                <span class="w-3 h-3 rounded-full bg-fc-blue"></span>
-                <span class="w-3 h-3 rounded-full bg-white"></span>
-                <span class="w-3 h-3 rounded-full bg-fc-red"></span>
-                <span class="font-display font-bold text-white text-sm tracking-wider uppercase">TINELLERS FC</span>
-            </div>
-            <div class="text-center md:text-right space-y-1">
-                <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
-                <p>Sitio web oficial creado y desarrollado por <span class="text-fc-yellow font-semibold">Franklin Jiménez Santana</span>.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        document.getElementById('menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-    </script>
+</main>
+<footer class="site-foot">
+  <div class="wrap foot-cols">
+    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="quienes-somos.html#plantilla">Plantilla</a><a href="noticias.html">Noticias</a></div>
+    <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
+    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="apuestas.html">Quiniela de la jornada</a></div>
+    <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
+  </div>
+  <div class="wrap foot-mid"><div data-r><img class="" src="img/escudo-tinellers-320.webp" alt="Escudo de Tinellers FC" width="320" height="354"></div><h2 class="foot-motto" data-r>El escudo, la cerveza y el césped</h2></div>
+  <div class="wrap foot-mark">
+    <p class="mark" aria-hidden="true" data-r>Tinellers FC</p>
+    <div class="legal"><p>© 2026 Tinellers FC. Web creada por Franklin Jiménez Santana.</p><a href="privacidad.html">Privacidad</a> · <a href="#top">Volver arriba</a></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
 </body>
 </html>

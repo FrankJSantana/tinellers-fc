@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiniela · Tinellers FC</title>
+<meta name="description" content="Apuesta por diversión quién la rompe en la jornada 3: Cocidos Madrileños FC contra Tinellers FC.">
+<meta name="theme-color" content="#070d26">
+<link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
+<script>document.documentElement.classList.add('js')</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+<a class="sr-only skip" href="#main">Saltar al contenido</a>
+<header class="site-head">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="Tinellers FC, inicio"><img src="img/escudo-tinellers-96.webp" alt="" width="96" height="106"><span>Tinellers FC</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="partidos.html">Partidos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="estadisticas.html">Estadísticas</a>
+      <a href="quienes-somos.html">Club</a>
+      <a class="btn" href="apuestas.html" aria-current="page">Quiniela</a>
+    </nav>
+    <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Inicio</a>
+    <a href="partidos.html">Partidos</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="quienes-somos.html">Club</a>
+    <a class="btn" href="apuestas.html">Quiniela</a>
+  </div>
+</header>
+<main id="main">
+<section class="page-head" aria-labelledby="h1">
+  <div class="wrap ph-grid">
+    <div><h1 id="h1" data-r>Quiniela</h1><p class="ph-sub" data-r>Jornada 3: Cocidos Madrileños FC contra Tinellers FC, domingo 8 de noviembre a las 19:00. Solo por diversión, sin dinero de por medio.</p></div>
+    <div class="ph-crest" data-r><img class="" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC: dos jarras de cerveza brindando bajo el nombre del club" width="900" height="997"></div>
+  </div>
+</section>
+
+<section class="section section--tight" id="partido" aria-labelledby="h-partido">
+  <div class="wrap"><div class="sec-head" data-r><h2 id="h-partido">Partido de la jornada</h2><p class="meta">Jornada 3 · Liga municipal de fútbol 7</p></div></div>
+  <div class="match match--compact">
+    <div class="mp mp--home" data-r><img class="mp-crest" src="img/escudo-cocidos.svg" alt="Escudo de Cocidos Madrileños FC" width="212" height="252"><p class="mp-name"><b>Cocidos Madrileños FC</b><span>Local</span></p></div>
+    <div class="seam" data-r>
+      <p class="seam-date">Domingo 8 nov</p>
+      <p class="seam-time">19:00</p>
+      <p class="seam-venue">IDB Almudena, F7: 1 · Ciudad Lineal</p>
+      <div class="count" data-kickoff="2026-11-08T19:00:00+01:00" role="timer" aria-label="Tiempo hasta el inicio del partido">
+        <div><b data-u="d">–</b><span>días</span></div>
+        <div><b data-u="h">–</b><span>horas</span></div>
+        <div><b data-u="m">–</b><span>min</span></div>
+        <div><b data-u="s">–</b><span>seg</span></div>
+      </div>
+    </div>
+    <div class="mp mp--away" data-r><img class="mp-crest" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC" width="900" height="997"><p class="mp-name"><b>Tinellers FC</b><span>Visitante</span></p></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="h-apostar">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-apostar">Haz tu apuesta</h2><p class="meta">Una apuesta por persona y jornada</p></div>
+    <div class="bet-layout">
+      <div class="bet-left">
+        <section id="auth-section" class="card card--blue" aria-labelledby="h-auth" data-r>
+          <div id="auth-logged-out">
+            <h3 id="h-auth">Entra para apostar</h3>
+            <p class="hint">Puedes cambiar tu apuesta hasta el partido.</p>
+            <div id="buttonDiv"></div>
+            <form id="local-login" class="hidden form-gap" novalidate>
+              <label for="local-name" class="sr-only">Tu nombre o apodo</label>
+              <input id="local-name" class="field" type="text" maxlength="30" autocomplete="nickname" placeholder="Tu nombre o apodo">
+              <button type="submit" class="btn btn--white" style="width:100%">Entrar</button>
+              <p class="meta" style="color:#fff">Modo local: el acceso con Google se activa al configurar el Client ID.</p>
+            </form>
+          </div>
+          <div id="auth-logged-in" class="hidden user-row">
+            <div class="who">
+              <img id="user-avatar" class="avatar hidden" alt="" referrerpolicy="no-referrer" width="52" height="52">
+              <div id="user-initial" class="avatar"></div>
+              <div><p id="user-name"></p><small>Sesión iniciada</small></div>
+            </div>
+            <button id="logout-btn" type="button" class="link-btn">Salir</button>
+          </div>
+        </section>
+
+        <section id="apuesta-section" class="card hidden" aria-labelledby="h-bet">
+          <h3 id="h-bet">Tu apuesta</h3>
+          <p id="apuesta-estado" class="hint">Elige jugador, qué va a pasar y cuánto.</p>
+          <form id="apuesta-form" class="form-gap" novalidate>
+            <div>
+              <label for="jugador" class="legend">Jugador</label>
+              <select id="jugador" class="field" required></select>
+            </div>
+            <fieldset>
+              <legend class="legend">Categoría</legend>
+              <div id="categorias" class="cat-grid"></div>
+            </fieldset>
+            <fieldset>
+              <legend id="prediccion-titulo" class="legend">Predicción</legend>
+              <div id="opciones" class="opt-row"></div>
+            </fieldset>
+            <div>
+              <button type="submit" class="btn"><span id="submit-label">Guardar apuesta</span></button>
+              <p id="form-error" class="error" role="alert"></p>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <section class="bets" aria-labelledby="h-list" data-r>
+        <div class="sec-head"><h3 id="h-list">Apuestas registradas</h3><span id="apuestas-count" class="meta num">0 apuestas</span></div>
+        <div class="table-scroll">
+          <table class="data">
+            <thead><tr><th scope="col">Apostante</th><th scope="col">Jugador</th><th scope="col">Categoría</th><th scope="col">Predicción</th></tr></thead>
+            <tbody id="apuestas-body"></tbody>
+          </table>
+          <p id="apuestas-vacio" class="bets-empty">Todavía no hay apuestas. ¡Sé el primero!</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<footer class="site-foot">
+  <div class="wrap foot-cols">
+    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="quienes-somos.html#plantilla">Plantilla</a><a href="noticias.html">Noticias</a></div>
+    <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
+    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="apuestas.html">Quiniela de la jornada</a></div>
+    <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
+  </div>
+  <div class="wrap foot-mid"><div data-r><img class="" src="img/escudo-tinellers-320.webp" alt="Escudo de Tinellers FC" width="320" height="354"></div><h2 class="foot-motto" data-r>El escudo, la cerveza y el césped</h2></div>
+  <div class="wrap foot-mark">
+    <p class="mark" aria-hidden="true" data-r>Tinellers FC</p>
+    <div class="legal"><p>© 2026 Tinellers FC. Web creada por Franklin Jiménez Santana.</p><a href="privacidad.html">Privacidad</a> · <a href="#top">Volver arriba</a></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/apuestas.js"></script>
+</body>
+</html>

@@ -1,250 +1,201 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TINELLERS FC - Sitio Web Oficial</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        fc: {
-                            navy: '#09122c',
-                            blue: '#004d98',
-                            red: '#a50044',
-                            yellow: '#edbb00',
-                            darkCard: '#0f172a'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Montserrat', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tinellers FC · Web oficial del club de fútbol 7 de Ciudad Lineal</title>
+<meta name="description" content="Web oficial de Tinellers FC: próximo partido, calendario, resultados, goles, noticias y la quiniela de la jornada.">
+<meta name="theme-color" content="#070d26">
+<link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-fc-blue selection:text-white">
+<body id="top">
+<a class="sr-only skip" href="#main">Saltar al contenido</a>
+<header class="site-head">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="Tinellers FC, inicio"><img src="img/escudo-tinellers-96.webp" alt="" width="96" height="106"><span>Tinellers FC</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="partidos.html">Partidos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="estadisticas.html">Estadísticas</a>
+      <a href="quienes-somos.html">Club</a>
+      <a class="btn" href="apuestas.html">Quiniela</a>
+    </nav>
+    <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html" aria-current="page">Inicio</a>
+    <a href="partidos.html">Partidos</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="quienes-somos.html">Club</a>
+    <a class="btn" href="apuestas.html">Quiniela</a>
+  </div>
+</header>
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+  <div class="hero-field">
+    <div class="wrap">
+      <div class="hero-text">
+        <h1 id="h1" data-r><span>Tinellers</span> <span>FC</span></h1>
+        <p class="hero-sub" data-r>Club de fútbol 7 de Ciudad Lineal, Madrid. Jugamos <b>cada domingo a las 19:00</b>.</p>
+      </div>
+    </div>
+  </div>
+  <div class="hero-band">
+    <div class="wrap">
+      <p class="motto" data-r>El escudo, la cerveza y el césped.</p>
+      <a class="btn btn--navy" href="#proximo" data-r>Próximo partido</a>
+    </div>
+  </div>
+  <figure class="hero-crest"><img class="" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC: dos jarras de cerveza brindando bajo el nombre del club" width="900" height="997"></figure>
+</section>
 
-    <!-- HEADER INSTITUCIONAL CON ESCUDO (escudo.png) Y EST. 2026 -->
-    <header class="sticky top-0 z-50 bg-slate-100/95 backdrop-blur-md border-b border-slate-300 shadow-sm">
-        <div class="bg-gradient-to-r from-fc-blue via-fc-navy to-fc-red px-4 py-1 text-center text-[11px] font-black tracking-widest text-white uppercase flex items-center justify-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-fc-yellow animate-ping"></span>
-            <span>TINELLERS FC • EST. 2026 • "EL ESCUDO, LA CERVEZA Y EL CÉSPED"</span>
+<section class="match" id="proximo" aria-labelledby="h-proximo">
+  <div class="mp mp--home">
+    <div class="mp-head" data-r>
+      <h2 id="h-proximo">Próximo partido</h2>
+      <p class="mp-meta">Jornada 3 · Liga municipal de fútbol 7</p>
+    </div>
+    <img class="mp-crest" src="img/escudo-cocidos.svg" alt="Escudo de Cocidos Madrileños FC" width="212" height="252">
+    <div class="mp-foot" data-r>
+      <p class="mp-name"><b>Cocidos Madrileños FC</b><span>Local</span></p>
+      <div class="mp-actions">
+        <a class="btn btn--navy btn--sm" href="partidos.html#resultados">Calendario</a>
+        <a class="btn btn--white btn--sm" href="https://www.google.com/maps/search/?api=1&amp;query=IDB%20Almudena%2C%20Ciudad%20Lineal%2C%20Madrid" target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+    </div>
+  </div>
+  <div class="seam" data-r>
+    <p class="seam-date">Domingo 8 nov</p>
+    <p class="seam-time">19:00</p>
+    <p class="seam-venue">IDB Almudena, F7: 1<br>Ciudad Lineal</p>
+    <div class="count" data-kickoff="2026-11-08T19:00:00+01:00" role="timer" aria-label="Tiempo hasta el inicio del partido">
+      <div><b data-u="d">–</b><span>días</span></div>
+      <div><b data-u="h">–</b><span>horas</span></div>
+      <div><b data-u="m">–</b><span>min</span></div>
+      <div><b data-u="s">–</b><span>seg</span></div>
+    </div>
+  </div>
+  <div class="mp mp--away">
+    <img class="mp-crest" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC" width="900" height="997">
+    <div class="mp-foot" data-r>
+      <p class="mp-name"><b>Tinellers FC</b><span>Visitante</span></p>
+      <div class="mp-actions">
+        <a class="btn btn--navy btn--sm" href="apuestas.html">Haz tu quiniela</a>
+        <a class="btn btn--white btn--sm" href="quienes-somos.html#plantilla">Plantilla</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--white" id="resultados" aria-labelledby="h-resultados">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-resultados">Calendario y resultados</h2><a class="more" href="partidos.html">Todos los partidos <span aria-hidden="true">→</span></a></div>
+    <table class="lineup">
+      <caption class="sr-only">Calendario y resultados de Tinellers FC</caption>
+      <thead class="sr-only"><tr><th scope="col">Partido</th><th scope="col">Resultado</th><th scope="col">Jornada</th><th scope="col">Fecha</th></tr></thead>
+      <tbody>
+      <tr data-r>
+        <td class="c-match"><span class="teams"><span class="team"><img src="img/escudo-cocidos.svg" alt="" width="34" height="38">Cocidos Madrileños FC</span><span class="vs">–</span><span class="team us"><img src="img/escudo-tinellers-96.webp" alt="" width="34" height="38">Tinellers FC</span></span></td>
+        <td class="c-res res"><span class="next-tag">19:00</span></td>
+        <td class="c-jor">Jornada 3</td>
+        <td class="c-date">Dom 8 nov</td>
+      </tr>
+      <tr data-r>
+        <td class="c-match"><span class="teams"><span class="team us"><img src="img/escudo-tinellers-96.webp" alt="" width="34" height="38">Tinellers FC</span><span class="vs">–</span><span class="team"><span class="crest-ph" aria-hidden="true">LB</span>La Banda del Patio</span></span></td>
+        <td class="c-res res"><b class="win">6–2</b> Victoria</td>
+        <td class="c-jor">Jornada 2</td>
+        <td class="c-date">Oct 2026</td>
+      </tr>
+      <tr data-r>
+        <td class="c-match"><span class="teams"><span class="team"><span class="crest-ph" aria-hidden="true">BF</span>Balkans FC</span><span class="vs">–</span><span class="team us"><img src="img/escudo-tinellers-96.webp" alt="" width="34" height="38">Tinellers FC</span></span></td>
+        <td class="c-res res"><b class="win">2–3</b> Victoria</td>
+        <td class="c-jor">Jornada 1</td>
+        <td class="c-date">Dom 18 oct</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="goals" aria-labelledby="h-goals">
+  <div class="wrap goals-grid">
+    <div class="goals-left">
+      <div data-r>
+        <h2 id="h-goals">Goles de la temporada</h2>
+        <p class="note">Nueve goles en dos jornadas, repartidos entre cinco jugadores. Cuatro encajados.</p>
+      </div>
+      <div data-r>
+        <p class="total-num">9</p>
+        <p class="total-cap">goles a favor tras la jornada 2</p>
+      </div>
+    </div>
+    <div class="slip" data-r>
+      <table>
+        <caption class="sr-only">Goleadores por jornada</caption>
+        <tbody>
+          <tr><th scope="rowgroup" colspan="2">Jornada 1 · Balkans FC 2–3</th></tr>
+          <tr><td class="lead">Alfa Junior Umaro</td><td>1</td></tr>
+          <tr><td class="lead">Luis Núñez</td><td>1</td></tr>
+          <tr><td class="lead">Piero Malasquez</td><td>1</td></tr>
+          <tr><th scope="rowgroup" colspan="2">Jornada 2 · La Banda del Patio 6–2</th></tr>
+          <tr><td class="lead">Alfa Junior Umaro</td><td>2</td></tr>
+          <tr><td class="lead">Alejandro Cuevas</td><td>2</td></tr>
+          <tr><td class="lead">Piero Malasquez</td><td>1</td></tr>
+          <tr><td class="lead">Junior De Jesus</td><td>1</td></tr>
+          <tr class="sum-gap"><td colspan="2"></td></tr>
+          <tr class="sum"><td class="lead">Total</td><td>9</td></tr>
+        </tbody>
+      </table>
+      <a class="more slip-link" href="estadisticas.html">Estadísticas completas <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="h-news">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-news">Últimas noticias</h2><a class="more" href="noticias.html">Todas las noticias <span aria-hidden="true">→</span></a></div>
+    <div class="news-grid">
+      <a class="news-main" href="noticias.html#goleada" data-r>
+        <div class="nm-visual" aria-hidden="true"><img class="" src="img/escudo-tinellers-320.webp" alt="" width="320" height="354"><span class="nm-score">6–2</span><span class="nm-rival">La Banda del Patio</span></div>
+        <div class="nm-text">
+          <h3>Goleada 6–2 a La Banda del Patio</h3>
+          <p class="meta">Crónica · Jornada 2 · Octubre 2026</p>
+          <p>Exhibición coral: Alfa Umaro y Alejandro Cuevas firman dos goles cada uno, y Arian Burguillo se lleva el MVP bajo palos.</p>
         </div>
+      </a>
+      <ul class="news-list">
+        <li data-r><a href="noticias.html#sancion"><h3>Sanción interna a Fidel Escalante</h3><p class="meta">Comunicado · Temporada 2026</p><p>No jugó la jornada 2 tras faltar sin aviso estando convocado y volverá desde el banquillo.</p></a></li>
+        <li data-r><a href="noticias.html#debut"><h3>Debut con victoria ante Balkans FC</h3><p class="meta">Crónica · Jornada 1 · 18 de octubre</p><p>Victoria 2–3 a domicilio con goles de Alfa Umaro, Luis Núñez y Oscar Piero Malasquez, MVP del partido.</p></a></li>
+        <li data-r><a href="noticias.html#club"><h3>Franklin y los capitanes, al mando</h3><p class="meta">Club · Temporada 2026</p><p>El fundador dirige el club con los capitanes Luis Núñez, Esteban Morales y Arian Burguillo.</p></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section class="cta" aria-labelledby="h-quiniela">
+  <a class="word-band" href="apuestas.html">
+    <p class="wb-note">Quiniela de la jornada 3: elige jugador, categoría y predicción. Solo por diversión, sin dinero.</p>
+    <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 36 L34 14 M16 13 H35 V32" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square"/></svg>
+    <h2 id="h-quiniela">Apuesta</h2>
+  </a>
+</section>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
-            <a href="index.html" class="flex items-center gap-3.5 group">
-                <div class="w-12 h-12 flex items-center justify-center transform group-hover:scale-105 transition duration-300">
-                    <img src="escudo.png" alt="Escudo TINELLERS FC" class="w-full h-full object-contain drop-shadow-md">
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-display font-black text-xl sm:text-2xl text-fc-navy tracking-tight group-hover:text-fc-blue transition-colors">
-                        TINELLERS <span class="text-fc-red">FC</span>
-                    </span>
-                    <span class="text-[9px] tracking-widest text-slate-500 font-bold uppercase -mt-1">Sitio Oficial</span>
-                </div>
-            </a>
-
-            <nav class="hidden md:flex items-center space-x-1.5 bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/60 shadow-inner">
-                <a href="index.html" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-fc-blue shadow-md transition">Inicio</a>
-                <a href="quienes-somos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Quiénes Somos</a>
-                <a href="noticias.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Noticias</a>
-                <a href="partidos.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Partidos</a>
-                <a href="estadisticas.html" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:text-fc-blue hover:bg-slate-100 transition">Estadísticas</a>
-            </nav>
-
-            <div class="md:hidden">
-                <button id="menu-btn" class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
-            </div>
-        </div>
-
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-100 border-b border-slate-300 px-6 py-5 space-y-2 shadow-2xl">
-            <a href="index.html" class="block px-4 py-3 rounded-xl text-white font-bold bg-fc-blue">Inicio</a>
-            <a href="quienes-somos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Quiénes Somos</a>
-            <a href="noticias.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Noticias</a>
-            <a href="partidos.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Partidos</a>
-            <a href="estadisticas.html" class="block px-4 py-3 rounded-xl text-slate-700 font-medium">Estadísticas</a>
-        </div>
-    </header>
-
-    <!-- CUERPO PRINCIPAL -->
-    <main class="flex-grow">
-        
-        <!-- HERO BANNER -->
-        <section class="fc-hero pt-24 pb-36 text-white relative">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="max-w-3xl space-y-6">
-                    <div class="inline-flex items-center gap-2 bg-blue-500/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-blue-300 border border-blue-400/30 shadow">
-                        <span class="w-2 h-2 rounded-full bg-fc-yellow animate-ping"></span> MÓDULO OFICIAL • LIGA 2026
-                    </div>
-                    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-none text-white">
-                        BARRER EL CÉSPED, <br>
-                        <span class="text-fc-red">BRINDAR CON GLORIA.</span>
-                    </h1>
-                    <p class="text-slate-300 text-base sm:text-lg max-w-xl font-normal leading-relaxed">
-                        Pasión, hermandad y rigor competitivo. Consulta los resultados en directo, crónicas y estadísticas oficiales de la plantilla.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-4">
-                        <a href="partidos.html" class="bg-fc-red hover:bg-red-800 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition flex items-center gap-2">
-                            <i class="fa-solid fa-futbol"></i> Ver Próximos Partidos
-                        </a>
-                        <a href="estadisticas.html" class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold px-8 py-4 rounded-xl border border-white/20 transition flex items-center gap-2">
-                            <i class="fa-solid fa-chart-bar"></i> Centro de Estadísticas
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MÓDULO DE INFORMACIÓN DESTACADA (PRÓXIMO PARTIDO PRIMERO) -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 mb-16">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-                
-                <!-- 1. Tarjeta Próximo Partido (Cocidos Madrileños FC vs Tinellers FC - 08/11/2026) -->
-                <!-- 1. Tarjeta Próximo Partido (Cocidos Madrileños FC vs Tinellers FC - 08/11/2026) -->
-                <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-red flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-fc-red uppercase tracking-wider">Próximo Partido</span>
-                            <span class="bg-amber-200/80 text-amber-900 border border-amber-300 text-[10px] font-black px-3 py-0.5 rounded-full uppercase">08/11/2026</span>
-                        </div>
-                        <div class="bg-slate-200/60 p-4 rounded-2xl flex items-center justify-between mb-4 border border-slate-300/80 text-slate-900">
-                            <div class="text-center flex-1">
-                                <p class="font-bold text-xs">Cocidos Madrileños</p>
-                                <span class="text-xs text-slate-500">Local</span>
-                            </div>
-                            <span class="font-black text-sm text-fc-red px-2">VS</span>
-                            <div class="text-center flex-1">
-                                <p class="font-bold text-xs">TINELLERS FC</p>
-                                <span class="text-xs text-slate-500">Visitante</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-200">
-                        <span><i class="fa-solid fa-location-dot"></i> Polideportivo Ciudad Lineal</span>
-                        <a href="partidos.html" class="font-bold text-fc-blue hover:underline">Ver previa →</a>
-                    </div>
-                </div>
-
-                <!-- 2. Tarjeta Último Partido -->
-                <div class="fc-card rounded-3xl p-6 shadow-lg border-t-4 border-fc-blue flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-bold text-fc-blue uppercase tracking-wider">Último Resultado</span>
-                            <span class="bg-emerald-200/80 text-emerald-900 border border-emerald-300 text-[10px] font-black px-3 py-0.5 rounded-full uppercase">Jornada 2</span>
-                        </div>
-                        <div class="bg-slate-900 text-white p-4 rounded-2xl flex items-center justify-between mb-4 shadow-inner">
-                            <div class="text-center flex-1">
-                                <p class="font-bold text-xs">TINELLERS FC</p>
-                                <span class="text-3xl font-black text-fc-yellow">6</span>
-                            </div>
-                            <span class="text-slate-500 font-bold text-sm">VS</span>
-                            <div class="text-center flex-1">
-                                <p class="font-bold text-xs text-slate-300">La Banda del Patio</p>
-                                <span class="text-3xl font-black text-white">2</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-xs text-slate-600 pt-3 border-t border-slate-200">
-                        <span><i class="fa-solid fa-star text-fc-yellow"></i> MVP: Arian Burguillo</span>
-                        <a href="partidos.html" class="font-bold text-fc-blue hover:underline">Crónica →</a>
-                    </div>
-                </div>
-
-                <!-- 3. Tarjeta Rendimiento Global -->
-                <div class="fc-dark-box rounded-3xl p-6 shadow-xl text-white flex flex-col justify-between border-t-4 border-fc-yellow">
-                    <div>
-                        <span class="text-xs font-bold text-fc-yellow uppercase tracking-wider">Rendimiento Global</span>
-                        <h3 class="font-display font-bold text-xl mt-1">Líderes de la Plantilla</h3>
-                        <p class="text-slate-400 text-xs mt-2">Consulta la tabla maestra con los jugadores registrados y sus estadísticas.</p>
-                    </div>
-                    <div class="pt-4">
-                        <a href="estadisticas.html" class="block w-full py-3 bg-fc-blue hover:bg-blue-700 text-center rounded-xl font-bold text-xs uppercase tracking-wider transition shadow text-white">
-                            Ver Tabla Completa →
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SECCIÓN DE ACCESOS RÁPIDOS -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <span class="text-fc-blue font-bold text-xs uppercase tracking-widest bg-blue-100/80 px-3.5 py-1.5 rounded-full border border-blue-200">Club Oficial</span>
-                    <h2 class="font-display text-3xl font-black uppercase text-fc-navy mt-2">Áreas del Tinellers FC</h2>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="quienes-somos.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-100/70 text-fc-blue flex items-center justify-center text-xl mb-4 group-hover:bg-fc-blue group-hover:text-white transition duration-300">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-fc-blue transition">Quiénes Somos</h3>
-                    <p class="text-slate-600 text-xs">Historia, directiva y capitanes fundadores.</p>
-                </a>
-
-                <a href="noticias.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
-                    <div class="w-12 h-12 rounded-2xl bg-red-100/70 text-fc-red flex items-center justify-center text-xl mb-4 group-hover:bg-fc-red group-hover:text-white transition duration-300">
-                        <i class="fa-solid fa-newspaper"></i>
-                    </div>
-                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-fc-red transition">Noticias & Fichajes</h3>
-                    <p class="text-slate-600 text-xs">Comunicados oficiales y formato Here We Go.</p>
-                </a>
-
-                <a href="partidos.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-100/70 text-amber-700 flex items-center justify-center text-xl mb-4 group-hover:bg-amber-500 group-hover:text-white transition duration-300">
-                        <i class="fa-solid fa-calendar-days"></i>
-                    </div>
-                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-amber-600 transition">Partidos & Resultados</h3>
-                    <p class="text-slate-600 text-xs">Calendario dominguero y marcadores en vivo.</p>
-                </a>
-
-                <a href="estadisticas.html" class="fc-card p-6 rounded-3xl group block shadow-sm">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center text-xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition duration-300">
-                        <i class="fa-solid fa-trophy"></i>
-                    </div>
-                    <h3 class="font-display font-bold text-lg text-fc-navy mb-1 group-hover:text-emerald-600 transition">Estadísticas</h3>
-                    <p class="text-slate-600 text-xs">Goleadores, asistencias y MVPs de la plantilla.</p>
-                </a>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER OFICIAL -->
-    <footer class="bg-fc-navy text-slate-400 py-12 border-t border-slate-800 text-xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-3">
-                <span class="w-3 h-3 rounded-full bg-fc-blue"></span>
-                <span class="w-3 h-3 rounded-full bg-white"></span>
-                <span class="w-3 h-3 rounded-full bg-fc-red"></span>
-                <span class="font-display font-bold text-white text-sm tracking-wider uppercase">TINELLERS FC</span>
-            </div>
-            <div class="text-center md:text-right space-y-1">
-                <p class="font-bold text-slate-300">© 2026 TINELLERS FC. Todos los derechos reservados.</p>
-                <p>Sitio web oficial creado y desarrollado por <span class="text-fc-yellow font-semibold">Franklin Jiménez Santana</span>.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        document.getElementById('menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-    </script>
+</main>
+<footer class="site-foot">
+  <div class="wrap foot-cols">
+    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="quienes-somos.html#plantilla">Plantilla</a><a href="noticias.html">Noticias</a></div>
+    <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
+    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="apuestas.html">Quiniela de la jornada</a></div>
+    <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
+  </div>
+  <div class="wrap foot-mid"><div data-r><img class="" src="img/escudo-tinellers-320.webp" alt="Escudo de Tinellers FC" width="320" height="354"></div><h2 class="foot-motto" data-r>El escudo, la cerveza y el césped</h2></div>
+  <div class="wrap foot-mark">
+    <p class="mark" aria-hidden="true" data-r>Tinellers FC</p>
+    <div class="legal"><p>© 2026 Tinellers FC. Web creada por Franklin Jiménez Santana.</p><a href="privacidad.html">Privacidad</a> · <a href="#top">Volver arriba</a></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
 </body>
 </html>
