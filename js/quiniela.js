@@ -30,7 +30,11 @@ const jornadas = JORNADAS
     .filter(j => !isNaN(j.inicio))
     .sort((a, b) => a.n - b.n);
 const abierta = j => Date.now() < j.cierre.getTime();
-const porDefecto = () => jornadas.find(abierta) || jornadas[jornadas.length - 1];
+// La página muestra solo la jornada en curso: la primera cuyo partido no ha terminado.
+// Tras el cierre (24 h antes) sigue visible, cerrada, con su tabla de apuestas hasta el final del partido.
+const HORAS_PARTIDO = 3;
+const terminada = j => Date.now() > j.inicio.getTime() + HORAS_PARTIDO * 36e5;
+const porDefecto = () => jornadas.find(j => !terminada(j)) || jornadas[jornadas.length - 1];
 
 let actual = porDefecto();
 let categoria = 'goles', prediccion = null, apuestas = [], usuario = null, cargada = false;
@@ -96,9 +100,7 @@ function pintarJornadas() {
             aria-label="Jornada ${j.n}, ${j.local} contra ${j.visitante}, ${ab ? 'abierta' : 'cerrada'}"
             class="pick-btn${ab ? '' : ' is-closed'}">J${j.n}<small>${ab ? 'Abierta' : 'Cerrada'}</small></button>`;
     }).join('');
-    $('jornadas').classList.toggle('hidden', jornadas.length < 2);
-    const sel = $('jornadas').querySelector('[aria-pressed="true"]');
-    if (sel) $('jornadas').scrollLeft = sel.offsetLeft - $('jornadas').offsetLeft - ($('jornadas').clientWidth - sel.offsetWidth) / 2;
+    $('jornadas').classList.add('hidden');
 }
 
 function pintarPartido() {
@@ -125,6 +127,8 @@ function pintarPartido() {
 
 function tick() {
     const j = actual; if (!j) return;
+    const siguiente = porDefecto();
+    if (siguiente !== j) { cambiarJornada(siguiente); return; }
     const box = $('q-count'), diff = j.cierre.getTime() - Date.now();
     $('q-count-label').textContent = diff > 0 ? 'Cierre de apuestas en' : 'Apuestas cerradas';
     box.classList.toggle('hidden', diff <= 0);
@@ -132,7 +136,7 @@ function tick() {
         const v = { d: Math.floor(diff / 864e5), h: Math.floor(diff % 864e5 / 36e5), m: Math.floor(diff % 36e5 / 6e4), s: Math.floor(diff % 6e4 / 1e3) };
         box.querySelectorAll('[data-u]').forEach(b => { b.textContent = v[b.dataset.u]; });
     } else if (box.dataset.estado !== 'cerrada') {
-        box.dataset.estado = 'cerrada'; pintarJornadas(); pintarSesion();
+        box.dataset.estado = 'cerrada'; pintarPartido(); pintarSesion(); pintarTabla();
     }
 }
 
