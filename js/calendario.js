@@ -77,13 +77,13 @@ export const JORNADAS = [
     {
         n: 12,
         local: 'Tinellers FC', escudoLocal: 'img/escudo-tinellers.webp',
-        visitante: 'Balkans FC', escudoVisitante: '',
+        visitante: 'Balkans FC', escudoVisitante: 'img/escudo-balkans.svg',
         fecha: '2027-01-31T19:00:00+01:00',
         campo: 'IDB Almudena, F7: 2 · Ciudad Lineal'
     },
     {
         n: 13,
-        local: 'La Banda del Patio', escudoLocal: '',
+        local: 'La Banda del Patio', escudoLocal: 'img/escudo-banda-patio.svg',
         visitante: 'Tinellers FC', escudoVisitante: 'img/escudo-tinellers.webp',
         fecha: '2027-02-07T19:00:00+01:00',
         campo: 'IDB Almudena, F7: 1 · Ciudad Lineal'

@@ -2,7 +2,7 @@
 // Cada jornada tiene su propia lista de apuestas y se cierra HORAS_CIERRE antes del partido.
 // Con Firebase configurado la lista es común para todos; sin configurar, modo local.
 import { firebaseConfig } from './firebase-config.js';
-import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261029b';
+import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261029c';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
