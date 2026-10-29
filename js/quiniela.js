@@ -93,9 +93,12 @@ function pintarJornadas() {
     $('jornadas').innerHTML = jornadas.map(j => {
         const ab = abierta(j);
         return `<button type="button" role="tab" data-j="${j.n}" aria-selected="${j === actual}" aria-pressed="${j === actual}"
-            class="pick-btn${ab ? '' : ' is-closed'}">Jornada ${j.n}<small>${ab ? 'Abierta' : 'Cerrada'}</small></button>`;
+            aria-label="Jornada ${j.n}, ${j.local} contra ${j.visitante}, ${ab ? 'abierta' : 'cerrada'}"
+            class="pick-btn${ab ? '' : ' is-closed'}">J${j.n}<small>${ab ? 'Abierta' : 'Cerrada'}</small></button>`;
     }).join('');
     $('jornadas').classList.toggle('hidden', jornadas.length < 2);
+    const sel = $('jornadas').querySelector('[aria-pressed="true"]');
+    if (sel) $('jornadas').scrollLeft = sel.offsetLeft - $('jornadas').offsetLeft - ($('jornadas').clientWidth - sel.offsetWidth) / 2;
 }
 
 function pintarPartido() {
