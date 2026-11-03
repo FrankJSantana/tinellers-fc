@@ -41,5 +41,21 @@ service cloud.firestore {
           && request.time < ficha().cierre;
       }
     }
+    // Convocatoria: cada jugador de la plantilla deja su respuesta (sin iniciar sesión).
+    // Solo los administradores pueden leer las respuestas.
+    match /asistencias/{jornada}/respuestas/{jugador} {
+      allow read, delete: if esAdmin();
+      allow create, update: if jugador in ['arian-burguillo', 'alfa-junior-umaro', 'luis-nunez', 'esteban-morales', 'jefferson-marte', 'sebas-rodriguez-yanez', 'eloy-marte', 'piero-malasquez', 'junior-de-jesus', 'nacho-escalante', 'fidel-escalante-mateo', 'alejandro-cuevas', 'gilbert-natanael-de-jesus']
+        && request.resource.data.keys().hasOnly(['nombre', 'asiste', 'dorsal', 'motivo', 'jornada', 'actualizada'])
+        && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 60
+        && request.resource.data.jornada is int
+        && jornada == 'j' + string(request.resource.data.jornada)
+        && request.resource.data.actualizada == request.time
+        && request.resource.data.motivo is string && request.resource.data.motivo.size() <= 300
+        && request.resource.data.asiste is bool
+        && (request.resource.data.asiste
+              ? (request.resource.data.dorsal is int && request.resource.data.dorsal >= 0 && request.resource.data.dorsal <= 99)
+              : (request.resource.data.dorsal == null && request.resource.data.motivo.size() >= 3));
+    }
   }
 }

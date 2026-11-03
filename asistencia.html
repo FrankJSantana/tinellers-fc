@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convocatoria · Tinellers FC</title>
+<meta name="description" content="Confirma si vienes al próximo partido de Tinellers FC y con qué dorsal.">
+<meta name="theme-color" content="#070d26">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Convocatoria · Tinellers FC">
+<meta property="og:description" content="Confirma tu asistencia al próximo partido.">
+<meta property="og:image" content="https://frankjsantana.github.io/tinellers-fc/img/escudo-tinellers-320.webp">
+<link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
+<link rel="stylesheet" href="style.css?v=20261029d">
+<style>
+  .cv-main { padding-bottom: 96px; }
+  .cv-head { background: var(--navy); color: var(--white); padding-block: clamp(32px, 6vw, 72px) clamp(28px, 4vw, 48px); }
+  .cv-head h1 { font-size: clamp(3.25rem, 9vw, 7rem); }
+  .cv-sub { margin-top: 18px; font-size: var(--s-lead); line-height: 1.35; color: var(--on-dark); max-width: 36ch; }
+  .cv-match { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; margin-top: clamp(28px, 4vw, 44px); background: var(--navy-2); padding: 20px clamp(16px, 3vw, 32px); }
+  .cv-team { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; font-family: var(--display); font-weight: 700; font-size: var(--s-lead); line-height: 1; text-transform: uppercase; }
+  .cv-team img { width: clamp(56px, 12vw, 88px); height: auto; }
+  .cv-team small { font-family: var(--text); font-weight: 500; font-size: var(--s-small); text-transform: none; color: var(--on-dark); }
+  .cv-when { text-align: center; font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 6vw, 3.25rem); line-height: 0.95; }
+  .cv-when span { display: block; margin-top: 8px; color: var(--red); font-size: 0.8em; }
+  .cv-venue { margin-top: 12px; font-size: var(--s-body); color: var(--on-dark); }
+  .kit { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; background: var(--white); color: var(--navy); padding: clamp(20px, 3vw, 32px); margin-top: var(--gap); }
+  .kit svg { width: 76px; height: 76px; }
+  .kit h2 { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+  .kit p { margin-top: 6px; font-size: var(--s-body); }
+  .cv-form { max-width: 720px; margin-top: clamp(40px, 6vw, 72px); }
+  .cv-form h2 { font-size: var(--s-head); margin-bottom: 20px; }
+  .step + .step { margin-top: 40px; }
+  .step label, .step .lbl { display: block; font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; margin-bottom: 12px; }
+  .choice { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+  .choice .pick-btn { min-height: 76px; font-size: clamp(1.25rem, 4vw, 1.625rem); }
+  .choice .pick-btn[data-v="no"][aria-pressed="true"] { background: var(--red); }
+  .cv-note { margin-top: 10px; color: var(--muted); font-size: var(--s-body); }
+  textarea.field { min-height: 120px; padding: 14px 16px; resize: vertical; font: inherit; }
+  .check { display: flex; gap: 12px; align-items: flex-start; margin-top: 18px; font-size: var(--s-body); cursor: pointer; }
+  .check input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--blue); flex: none; }
+  .cv-error { min-height: 1.5em; margin-top: 16px; color: var(--red); font-weight: 600; }
+  .cv-send { width: 100%; margin-top: 8px; min-height: 64px; }
+  .cv-done { max-width: 720px; margin-top: clamp(40px, 6vw, 72px); background: var(--blue); color: var(--white); padding: clamp(24px, 4vw, 44px); }
+  .cv-done h2 { font-size: var(--s-head); }
+  .cv-done p { margin-top: 12px; font-size: var(--s-lead); line-height: 1.4; }
+  .cv-done .btn { margin-top: 24px; }
+  .cv-closed { margin-top: 40px; font-size: var(--s-lead); }
+  .cv-admin-link { margin-top: 56px; font-size: var(--s-small); color: var(--muted); }
+  .cv-admin-link button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; }
+  /* Panel del delegado */
+  .adm { margin-top: clamp(40px, 6vw, 72px); }
+  .adm h2 { font-size: var(--s-head); }
+  .adm-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin: 24px 0; }
+  .adm-sum div { background: var(--white); padding: 18px; }
+  .adm-sum b { display: block; font-family: var(--display); font-weight: 800; font-size: clamp(2.5rem, 7vw, 4rem); line-height: 0.9; }
+  .adm-sum .si b { color: var(--blue); } .adm-sum .no b { color: var(--red); } .adm-sum .pend b { color: var(--muted); }
+  .adm-actions { display: flex; flex-wrap: wrap; gap: var(--gap); margin-bottom: 24px; }
+  .adm table { width: 100%; border-collapse: collapse; background: var(--white); font-size: var(--s-body); }
+  .adm th, .adm td { text-align: left; padding: 14px 16px; vertical-align: top; }
+  .adm thead th { background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 700; text-transform: uppercase; }
+  .adm tbody tr:nth-child(even) { background: var(--paper); }
+  .adm .st-si { color: var(--blue); font-weight: 700; } .adm .st-no { color: var(--red); font-weight: 700; } .adm .st-pend { color: var(--muted); }
+  .adm-scroll { overflow-x: auto; }
+  .toast { position: fixed; left: 50%; bottom: 24px; z-index: 90; transform: translate(-50%, 12px); opacity: 0; pointer-events: none; background: var(--navy); color: var(--white); padding: 14px 24px; font-weight: 600; transition: opacity 200ms, transform 200ms; }
+  .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+  @media (max-width: 520px) {
+    .cv-match { grid-template-columns: 1fr 1fr; }
+    .cv-when { grid-column: 1 / -1; grid-row: 1; }
+    .adm thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .adm table, .adm tbody, .adm tr, .adm td { display: block; }
+    .adm tr { padding: 14px 16px; }
+    .adm td { padding: 0; }
+    .adm td:first-child { font-size: var(--s-lead); }
+    .adm td:nth-child(2), .adm td:nth-child(3) { display: inline; margin-right: 10px; }
+    .adm td:nth-child(3):empty, .adm td.dash { display: none; }
+    .adm td:nth-child(4) { margin-top: 4px; color: var(--muted); }
+  }
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="Tinellers FC, web del club"><img src="img/escudo-tinellers-96.webp" alt="" width="96" height="106"><span>Tinellers FC</span></a>
+  </div>
+</header>
+<main id="main" class="cv-main">
+  <section class="cv-head" aria-labelledby="h1">
+    <div class="wrap">
+      <h1 id="h1">Convocatoria <span id="cv-j">jornada 3</span></h1>
+      <p class="cv-sub">Dinos si vienes al partido y con qué dorsal vas a jugar.</p>
+      <div class="cv-match">
+        <div class="cv-team"><img id="cv-home-crest" src="img/escudo-cocidos.svg" alt="" width="212" height="252"><span id="cv-home">Cocidos Madrileños FC</span><small id="cv-home-role">Local</small></div>
+        <p class="cv-when" id="cv-when">Dom 8 nov<span id="cv-hour">19:00</span></p>
+        <div class="cv-team"><img id="cv-away-crest" src="img/escudo-tinellers-320.webp" alt="" width="320" height="354"><span id="cv-away">Tinellers FC</span><small id="cv-away-role">Visitante</small></div>
+      </div>
+      <p class="cv-venue" id="cv-venue">IDB Almudena, F7: 1 · Ciudad Lineal</p>
+      <div class="kit" id="kit">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M22 6 L12 10 L2 22 L10 30 L16 25 L16 58 L48 58 L48 25 L54 30 L62 22 L52 10 L42 6 C40 11 36 13 32 13 C28 13 24 11 22 6 Z" fill="#ffffff" stroke="#070d26" stroke-width="3" stroke-linejoin="round"/></svg>
+        <div><h2 id="kit-title">Equipación blanca</h2><p id="kit-text">Somos visitantes: camiseta blanca obligatoria.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <form class="cv-form" id="cv-form" novalidate aria-labelledby="h-form">
+      <h2 id="h-form">Tu respuesta</h2>
+      <div class="step">
+        <label for="jugador">¿Quién eres?</label>
+        <select id="jugador" class="field" required><option value="">Elige tu nombre…</option></select>
+      </div>
+      <div class="step">
+        <p class="lbl" id="lbl-asiste">¿Vienes al partido?</p>
+        <div class="choice" role="group" aria-labelledby="lbl-asiste">
+          <button type="button" class="pick-btn" data-v="si" aria-pressed="false">Sí, voy</button>
+          <button type="button" class="pick-btn" data-v="no" aria-pressed="false">No puedo ir</button>
+        </div>
+      </div>
+      <div class="step hidden" id="paso-si">
+        <label for="dorsal">Dorsal con el que vas a jugar</label>
+        <input id="dorsal" class="field" type="number" inputmode="numeric" min="0" max="99" aria-describedby="dorsal-note">
+        <p class="cv-note" id="dorsal-note">Ya viene puesto tu dorsal habitual. Cámbialo solo si vas a jugar con otro.</p>
+        <label class="check"><input type="checkbox" id="kit-ok"><span id="kit-check">Llevaré la equipación blanca.</span></label>
+      </div>
+      <div class="step hidden" id="paso-no">
+        <label for="motivo">¿Por qué no puedes venir?</label>
+        <textarea id="motivo" class="field" maxlength="300" placeholder="Trabajo, lesión, viaje…"></textarea>
+      </div>
+      <p class="cv-error" id="cv-error" role="alert"></p>
+      <button type="submit" class="btn cv-send" id="cv-send">Enviar respuesta</button>
+    </form>
+
+    <section class="cv-done hidden" id="cv-done" aria-live="polite" aria-labelledby="h-done">
+      <h2 id="h-done">¡Respuesta enviada!</h2>
+      <p id="cv-done-text"></p>
+      <button type="button" class="btn btn--white btn--sm" id="cv-again">Cambiar mi respuesta</button>
+    </section>
+
+    <p class="cv-closed hidden" id="cv-closed">Este partido ya se ha jugado. La convocatoria está cerrada.</p>
+
+    <section class="adm hidden" id="adm" aria-labelledby="h-adm">
+      <h2 id="h-adm">Respuestas recibidas</h2>
+      <div class="adm-sum">
+        <div class="si"><b id="n-si">0</b>Vienen</div>
+        <div class="no"><b id="n-no">0</b>No pueden</div>
+        <div class="pend"><b id="n-pend">0</b>Sin responder</div>
+      </div>
+      <div class="adm-actions">
+        <button type="button" class="btn btn--navy btn--sm" id="adm-copy">Copiar resumen para WhatsApp</button>
+        <button type="button" class="btn btn--white btn--sm" id="adm-out">Salir</button>
+      </div>
+      <div class="adm-scroll">
+        <table>
+          <thead><tr><th scope="col">Jugador</th><th scope="col">Respuesta</th><th scope="col">Dorsal</th><th scope="col">Motivo</th></tr></thead>
+          <tbody id="adm-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="cv-admin-link" id="cv-admin-link">¿Eres el delegado? <button type="button" id="adm-in">Ver las respuestas</button></p>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/asistencia.js?v=20261103a"></script>
+</body>
+</html>
