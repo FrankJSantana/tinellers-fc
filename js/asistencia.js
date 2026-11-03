@@ -3,7 +3,7 @@
 // El código está en Firebase (codigos/{código} con jugador 'equipo'); sin él nadie puede responder.
 // Las respuestas (asistencias/j{n}/respuestas/{jugador}) solo las leen los administradores.
 import { firebaseConfig } from './firebase-config.js';
-import { JORNADAS } from './calendario.js?v=20261029c';
+import { JORNADAS } from './calendario.js?v=20261103c';
 
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
 

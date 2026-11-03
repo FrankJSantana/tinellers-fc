@@ -71,7 +71,7 @@
     /* ---------- Piezas ---------- */
     const escudo = (e, w = 34, h = 38) => {
         const x = L.escudos?.[e];
-        return x ? `<img src="${x.mini}" alt="" width="${w}" height="${h}" loading="lazy">`
+        return x ? `<img src="${x.mini}" alt="" width="${w}" height="${x.w ? Math.round(w * x.h / x.w) : h}" loading="lazy">`
                  : `<span class="crest-ph" aria-hidden="true">${esc(L.iniciales?.[e] || e.slice(0, 2).toUpperCase())}</span>`;
     };
     const equipo = (e, w, h) => `<span class="team${e === US ? ' us' : ''}">${escudo(e, w, h)}${esc(e)}</span>`;

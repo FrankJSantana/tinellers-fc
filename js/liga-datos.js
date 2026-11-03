@@ -13,12 +13,20 @@ window.LIGA = {
     encuentros: 'https://deportesweb.madrid.es/DeportesWeb/Modulos/VentaServicios/Competiciones/ConsultarEncuentros?token=5F47B0942AD5C1AE205B2E25F1D6175D',
     clasificacion: 'https://deportesweb.madrid.es/DeportesWeb/Modulos/VentaServicios/Competiciones/ConsultarClasificaciones?token=5F47B0942AD5C1AEE65C0EA0AC494AB5'
   },
-  // Escudos que tenemos; el resto de equipos se muestran con sus iniciales
+  // Escudos de los equipos (si alguno falta, se muestra con sus iniciales)
   escudos: {
     'Tinellers FC': { mini: 'img/escudo-tinellers-96.webp', grande: 'img/escudo-tinellers.webp', w: 900, h: 997 },
     'Cocidos Madrileños FC': { mini: 'img/escudo-cocidos.svg', grande: 'img/escudo-cocidos.svg', w: 212, h: 252 },
     'Balkans FC': { mini: 'img/escudo-balkans.svg', grande: 'img/escudo-balkans.svg', w: 212, h: 252 },
-    'La Banda del Patio': { mini: 'img/escudo-banda-patio.svg', grande: 'img/escudo-banda-patio.svg', w: 212, h: 252 }
+    'La Banda del Patio': { mini: 'img/escudo-banda-patio.svg', grande: 'img/escudo-banda-patio.svg', w: 212, h: 252 },
+    'La Trese FC': { mini: 'img/escudo-la-trese.svg', grande: 'img/escudo-la-trese.svg', w: 212, h: 252 },
+    'Les Fifiwis': { mini: 'img/escudo-les-fifiwis.svg', grande: 'img/escudo-les-fifiwis.svg', w: 212, h: 252 },
+    'El Club de Carl': { mini: 'img/escudo-club-de-carl.svg', grande: 'img/escudo-club-de-carl.svg', w: 212, h: 252 },
+    'Hortaleza Eleven FC': { mini: 'img/escudo-hortaleza-eleven.svg', grande: 'img/escudo-hortaleza-eleven.svg', w: 212, h: 252 },
+    'Jagger de Munich': { mini: 'img/escudo-jagger-de-munich.svg', grande: 'img/escudo-jagger-de-munich.svg', w: 212, h: 252 },
+    'Kows FC': { mini: 'img/escudo-kows.svg', grande: 'img/escudo-kows.svg', w: 212, h: 252 },
+    'Lineal King': { mini: 'img/escudo-lineal-king.svg', grande: 'img/escudo-lineal-king.svg', w: 212, h: 252 },
+    'Secreto Loungue': { mini: 'img/escudo-secreto-loungue.svg', grande: 'img/escudo-secreto-loungue.svg', w: 212, h: 252 }
   },
   iniciales: {
     'La Trese FC': 'LT', 'Les Fifiwis': 'LF', 'El Club de Carl': 'CC', 'Hortaleza Eleven FC': 'HE',
