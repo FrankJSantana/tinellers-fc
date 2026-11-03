@@ -1,6 +1,7 @@
 // js/asistencia.js — convocatoria: cada jugador confirma si viene al partido.
-// Las respuestas se guardan en Firebase (asistencias/j{n}/respuestas/{jugador})
-// y solo los administradores pueden leerlas, desde esta misma página.
+// Cada jugador entra con su ENLACE PERSONAL (?c=código). El código está guardado en
+// Firebase (codigos/{código}) y solo con él se puede responder en su nombre.
+// Las respuestas (asistencias/j{n}/respuestas/{código}) solo las leen los administradores.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS } from './calendario.js?v=20261029c';
 
@@ -59,6 +60,8 @@ if (!visitante) {
 const equipacion = visitante ? 'blanca' : 'del club';
 
 /* ---------- Conexión ---------- */
+const codigo = (new URLSearchParams(location.search).get('c') || '').trim();
+const nuevoCodigo = () => { const a = 'abcdefghjkmnpqrstuvwxyz23456789'; const r = crypto.getRandomValues(new Uint8Array(14)); return Array.from(r, x => a[x % a.length]).join(''); };
 const conFirebase = !!firebaseConfig?.apiKey && !firebaseConfig.apiKey.startsWith('PEGA');
 let api;
 if (conFirebase) {
@@ -73,27 +76,43 @@ if (conFirebase) {
     const col = F.collection(db, 'asistencias', 'j' + J.n, 'respuestas');
     let parar = null;
     api = {
-        enviar: r => F.setDoc(F.doc(col, r.id), {
-            nombre: r.nombre, asiste: r.asiste, dorsal: r.dorsal, motivo: r.motivo,
+        // Quién es el dueño de un código (solo se puede leer conociendo el código)
+        quien: async c => { const d = await F.getDoc(F.doc(db, 'codigos', c)); return d.exists() ? d.data().jugador : null; },
+        enviar: r => F.setDoc(F.doc(col, codigo), {
+            jugador: r.id, nombre: r.nombre, asiste: r.asiste, dorsal: r.dorsal, motivo: r.motivo,
             jornada: J.n, actualizada: F.serverTimestamp()
         }),
         login: () => A.signInWithPopup(auth, new A.GoogleAuthProvider()),
         logout: () => A.signOut(auth),
         onUser: cb => A.onAuthStateChanged(auth, cb),
-        escuchar: (cb, err) => { parar?.(); parar = F.onSnapshot(col, s => cb(s.docs.map(d => ({ id: d.id, ...d.data() }))), err); },
+        // El administrador crea los códigos que falten y recibe la lista completa
+        codigos: async () => {
+            const snap = await F.getDocs(F.collection(db, 'codigos'));
+            const mapa = {}; snap.forEach(d => { mapa[d.data().jugador] = d.id; });
+            for (const p of PLANTILLA) if (!mapa[p.id]) {
+                const c = nuevoCodigo();
+                await F.setDoc(F.doc(db, 'codigos', c), { jugador: p.id, nombre: p.nombre });
+                mapa[p.id] = c;
+            }
+            return mapa;
+        },
+        escuchar: (cb, err) => { parar?.(); parar = F.onSnapshot(col, s => cb(s.docs.map(d => d.data())), err); },
         dejar: () => { parar?.(); parar = null; }
     };
 } else {
-    // Sin Firebase (pruebas locales): se guarda en este navegador
-    const K = 'tinellers_asistencia_j' + J.n;
-    const leer = () => { try { return JSON.parse(localStorage.getItem(K)) || {}; } catch { return {}; } };
+    // Sin Firebase (pruebas locales): todo se guarda en este navegador
+    const K = 'tinellers_asistencia_j' + J.n, KC = 'tinellers_codigos';
+    const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch { return d; } };
+    const escribir = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
     let cb = null;
     api = {
-        enviar: async r => { const t = leer(); t[r.id] = { ...r, jornada: J.n }; try { localStorage.setItem(K, JSON.stringify(t)); } catch {} cb?.(Object.values(t)); },
+        quien: async c => Object.entries(leer(KC, {})).find(([, v]) => v === c)?.[0] || null,
+        enviar: async r => { const t = leer(K, {}); t[codigo] = { jugador: r.id, ...r, jornada: J.n }; escribir(K, t); cb?.(Object.values(t)); },
         login: async () => { localStorage.setItem(K + '_admin', '1'); location.reload(); },
         logout: async () => { localStorage.removeItem(K + '_admin'); location.reload(); },
         onUser: f => f(localStorage.getItem(K + '_admin') ? { email: ADMINS[0] } : null),
-        escuchar: f => { cb = f; f(Object.values(leer())); },
+        codigos: async () => { const m = leer(KC, {}); for (const p of PLANTILLA) m[p.id] ||= nuevoCodigo(); escribir(KC, m); return m; },
+        escuchar: f => { cb = f; f(Object.values(leer(K, {}))); },
         dejar: () => { cb = null; }
     };
 }
@@ -103,15 +122,20 @@ function toast(msg) {
     clearTimeout(toast.id); toast.id = setTimeout(() => t.classList.remove('is-visible'), 2600);
 }
 
+/* ---------- ¿Quién abre la página? ---------- */
+let yo = null;
+if (codigo) { try { const id = await api.quien(codigo); yo = PLANTILLA.find(p => p.id === id) || null; } catch {} }
+if (yo) {
+    $('yo-nombre').textContent = yo.nombre;
+    $('dorsal').value = yo.dorsal;
+} else {
+    $('cv-form').classList.add('hidden');
+    $('cv-sin-enlace').classList.remove('hidden');
+    if (codigo) $('cv-sin-enlace-text').textContent = 'Este enlace no es válido. Pide al delegado tu enlace personal.';
+}
+
 /* ---------- Formulario ---------- */
 let asiste = null;
-$('jugador').insertAdjacentHTML('beforeend', PLANTILLA.map(p => `<option value="${p.id}">${esc(p.nombre)} · #${p.dorsal}</option>`).join(''));
-try { const g = localStorage.getItem('tinellers_jugador'); if (g && PLANTILLA.some(p => p.id === g)) $('jugador').value = g; } catch {}
-const jugador = () => PLANTILLA.find(p => p.id === $('jugador').value);
-const ponerDorsal = () => { const p = jugador(); if (p) $('dorsal').value = p.dorsal; };
-ponerDorsal();
-$('jugador').addEventListener('change', () => { ponerDorsal(); $('cv-error').textContent = ''; });
-
 document.querySelectorAll('.choice .pick-btn').forEach(b => b.addEventListener('click', () => {
     asiste = b.dataset.v === 'si';
     document.querySelectorAll('.choice .pick-btn').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
@@ -123,8 +147,8 @@ document.querySelectorAll('.choice .pick-btn').forEach(b => b.addEventListener('
 
 $('cv-form').addEventListener('submit', async e => {
     e.preventDefault();
-    const p = jugador(), err = $('cv-error');
-    if (!p) { err.textContent = 'Elige tu nombre.'; $('jugador').focus(); return; }
+    const p = yo, err = $('cv-error');
+    if (!p) return;
     if (asiste === null) { err.textContent = 'Dinos si vienes o no.'; return; }
     let dorsal = null, motivo = '';
     if (asiste) {
@@ -139,7 +163,6 @@ $('cv-form').addEventListener('submit', async e => {
     const btn = $('cv-send'); btn.disabled = true; btn.textContent = 'Enviando…';
     try {
         await api.enviar({ id: p.id, nombre: p.nombre, asiste, dorsal, motivo });
-        try { localStorage.setItem('tinellers_jugador', p.id); } catch {}
         $('cv-done-text').textContent = asiste
             ? `Gracias, ${p.nombre.split(' ')[0]}. Te esperamos el ${fmtLargo.format(J.inicio)} a las ${fmtHora.format(J.inicio)} con el dorsal ${dorsal} y la equipación ${equipacion}.`
             : `Gracias por avisar, ${p.nombre.split(' ')[0]}. Ya sabemos que no puedes venir contra ${rival}.`;
@@ -147,23 +170,23 @@ $('cv-form').addEventListener('submit', async e => {
         $('cv-done').scrollIntoView({ block: 'start' });
     } catch (e2) {
         err.textContent = e2?.code === 'permission-denied'
-            ? 'No se ha podido guardar: la convocatoria no está abierta. Avisa al delegado.'
+            ? 'No se ha podido guardar con este enlace. Pide al delegado tu enlace personal.'
             : 'No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo.';
     } finally { btn.disabled = false; btn.textContent = 'Enviar respuesta'; }
 });
 $('cv-again').addEventListener('click', () => { $('cv-done').classList.add('hidden'); $('cv-form').classList.remove('hidden'); });
 
-if (cerrada) { $('cv-form').classList.add('hidden'); $('cv-closed').classList.remove('hidden'); }
+if (cerrada) { $('cv-form').classList.add('hidden'); $('cv-sin-enlace').classList.add('hidden'); $('cv-closed').classList.remove('hidden'); }
 
 /* ---------- Panel del delegado ---------- */
-let respuestas = [];
+let respuestas = [], codigos = {};
+const enlace = id => `${location.origin}${location.pathname}?c=${codigos[id]}`;
 function pintarAdmin() {
-    const por = Object.fromEntries(respuestas.map(r => [r.id, r]));
+    const por = Object.fromEntries(respuestas.map(r => [r.jugador, r]));
     const filas = PLANTILLA.map(p => ({ p, r: por[p.id] }));
     const si = filas.filter(f => f.r?.asiste === true), no = filas.filter(f => f.r?.asiste === false), pend = filas.filter(f => !f.r);
     $('n-si').textContent = si.length; $('n-no').textContent = no.length; $('n-pend').textContent = pend.length;
-    const orden = [...si, ...no, ...pend];
-    $('adm-body').innerHTML = orden.map(({ p, r }) => `<tr>
+    $('adm-body').innerHTML = [...si, ...no, ...pend].map(({ p, r }) => `<tr>
         <td><strong>${esc(p.nombre)}</strong></td>
         <td class="${r ? (r.asiste ? 'st-si' : 'st-no') : 'st-pend'}">${r ? (r.asiste ? 'Viene' : 'No puede') : 'Sin responder'}</td>
         <td${r?.asiste ? '' : ' class="dash"'}>${r?.asiste ? 'Dorsal ' + esc(r.dorsal) : '–'}</td>
@@ -176,17 +199,30 @@ function pintarAdmin() {
         `⏳ Sin responder (${pend.length}):`, ...pend.map(f => f.p.nombre)
     ].join('\n');
 }
+function pintarEnlaces() {
+    $('adm-links').innerHTML = PLANTILLA.map(p => {
+        const txt = `Hola ${p.nombre.split(' ')[0]}, confirma si vienes a la jornada ${J.n} (${J.local} – ${J.visitante}). Este enlace es solo tuyo, no lo compartas: ${enlace(p.id)}`;
+        return `<li><span><strong>${esc(p.nombre)}</strong> · #${p.dorsal}</span>
+            <span class="adm-link-btns"><button type="button" class="btn btn--navy btn--sm" data-copy="${p.id}">Copiar enlace</button>
+            <a class="btn btn--blue btn--sm" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">WhatsApp</a></span></li>`;
+    }).join('');
+}
+$('adm-links').addEventListener('click', async e => {
+    const b = e.target.closest('[data-copy]'); if (!b) return;
+    try { await navigator.clipboard.writeText(enlace(b.dataset.copy)); toast('Enlace copiado'); } catch { toast('No se pudo copiar'); }
+});
 $('adm-copy').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(pintarAdmin.texto || ''); toast('Resumen copiado'); }
     catch { toast('No se pudo copiar'); }
 });
 $('adm-in').addEventListener('click', () => api.login().catch(() => toast('No se pudo iniciar sesión')));
 $('adm-out').addEventListener('click', () => api.logout());
-api.onUser(u => {
+api.onUser(async u => {
     const admin = !!u?.email && ADMINS.includes(u.email.toLowerCase());
     $('adm').classList.toggle('hidden', !admin);
     $('cv-admin-link').classList.toggle('hidden', admin);
     if (admin) {
+        try { codigos = await api.codigos(); pintarEnlaces(); } catch { toast('No se pudieron preparar los enlaces'); }
         api.escuchar(l => { respuestas = l; pintarAdmin(); }, () => toast('No se pudieron cargar las respuestas'));
     } else {
         api.dejar();
