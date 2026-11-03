@@ -626,3 +626,124 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 @media (max-width: 420px) {
     .ld-list li { grid-template-columns: 1fr; gap: 12px; }
 }
+
+/* ==========================================================
+   Liga: calendario completo, clasificación y jornadas
+   ========================================================== */
+.res .loss { color: var(--red); }
+.res .draw { color: var(--muted); }
+.muted { color: var(--muted); }
+.c-sub { display: block; margin-top: 4px; font-family: var(--text); font-weight: 500; font-size: var(--s-small); color: var(--muted); }
+.lineup tbody tr.is-next { background: var(--blue); color: var(--white); }
+.lineup tbody tr.is-next:hover { background: var(--blue-deep); }
+.lineup tbody tr.is-next .us { color: var(--white); }
+.lineup tbody tr.is-next .vs, .lineup tbody tr.is-next .c-sub { color: var(--on-dark); }
+.lineup tbody tr.is-next .next-tag { color: var(--white); background: var(--red); padding: 4px 10px; }
+.lineup tbody tr.is-next .crest-ph { background: var(--blue-deep); color: var(--white); }
+.lineup--cal .grp th { position: sticky; top: var(--head-h); z-index: 2; }
+.crest-big { display: flex; align-items: center; justify-content: center; aspect-ratio: 212 / 252; height: clamp(180px, 34vh, 340px); width: auto; background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 800; font-size: clamp(3rem, 7vw, 6rem); letter-spacing: -0.02em; clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%); padding-bottom: 12%; }
+.mp--away .crest-big { background: var(--blue-deep); }
+
+/* Cabecera de Clasificación: nuestra posición */
+.ph-pos { text-align: right; }
+.pp-num { font-family: var(--display); font-weight: 800; font-size: var(--s-giant); line-height: 0.8; letter-spacing: -0.04em; color: var(--white); }
+.pp-cap { margin-top: 14px; font-size: var(--s-lead); color: var(--on-dark); }
+.pp-cap b { display: block; font-family: var(--display); font-weight: 700; text-transform: uppercase; color: var(--white); }
+
+/* Tabla de clasificación */
+.std { width: 100%; border-collapse: collapse; font-family: var(--display); font-weight: 600; font-size: var(--s-lead); font-variant-numeric: tabular-nums; }
+.std thead th { background: var(--navy); color: var(--white); font-weight: 700; font-size: var(--s-body); text-transform: uppercase; padding: 14px 10px; text-align: center; white-space: nowrap; }
+.std abbr { text-decoration: none; }
+.std td, .std tbody th { padding: 14px 10px; text-align: center; font-weight: 600; }
+.std tbody tr:nth-child(odd) { background: var(--paper); }
+.std .c-pos { width: 4ch; font-weight: 800; }
+.std .c-team, .std thead .c-team { text-align: left; }
+.std tbody .c-team { font-weight: 700; }
+.std .c-pts { font-weight: 800; font-size: 1.15em; }
+.std thead .c-pts { font-size: var(--s-body); }
+.std tbody tr.is-us { background: var(--blue); color: var(--white); }
+.std tbody tr.is-us .us { color: var(--white); }
+.std tbody tr.is-us .crest-ph { background: var(--blue-deep); color: var(--white); }
+.std tbody tr .crest-ph { background: var(--paper-2); }
+.std tbody tr:nth-child(odd) .crest-ph { background: var(--white); }
+.forma { display: inline-flex; gap: 4px; }
+.fm { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; font-size: 0.8125rem; font-weight: 700; color: var(--white); }
+.fm-G { background: var(--blue); } .fm-E { background: var(--muted); } .fm-P { background: var(--red); }
+.is-us .fm-G { background: var(--navy); }
+.evo { font-size: var(--s-body); font-weight: 700; }
+.evo-up { color: var(--blue); } .evo-down { color: var(--red); } .evo-eq { color: var(--muted); }
+.is-us .evo { color: var(--white); }
+.std-note { margin-top: 20px; font-size: var(--s-body); color: var(--muted); }
+.std-note a { color: var(--ink); font-weight: 600; }
+.std--mini { font-size: var(--s-body); }
+.std--mini td, .std--mini tbody th { padding: 12px 10px; }
+
+/* Portada: resultados y clasificación lado a lado */
+.res-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px var(--gap); align-items: start; }
+.res-grid > .rg-main { grid-column: 1 / 9; }
+.res-grid > .rg-side { grid-column: 9 / 13; }
+.rg-side h3 { font-size: var(--s-head); text-transform: uppercase; line-height: 0.95; margin-bottom: 20px; }
+.rg-side .more { margin-top: 20px; }
+
+/* Partidos de la liga, jornada a jornada */
+.jz-nav { display: flex; align-items: center; gap: var(--gap); }
+.jz-btn { width: 52px; height: 52px; border: 0; background: var(--navy); color: var(--white); font-size: 1.5rem; line-height: 1; transition: transform 160ms var(--ease), background-color 160ms; }
+.jz-btn:hover { background: var(--blue); }
+.jz-btn:active { transform: scale(0.94); }
+.jz-btn:disabled { background: var(--paper-2); color: var(--muted); cursor: default; transform: none; }
+.jz-label { min-width: 15ch; text-align: center; font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; }
+.jz-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.jz-m { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px 16px; background: var(--white); padding: 20px; font-family: var(--display); font-weight: 600; font-size: var(--s-lead); line-height: 1.1; }
+.jz-m.is-us { background: var(--blue); color: var(--white); }
+.jz-m.is-us .us { color: var(--white); }
+.jz-m.is-us .crest-ph { background: var(--blue-deep); color: var(--white); }
+.jz-home { justify-self: end; text-align: right; }
+.jz-home .team { flex-direction: row-reverse; }
+.jz-score { min-width: 4.2ch; text-align: center; background: var(--navy); color: var(--white); padding: 8px 10px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.jz-score.is-time { background: var(--paper-2); color: var(--ink); font-weight: 700; }
+.jz-m.is-us .jz-score { background: var(--white); color: var(--navy); }
+.jz-meta { grid-column: 1 / -1; text-align: center; font-family: var(--text); font-weight: 500; font-size: var(--s-small); color: var(--muted); }
+.jz-m.is-us .jz-meta { color: var(--on-dark); }
+
+@media (max-width: 1080px) {
+    .nav { gap: 16px; }
+    .nav a:not(.btn) { font-size: 1.0625rem; }
+    .nav .btn { padding: 0 14px; }
+}
+@media (max-width: 900px) {
+    .ph-pos { text-align: left; order: 2; }
+    .res-grid > .rg-main, .res-grid > .rg-side { grid-column: 1 / -1; }
+    .jz-list { grid-template-columns: 1fr; }
+    .lineup--cal .grp th { position: static; }
+}
+@media (max-width: 700px) {
+    .std .c-opt { display: none; }
+    .std td, .std tbody th, .std thead th { padding: 12px 6px; }
+    .std { font-size: 1.0625rem; }
+    .std .team { gap: 8px; }
+    .std .team img, .std .crest-ph { width: 26px; height: 30px; }
+    .jz-m { padding: 16px 12px; gap: 10px; font-size: 1.0625rem; }
+    .jz-m .team { gap: 8px; }
+    .jz-m .team img, .jz-m .crest-ph { width: 26px; height: 30px; }
+    .jz-nav { width: 100%; justify-content: space-between; }
+    .jz-label { min-width: 0; font-size: 1.125rem; }
+}
+.cal-meta { margin: -24px 0 28px; font-size: var(--s-body); color: var(--muted); }
+.std .team { display: flex; }
+.res-grid { column-gap: clamp(24px, 3.4vw, 56px); }
+.lineup--home { font-size: 1.3125rem; }
+.lineup--home td { padding: 18px 16px; }
+.lineup--home .c-match { width: auto; }
+.lineup--home .c-res { width: 1%; }
+.lineup--home .c-date { width: 1%; }
+.rg-main .sec-head { flex-wrap: wrap; }
+@media (max-width: 900px) {
+    .res-grid { row-gap: 104px; }
+}
+@media (max-width: 700px) {
+    .lineup tbody tr.is-next td, .lineup tbody tr.is-next td.c-res b { color: var(--white); }
+    .lineup tbody tr.is-next .c-sub { color: var(--on-dark); }
+    .lineup .c-sub { display: inline; margin: 0 0 0 8px; }
+    .lineup .grp th { display: block; padding: 12px 16px; }
+    .lineup tr.grp { padding: 0; }
+}
