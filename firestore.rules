@@ -41,9 +41,9 @@ service cloud.firestore {
           && request.time < ficha().cierre;
       }
     }
-    // Convocatoria: cada jugador responde con su ENLACE PERSONAL (?c=código).
-    // codigos/{código} -> { jugador, nombre }. Se puede leer un código solo si ya lo conoces;
-    // listar, crear o borrar códigos solo pueden los administradores.
+    // Convocatoria: solo se responde con el ENLACE DEL EQUIPO (?c=código) que el delegado
+    // manda al grupo. codigos/{código} -> { jugador: 'equipo' }. Un código solo se puede leer
+    // si ya lo conoces; listarlos o crearlos solo pueden los administradores.
     match /codigos/{codigo} {
       allow get: if true;
       allow list, delete: if esAdmin();
@@ -53,14 +53,16 @@ service cloud.firestore {
         && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 60;
     }
 
-    // Respuestas: el documento se llama como el código, así que sin el enlace personal
-    // nadie puede responder en nombre de otro. Solo los administradores las leen.
-    match /asistencias/{jornada}/respuestas/{codigo} {
-      function dueno() { return get(/databases/$(database)/documents/codigos/$(codigo)).data; }
+    // Respuestas: una por jugador y jornada; hace falta la clave del enlace del equipo.
+    // Solo los administradores las leen.
+    match /asistencias/{jornada}/respuestas/{jugador} {
       allow read, delete: if esAdmin();
-      allow create, update: if exists(/databases/$(database)/documents/codigos/$(codigo))
-        && request.resource.data.keys().hasOnly(['jugador', 'nombre', 'asiste', 'dorsal', 'motivo', 'jornada', 'actualizada'])
-        && request.resource.data.jugador == dueno().jugador
+      allow create, update: if jugador in ['arian-burguillo', 'alfa-junior-umaro', 'luis-nunez', 'esteban-morales', 'jefferson-marte', 'sebas-rodriguez-yanez', 'eloy-marte', 'piero-malasquez', 'junior-de-jesus', 'nacho-escalante', 'fidel-escalante-mateo', 'alejandro-cuevas', 'gilbert-natanael-de-jesus']
+        && request.resource.data.keys().hasOnly(['clave', 'jugador', 'nombre', 'asiste', 'dorsal', 'motivo', 'jornada', 'actualizada'])
+        && request.resource.data.clave is string && request.resource.data.clave.size() <= 40
+        && exists(/databases/$(database)/documents/codigos/$(request.resource.data.clave))
+        && get(/databases/$(database)/documents/codigos/$(request.resource.data.clave)).data.jugador == 'equipo'
+        && request.resource.data.jugador == jugador
         && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 60
         && request.resource.data.jornada is int
         && jornada == 'j' + string(request.resource.data.jornada)

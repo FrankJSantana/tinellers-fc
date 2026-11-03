@@ -1,7 +1,7 @@
 // js/asistencia.js — convocatoria: cada jugador confirma si viene al partido.
-// Cada jugador entra con su ENLACE PERSONAL (?c=código). El código está guardado en
-// Firebase (codigos/{código}) y solo con él se puede responder en su nombre.
-// Las respuestas (asistencias/j{n}/respuestas/{código}) solo las leen los administradores.
+// Solo se puede responder con el ENLACE DEL EQUIPO (?c=código), que el delegado manda al grupo.
+// El código está en Firebase (codigos/{código} con jugador 'equipo'); sin él nadie puede responder.
+// Las respuestas (asistencias/j{n}/respuestas/{jugador}) solo las leen los administradores.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS } from './calendario.js?v=20261029c';
 
@@ -78,23 +78,19 @@ if (conFirebase) {
     api = {
         // Quién es el dueño de un código (solo se puede leer conociendo el código)
         quien: async c => { const d = await F.getDoc(F.doc(db, 'codigos', c)); return d.exists() ? d.data().jugador : null; },
-        enviar: r => F.setDoc(F.doc(col, codigo), {
-            jugador: r.id, nombre: r.nombre, asiste: r.asiste, dorsal: r.dorsal, motivo: r.motivo,
+        enviar: r => F.setDoc(F.doc(col, r.id), {
+            clave: codigo, jugador: r.id, nombre: r.nombre, asiste: r.asiste, dorsal: r.dorsal, motivo: r.motivo,
             jornada: J.n, actualizada: F.serverTimestamp()
         }),
         login: () => A.signInWithPopup(auth, new A.GoogleAuthProvider()),
         logout: () => A.signOut(auth),
         onUser: cb => A.onAuthStateChanged(auth, cb),
-        // El administrador crea los códigos que falten y recibe la lista completa
-        codigos: async () => {
+        // El administrador obtiene (o crea la primera vez) el código del equipo
+        codigoEquipo: async () => {
             const snap = await F.getDocs(F.collection(db, 'codigos'));
-            const mapa = {}; snap.forEach(d => { mapa[d.data().jugador] = d.id; });
-            for (const p of PLANTILLA) if (!mapa[p.id]) {
-                const c = nuevoCodigo();
-                await F.setDoc(F.doc(db, 'codigos', c), { jugador: p.id, nombre: p.nombre });
-                mapa[p.id] = c;
-            }
-            return mapa;
+            let c = null; snap.forEach(d => { if (d.data().jugador === 'equipo') c = d.id; });
+            if (!c) { c = nuevoCodigo(); await F.setDoc(F.doc(db, 'codigos', c), { jugador: 'equipo', nombre: 'Tinellers FC' }); }
+            return c;
         },
         escuchar: (cb, err) => { parar?.(); parar = F.onSnapshot(col, s => cb(s.docs.map(d => d.data())), err); },
         dejar: () => { parar?.(); parar = null; }
@@ -106,12 +102,12 @@ if (conFirebase) {
     const escribir = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
     let cb = null;
     api = {
-        quien: async c => Object.entries(leer(KC, {})).find(([, v]) => v === c)?.[0] || null,
-        enviar: async r => { const t = leer(K, {}); t[codigo] = { jugador: r.id, ...r, jornada: J.n }; escribir(K, t); cb?.(Object.values(t)); },
+        quien: async c => (leer(KC, {}).equipo === c ? 'equipo' : null),
+        enviar: async r => { const t = leer(K, {}); t[r.id] = { jugador: r.id, ...r, jornada: J.n }; escribir(K, t); cb?.(Object.values(t)); },
         login: async () => { localStorage.setItem(K + '_admin', '1'); location.reload(); },
         logout: async () => { localStorage.removeItem(K + '_admin'); location.reload(); },
         onUser: f => f(localStorage.getItem(K + '_admin') ? { email: ADMINS[0] } : null),
-        codigos: async () => { const m = leer(KC, {}); for (const p of PLANTILLA) m[p.id] ||= nuevoCodigo(); escribir(KC, m); return m; },
+        codigoEquipo: async () => { const m = leer(KC, {}); m.equipo ||= nuevoCodigo(); escribir(KC, m); return m.equipo; },
         escuchar: f => { cb = f; f(Object.values(leer(K, {}))); },
         dejar: () => { cb = null; }
     };
@@ -123,15 +119,18 @@ function toast(msg) {
 }
 
 /* ---------- ¿Quién abre la página? ---------- */
-let yo = null;
-if (codigo) { try { const id = await api.quien(codigo); yo = PLANTILLA.find(p => p.id === id) || null; } catch {} }
-if (yo) {
-    $('yo-nombre').textContent = yo.nombre;
-    $('dorsal').value = yo.dorsal;
-} else {
+let valido = false;
+if (codigo) { try { valido = (await api.quien(codigo)) === 'equipo'; } catch {} }
+$('jugador').insertAdjacentHTML('beforeend', PLANTILLA.map(p => `<option value="${p.id}">${esc(p.nombre)} · #${p.dorsal}</option>`).join(''));
+try { const g = localStorage.getItem('tinellers_jugador'); if (g && PLANTILLA.some(p => p.id === g)) $('jugador').value = g; } catch {}
+const jugador = () => PLANTILLA.find(p => p.id === $('jugador').value);
+const ponerDorsal = () => { const p = jugador(); if (p) $('dorsal').value = p.dorsal; };
+ponerDorsal();
+$('jugador').addEventListener('change', () => { ponerDorsal(); $('cv-error').textContent = ''; });
+if (!valido) {
     $('cv-form').classList.add('hidden');
     $('cv-sin-enlace').classList.remove('hidden');
-    if (codigo) $('cv-sin-enlace-text').textContent = 'Este enlace no es válido. Pide al delegado tu enlace personal.';
+    if (codigo) $('cv-sin-enlace-text').textContent = 'Este enlace no es válido. Usa el último enlace que el delegado ha enviado al grupo.';
 }
 
 /* ---------- Formulario ---------- */
@@ -147,8 +146,8 @@ document.querySelectorAll('.choice .pick-btn').forEach(b => b.addEventListener('
 
 $('cv-form').addEventListener('submit', async e => {
     e.preventDefault();
-    const p = yo, err = $('cv-error');
-    if (!p) return;
+    const p = jugador(), err = $('cv-error');
+    if (!p) { err.textContent = 'Elige tu nombre.'; $('jugador').focus(); return; }
     if (asiste === null) { err.textContent = 'Dinos si vienes o no.'; return; }
     let dorsal = null, motivo = '';
     if (asiste) {
@@ -163,6 +162,7 @@ $('cv-form').addEventListener('submit', async e => {
     const btn = $('cv-send'); btn.disabled = true; btn.textContent = 'Enviando…';
     try {
         await api.enviar({ id: p.id, nombre: p.nombre, asiste, dorsal, motivo });
+        try { localStorage.setItem('tinellers_jugador', p.id); } catch {}
         $('cv-done-text').textContent = asiste
             ? `Gracias, ${p.nombre.split(' ')[0]}. Te esperamos el ${fmtLargo.format(J.inicio)} a las ${fmtHora.format(J.inicio)} con el dorsal ${dorsal} y la equipación ${equipacion}.`
             : `Gracias por avisar, ${p.nombre.split(' ')[0]}. Ya sabemos que no puedes venir contra ${rival}.`;
@@ -170,7 +170,7 @@ $('cv-form').addEventListener('submit', async e => {
         $('cv-done').scrollIntoView({ block: 'start' });
     } catch (e2) {
         err.textContent = e2?.code === 'permission-denied'
-            ? 'No se ha podido guardar con este enlace. Pide al delegado tu enlace personal.'
+            ? 'No se ha podido guardar con este enlace. Usa el enlace que el delegado ha enviado al grupo.'
             : 'No se ha podido enviar. Revisa tu conexión y vuelve a intentarlo.';
     } finally { btn.disabled = false; btn.textContent = 'Enviar respuesta'; }
 });
@@ -179,8 +179,8 @@ $('cv-again').addEventListener('click', () => { $('cv-done').classList.add('hidd
 if (cerrada) { $('cv-form').classList.add('hidden'); $('cv-sin-enlace').classList.add('hidden'); $('cv-closed').classList.remove('hidden'); }
 
 /* ---------- Panel del delegado ---------- */
-let respuestas = [], codigos = {};
-const enlace = id => `${location.origin}${location.pathname}?c=${codigos[id]}`;
+let respuestas = [], clave = '';
+const enlace = () => `${location.origin}${location.pathname}?c=${clave}`;
 function pintarAdmin() {
     const por = Object.fromEntries(respuestas.map(r => [r.jugador, r]));
     const filas = PLANTILLA.map(p => ({ p, r: por[p.id] }));
@@ -200,16 +200,14 @@ function pintarAdmin() {
     ].join('\n');
 }
 function pintarEnlaces() {
-    $('adm-links').innerHTML = PLANTILLA.map(p => {
-        const txt = `Hola ${p.nombre.split(' ')[0]}, confirma si vienes a la jornada ${J.n} (${J.local} – ${J.visitante}). Este enlace es solo tuyo, no lo compartas: ${enlace(p.id)}`;
-        return `<li><span><strong>${esc(p.nombre)}</strong> · #${p.dorsal}</span>
-            <span class="adm-link-btns"><button type="button" class="btn btn--navy btn--sm" data-copy="${p.id}">Copiar enlace</button>
-            <a class="btn btn--blue btn--sm" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">WhatsApp</a></span></li>`;
-    }).join('');
+    const txt = `⚽ Convocatoria jornada ${J.n}: ${J.local} – ${J.visitante}, ${fmtLargo.format(J.inicio)} a las ${fmtHora.format(J.inicio)}.${visitante ? ' Somos visitantes: ¡equipación BLANCA!' : ''} Confirmad aquí si venís y con qué dorsal 👇 ${enlace()}`;
+    $('adm-links').innerHTML = `<li><span><strong>Enlace del equipo</strong><br><small>${esc(enlace())}</small></span>
+        <span class="adm-link-btns"><button type="button" class="btn btn--navy btn--sm" data-copy="1">Copiar enlace</button>
+        <a class="btn btn--blue btn--sm" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">Enviar al grupo</a></span></li>`;
 }
 $('adm-links').addEventListener('click', async e => {
-    const b = e.target.closest('[data-copy]'); if (!b) return;
-    try { await navigator.clipboard.writeText(enlace(b.dataset.copy)); toast('Enlace copiado'); } catch { toast('No se pudo copiar'); }
+    if (!e.target.closest('[data-copy]')) return;
+    try { await navigator.clipboard.writeText(enlace()); toast('Enlace copiado'); } catch { toast('No se pudo copiar'); }
 });
 $('adm-copy').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(pintarAdmin.texto || ''); toast('Resumen copiado'); }
@@ -222,7 +220,7 @@ api.onUser(async u => {
     $('adm').classList.toggle('hidden', !admin);
     $('cv-admin-link').classList.toggle('hidden', admin);
     if (admin) {
-        try { codigos = await api.codigos(); pintarEnlaces(); } catch { toast('No se pudieron preparar los enlaces'); }
+        try { clave = await api.codigoEquipo(); pintarEnlaces(); } catch { toast('No se pudo preparar el enlace'); }
         api.escuchar(l => { respuestas = l; pintarAdmin(); }, () => toast('No se pudieron cargar las respuestas'));
     } else {
         api.dejar();

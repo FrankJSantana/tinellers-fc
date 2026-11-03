@@ -112,7 +112,10 @@
   <div class="wrap">
     <form class="cv-form" id="cv-form" novalidate aria-labelledby="h-form">
       <h2 id="h-form">Tu respuesta</h2>
-      <p class="yo">Respondes como <strong id="yo-nombre"></strong></p>
+      <div class="step">
+        <label for="jugador">¿Quién eres?</label>
+        <select id="jugador" class="field" required><option value="">Elige tu nombre…</option></select>
+      </div>
       <div class="step">
         <p class="lbl" id="lbl-asiste">¿Vienes al partido?</p>
         <div class="choice" role="group" aria-labelledby="lbl-asiste">
@@ -140,7 +143,7 @@
       <button type="button" class="btn btn--white btn--sm" id="cv-again">Cambiar mi respuesta</button>
     </section>
 
-    <section class="cv-done cv-done--plain hidden" id="cv-sin-enlace" aria-labelledby="h-sin"><h2 id="h-sin">Usa tu enlace personal</h2><p id="cv-sin-enlace-text">Cada jugador tiene su propio enlace para confirmar. Pídeselo al delegado por WhatsApp.</p></section>
+    <section class="cv-done cv-done--plain hidden" id="cv-sin-enlace" aria-labelledby="h-sin"><h2 id="h-sin">Solo para la plantilla</h2><p id="cv-sin-enlace-text">Para confirmar asistencia abre el enlace que el delegado ha enviado al grupo del equipo.</p></section>
 
     <p class="cv-closed hidden" id="cv-closed">Este partido ya se ha jugado. La convocatoria está cerrada.</p>
 
@@ -161,8 +164,8 @@
           <tbody id="adm-body"></tbody>
         </table>
       </div>
-      <h3 class="adm-h3">Enlaces personales</h3>
-      <p class="cv-note">Manda a cada jugador su enlace por privado. Solo con su enlace se puede responder en su nombre.</p>
+      <h3 class="adm-h3">Enlace del equipo</h3>
+      <p class="cv-note">Envíalo solo al grupo de WhatsApp del equipo. Sin este enlace nadie puede responder.</p>
       <ul class="adm-links" id="adm-links"></ul>
     </section>
 
