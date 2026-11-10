@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jugador · Tinellers FC</title>
+<meta name="description" content="Ficha del jugador de Tinellers FC: media, goles, asistencias y nota de cada jornada.">
+<meta name="theme-color" content="#070d26">
+<link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="style.css?v=20261110b">
+</head>
+<body id="top">
+<a class="sr-only skip" href="#main">Saltar al contenido</a>
+<header class="site-head">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="Tinellers FC, inicio"><img src="img/escudo-tinellers-96.webp" alt="" width="96" height="106"><span>Tinellers FC</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="partidos.html">Partidos</a>
+      <a href="clasificacion.html">Clasificación</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="estadisticas.html" aria-current="page">Estadísticas</a>
+      <a href="quienes-somos.html">Club</a>
+      <a class="btn" href="apuestas.html">Quiniela</a>
+    </nav>
+    <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Inicio</a>
+    <a href="partidos.html">Partidos</a>
+    <a href="clasificacion.html">Clasificación</a>
+    <a href="noticias.html">Noticias</a>
+    <a href="estadisticas.html" aria-current="page">Estadísticas</a>
+    <a href="quienes-somos.html">Club</a>
+    <a class="btn" href="apuestas.html">Quiniela</a>
+  </div>
+</header>
+<main id="main">
+<section class="page-head" aria-labelledby="ph-nombre">
+  <div class="wrap ph-grid">
+    <div>
+      <a class="crumb" href="estadisticas.html" data-r><span aria-hidden="true">←</span> Estadísticas</a>
+      <p class="ph-dorsal num" id="ph-dorsal" data-r aria-hidden="true"></p>
+      <h1 id="ph-nombre" data-r>Jugador</h1>
+      <p class="ph-sub" id="ph-puesto" data-r></p>
+    </div>
+    <div class="ph-crest" data-r><img class="" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC" width="900" height="997"></div>
+  </div>
+</section>
+
+<section class="balance" aria-labelledby="h-temp">
+  <div class="wrap balance-grid" id="fx-tiles"></div>
+</section>
+
+<section class="section section--white" aria-labelledby="h-partidos">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-partidos">Partido a partido</h2><p class="meta">Nota de la votación del equipo en cada jornada</p></div>
+    <div class="table-scroll" data-r>
+      <table class="data fx-log">
+        <caption class="sr-only">Nota, goles y MVP del jugador en cada jornada</caption>
+        <thead><tr><th scope="col">Jornada</th><th scope="col">Rival</th><th scope="col">Resultado</th><th scope="col">Nota</th><th scope="col">Goles</th><th scope="col">MVP</th></tr></thead>
+        <tbody id="fx-tabla"></tbody>
+      </table>
+    </div>
+    <p class="fx-note" data-r>Asistencias, paradas y tarjetas se cuentan en el total de la temporada.</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="h-analisis">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-analisis">Análisis por jornada</h2><p class="meta">Por qué tiene esa nota en cada partido</p></div>
+    <div class="fx-cards" id="fx-analisis"></div>
+  </div>
+</section>
+
+<section class="section section--white section--plantilla" aria-labelledby="h-resto">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-resto">Resto de la plantilla</h2><a class="more" href="estadisticas.html">Todas las estadísticas <span aria-hidden="true">→</span></a></div>
+    <ul class="fx-squad" id="fx-plantilla"></ul>
+  </div>
+</section>
+</main>
+<footer class="site-foot">
+  <div class="wrap foot-cols">
+    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="quienes-somos.html#plantilla">Plantilla</a><a href="noticias.html">Noticias</a></div>
+    <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="clasificacion.html">Clasificación</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
+    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="apuestas.html">Quiniela de la jornada</a></div>
+    <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
+  </div>
+  <div class="wrap foot-mid"><div data-r><img class="" src="img/escudo-tinellers-320.webp" alt="Escudo de Tinellers FC" width="320" height="354"></div><h2 class="foot-motto" data-r>El escudo, la cerveza y el césped</h2></div>
+  <div class="wrap foot-mark">
+    <p class="mark" aria-hidden="true" data-r>Tinellers FC</p>
+    <div class="legal"><p>© 2026 Tinellers FC. Web creada por Franklin Jiménez Santana.</p><a href="privacidad.html">Privacidad</a> · <a href="#top">Volver arriba</a></div>
+  </div>
+</footer>
+<script src="js/jugadores-datos.js?v=20261110b"></script>
+<script src="js/jugador.js?v=20261110b"></script>
+<script src="js/main.js?v=20261110b"></script>
+</body>
+</html>

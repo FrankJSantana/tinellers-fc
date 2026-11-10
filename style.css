@@ -356,6 +356,70 @@ h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); li
 .data td.dorsal, .data th:first-child { position: sticky; left: 0; }
 .data tbody td.dorsal { background: inherit; }
 
+/* Enlaces a la ficha del jugador desde la tabla */
+.player-link { color: inherit; text-decoration: none; background-image: linear-gradient(currentColor, currentColor); background-size: 0% 2px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size 220ms var(--ease); }
+.player-link:hover { background-size: 100% 2px; }
+.avg-link { display: inline-flex; align-items: center; gap: 6px; margin: -6px -8px; padding: 6px 8px; color: inherit; text-decoration: underline 1.5px; text-underline-offset: 5px; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); transition: text-decoration-color 160ms; }
+.avg-link:hover { text-decoration-color: currentColor; }
+.avg-link svg { width: 11px; height: 11px; flex: none; transition: transform 200ms var(--ease); }
+.avg-link:hover svg { transform: translate(2px, -2px); }
+
+/* ==========================================================
+   Ficha de jugador (jugador.html)
+   ========================================================== */
+.crumb { display: inline-flex; align-items: center; gap: 8px; margin-bottom: clamp(24px, 3vw, 40px); font-family: var(--display); font-weight: 700; font-size: var(--s-body); text-transform: uppercase; text-decoration: none; color: var(--on-dark); transition: color 160ms; }
+.crumb:hover { color: var(--white); }
+.crumb span { transition: transform 220ms var(--ease); }
+.crumb:hover span { transform: translateX(-4px); }
+.ph-dorsal { font-family: var(--display); font-weight: 800; font-size: var(--s-display); line-height: 0.8; letter-spacing: -0.04em; color: var(--red); margin-bottom: 12px; }
+.balance h2 span { display: block; margin-top: 6px; font-family: var(--text); font-size: var(--s-body); font-weight: 500; text-transform: none; color: var(--on-dark); }
+
+.rating { display: inline-flex; align-items: center; justify-content: center; min-width: 3.4em; padding: 4px 8px; font-family: var(--display); font-weight: 800; font-size: var(--s-body); line-height: 1.2; color: var(--white); background: var(--navy); font-variant-numeric: tabular-nums; }
+.rating--hi { background: var(--blue); }
+.rating--mid { background: var(--navy); }
+.rating--lo { background: var(--paper-2); color: var(--ink); }
+.rating--none { background: transparent; color: var(--muted); }
+.mvp-tag { display: inline-block; padding: 3px 10px; background: var(--red); color: var(--white); font-family: var(--display); font-weight: 800; font-size: var(--s-small); letter-spacing: 0.04em; }
+
+.fx-log { min-width: 640px; }
+.fx-log th:nth-child(2), .fx-log td:nth-child(2) { text-align: left; }
+.fx-log th:first-child, .fx-log td:first-child { position: static; }
+.fx-log td.fx-jor { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); }
+.fx-log .team { font-weight: 600; }
+.fx-log .c-sub { margin-left: 46px; }
+.fx-log .res b { display: inline-flex; align-items: center; justify-content: center; width: 1.7em; height: 1.7em; margin-right: 8px; font-family: var(--display); font-weight: 800; }
+.fx-log .res b.win { background: var(--blue); color: var(--white); }
+.fx-log .res b.loss { background: var(--red); color: var(--white); }
+.fx-log .res b.draw { background: var(--paper-2); color: var(--ink); }
+.fx-estado { font-size: var(--s-small); font-weight: 600; color: var(--muted); }
+.fx-log tbody tr.fx-total, .fx-log tbody tr.fx-total:hover { background: var(--navy); }
+.fx-log tr.fx-total td { color: var(--white); font-family: var(--display); font-weight: 800; font-size: var(--s-lead); text-transform: uppercase; }
+.fx-log tr.fx-total td:first-child { text-align: left; }
+.fx-log tr.fx-total .rating { background: var(--red); }
+.fx-note { margin-top: 16px; font-size: var(--s-small); color: var(--muted); }
+
+.fx-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.fx-card { background: var(--white); }
+.fx-card-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px clamp(20px, 2.6vw, 36px); background: var(--navy); color: var(--white); }
+.fx-card-head h3 { font-size: var(--s-lead); text-transform: uppercase; }
+.fx-card-head p { margin-top: 4px; font-size: var(--s-small); color: var(--on-dark); }
+.fx-card-head .rating { font-size: var(--s-lead); padding: 6px 12px; }
+.fx-card-head .rating--mid { background: var(--white); color: var(--navy); }
+#fx-tiles .bal b { font-size: clamp(3.25rem, 1.6rem + 5.4vw, 8rem); }
+.fx-card-body { padding: 24px clamp(20px, 2.6vw, 36px) 32px; max-width: 64ch; }
+.fx-card-body p + p { margin-top: 1em; }
+
+.fx-squad { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--gap); }
+.fx-squad a { display: grid; grid-template-columns: 2.4em minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 16px 18px; background: var(--paper); text-decoration: none; transition: background-color 160ms; }
+.fx-squad a:hover { background: var(--paper-2); }
+.fx-dor { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); }
+.fx-nom { font-weight: 600; line-height: 1.2; }
+@media (max-width: 900px) {
+    .fx-cards { grid-template-columns: minmax(0, 1fr); }
+    .fx-log .c-sub { margin-left: 0; }
+}
+
+
 /* Historia del club: dos columnas, palabras marcadas */
 .story { columns: 2; column-gap: 48px; font-size: var(--s-lead); line-height: 1.4; color: var(--muted); text-align: left; }
 .story strong { color: var(--ink); font-weight: 600; }
