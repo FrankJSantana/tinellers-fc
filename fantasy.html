@@ -12,7 +12,7 @@
 <link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="style.css?v=20261110b">
-<link rel="stylesheet" href="fantasy.css?v=20261110i">
+<link rel="stylesheet" href="fantasy.css?v=20261110k">
 </head>
 <body id="top">
 <a class="sr-only skip" href="#main">Saltar al contenido</a>
@@ -57,14 +57,25 @@
 <section class="section fz-section" aria-labelledby="h-equipo">
   <div class="wrap">
     <div class="sec-head" data-r><h2 id="h-equipo">Tu equipo</h2><p class="meta" id="fz-para">Jornada 4 · Tinellers FC – La Trese FC · Dom 15 nov</p></div>
-    <div class="fz-layout">
+    <div class="fz-layout" id="fz-layout">
+      <div class="fz-gate hidden" id="fz-gate">
+        <div class="fz-gate-card">
+          <h3>Entra para hacer tu equipo</h3>
+          <p>Primero inicia sesión con tu cuenta de Google. Así tu equipo queda guardado a tu nombre y puedes cambiarlo desde cualquier móvil u ordenador.</p>
+          <button type="button" class="btn" id="fz-entrar">Entrar con Google</button>
+          <form id="fz-gate-local" class="hidden fz-local" novalidate>
+            <label for="fz-gate-name" class="legend">Tu nombre o apodo</label>
+            <input id="fz-gate-name" class="field" type="text" maxlength="30" autocomplete="nickname">
+            <button type="submit" class="btn">Entrar</button>
+            <p class="meta">Modo local: cada navegador guarda sus propios equipos.</p>
+          </form>
+          <p id="fz-gate-error" class="error" role="alert"></p>
+        </div>
+      </div>
       <div class="fz-main">
         <div class="fz-tools" data-r>
-          <div class="fz-forms" id="fz-forms" role="group" aria-label="Formación">
-            <button type="button" class="pick-btn" data-f="2-2" aria-pressed="true">2-2</button>
-            <button type="button" class="pick-btn" data-f="3-1" aria-pressed="false">3-1</button>
-            <button type="button" class="pick-btn" data-f="1-2-1" aria-pressed="false">1-2-1</button>
-          </div>
+          <div class="fz-forms" id="fz-forms" role="group" aria-label="Formación"></div>
+          <p class="fz-form-nombre" id="fz-form-nombre"></p>
           <p class="fz-cost"><b id="fz-gastado" class="num">0</b> <span>/ 47 M</span></p>
         </div>
 
@@ -104,6 +115,7 @@
             </div>
             <button id="fz-salir" type="button" class="link-btn">Salir</button>
           </div>
+          <div class="fz-aviso-box hidden" id="fz-aviso-box" aria-live="polite"></div>
           <p class="fz-estado" id="fz-estado">Toca un hueco del campo para fichar.</p>
           <form id="fz-local" class="hidden fz-local" novalidate>
             <label for="fz-local-name" class="legend">Tu nombre o apodo</label>
@@ -121,12 +133,12 @@
         <section class="card fz-rules" aria-labelledby="h-reglas" data-r>
           <h3 id="h-reglas">Cómo se juega</h3>
           <ol>
-            <li><b>Cinco jugadores:</b> el portero y cuatro de campo. Colócalos con la formación que quieras.</li>
+            <li><b>Cinco jugadores:</b> el portero y cuatro de campo. Cada uno solo puede jugar en sus posiciones (central, banda, medio o delantero), así que elige bien la formación.</li>
             <li><b>47 M de presupuesto.</b> Jandro y Alfa valen 15 M cada uno, así que solo te cabe uno de los dos. El resto cuesta entre 6 y 9 M según su media.</li>
             <li><b>Puntos:</b> la nota del partido, +3 por gol, +2 por asistencia y +5 si es el MVP. Si no juega, 0.</li>
             <li><b>Capitán:</b> puntúa doble.</li>
             <li><b>Cambios:</b> hasta 24 horas antes de cada partido. Si no tocas nada, tu equipo sigue igual en la jornada siguiente.</li>
-            <li><b>Los equipos de los demás</b> se ven cuando cierra cada jornada. Es gratis y sin dinero.</li>
+            <li><b>Todos los equipos se ven siempre</b> en la clasificación. Pulsa un jugador para ver qué ha puntuado en cada jornada. Es gratis y sin dinero.</li>
           </ol>
         </section>
       </div>
@@ -136,8 +148,8 @@
 
 <section class="section section--white fz-ranking" aria-labelledby="h-clasif">
   <div class="wrap">
-    <div class="sec-head" data-r><h2 id="h-clasif">Clasificación</h2><p class="meta" id="fz-clasif-meta">Empieza en la jornada 4</p></div>
-    <div id="fz-clasif" data-r><p class="fz-empty">La clasificación empieza con la jornada 4.</p></div>
+    <div class="sec-head" data-r><h2 id="h-clasif">Equipos y clasificación</h2><p class="meta" id="fz-clasif-meta">Equipos de todos los participantes</p></div>
+    <div id="fz-clasif" data-r><p class="fz-empty">Cargando los equipos…</p></div>
   </div>
 </section>
 </main>
@@ -149,6 +161,14 @@
   </div>
   <div id="fz-current"></div>
   <ul class="fz-pick" id="fz-pick"></ul>
+</dialog>
+
+<dialog class="fz-sheet fz-ficha" id="fz-ficha" aria-labelledby="fz-ficha-title">
+  <div class="fz-sheet-head">
+    <div><h2 id="fz-ficha-title">Jugador</h2><p id="fz-ficha-sub" class="meta"></p></div>
+    <button type="button" class="fz-x" id="fz-ficha-x" aria-label="Cerrar"><span aria-hidden="true">×</span></button>
+  </div>
+  <div class="fz-ficha-body" id="fz-ficha-body"></div>
 </dialog>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -167,6 +187,6 @@
 </footer>
 <script src="js/main.js"></script>
 <script src="js/jugadores-datos.js?v=20261110j"></script>
-<script type="module" src="js/fantasy.js?v=20261110j"></script>
+<script type="module" src="js/fantasy.js?v=20261110k"></script>
 </body>
 </html>

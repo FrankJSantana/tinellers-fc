@@ -199,6 +199,64 @@ html:has(.fz-sheet[open]) { overflow: hidden; }
 @media (hover: hover) and (pointer: fine) { .fz-opt:not(:disabled):hover { background: var(--paper); } }
 .fz-none { padding: 24px; color: var(--muted); }
 
+/* ---------- Formación: nombre bajo los botones ---------- */
+.fz-tools { row-gap: 8px; }
+.fz-form-nombre { order: 3; flex-basis: 100%; font-size: var(--s-small); font-weight: 600; color: var(--muted); }
+
+/* ---------- Acceso: primero se entra ---------- */
+.fz-layout { position: relative; }
+.fz-gate { position: absolute; inset: -12px; z-index: 6; display: flex; justify-content: center; align-items: flex-start; padding: 64px 16px 0; background: rgba(242, 244, 248, 0.78); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.fz-gate-card { position: sticky; top: calc(var(--head-h) + 32px); width: min(460px, 100%); padding: 32px; background: var(--navy); color: var(--white); text-align: left; }
+.fz-gate-card h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-head); text-transform: uppercase; line-height: 0.95; }
+.fz-gate-card p { margin-top: 14px; color: var(--on-dark); }
+.fz-gate-card .btn { width: 100%; margin-top: 24px; }
+.fz-gate-card .legend { color: var(--white); margin-top: 20px; }
+.fz-gate-card .error:empty { display: none; }
+.fz-layout.is-locked .fz-pitch { filter: saturate(0.7); }
+
+/* ---------- Avisos por correo ---------- */
+.fz-aviso-box { padding: 16px; background: var(--paper); }
+.fz-aviso-box.is-pending { background: var(--blue); color: var(--white); }
+.fz-aviso-box p b { font-weight: 700; }
+.fz-aviso-btns { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.fz-check { display: flex; gap: 12px; align-items: flex-start; font-size: var(--s-small); font-weight: 600; cursor: pointer; }
+.fz-check input { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--blue); }
+
+/* ---------- Mercado: el nombre abre la ficha de puntos ---------- */
+.fz-ver { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.fz-ver b { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color 160ms ease; }
+@media (hover: hover) and (pointer: fine) { .fz-ver:hover b { text-decoration-color: currentColor; } }
+
+/* ---------- Equipos en la clasificación ---------- */
+.fz-team ul { gap: 6px; }
+.fz-team li { padding: 0; }
+.fz-team li button { display: inline-flex; align-items: baseline; gap: 8px; padding: 6px 10px; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; cursor: pointer; }
+.fz-team li small { font-family: var(--text); font-size: 0.6875rem; font-weight: 600; color: var(--muted); }
+.fz-hist { margin-top: 16px; display: grid; gap: 12px; }
+.fz-hist > div { padding-top: 12px; border-top: 1px solid rgba(57, 68, 106, 0.18); }
+.fz-rank > li.is-me .fz-hist > div { border-top-color: rgba(255, 255, 255, 0.25); }
+.fz-hist b { font-weight: 700; }
+
+/* ---------- Ficha de puntos de un jugador ---------- */
+.fz-ficha-body { overflow-y: auto; overscroll-behavior: contain; padding: 20px 24px 28px; }
+.fz-ficha-total { font-weight: 600; }
+.fz-ficha-total b { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); }
+.fz-ficha-reglas { margin-top: 6px; font-size: var(--s-small); color: var(--muted); }
+.fz-fichas { margin-top: 18px; display: grid; gap: 8px; }
+.fz-fj { padding: 14px 16px; background: var(--paper); }
+.fz-fj.is-antes { opacity: 0.75; }
+.fz-fj-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.fz-fj-head b { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); text-transform: uppercase; }
+.fz-fj-head span { font-size: var(--s-small); color: var(--muted); }
+.fz-fj-head i { font-style: normal; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; background: var(--paper-2); }
+.fz-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.fz-chips span { padding: 3px 9px; background: var(--white); font-size: var(--s-small); font-weight: 600; }
+.fz-cuenta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 10px; font-size: var(--s-small); color: var(--muted); }
+.fz-cuenta b { color: var(--ink); }
+.fz-cuenta strong { margin-left: auto; font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); }
+.fz-ficha-body .more { margin-top: 20px; }
+@media (max-width: 700px) { .fz-ficha-body { padding: 16px 16px 24px; } }
+
 /* ---------- Movimiento (solo si no se pide reducirlo) ---------- */
 @media (prefers-reduced-motion: no-preference) {
     .fz-kit.is-new { animation: fz-fichaje 260ms var(--ease) both; }
