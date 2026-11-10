@@ -131,7 +131,7 @@
 }
 .fz-act:active { transform: scale(0.96); }
 .fz-act.is-out { background: var(--paper-2); color: var(--ink); }
-.fz-act:disabled { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 2px var(--paper-2); /* taste-skill-ignore: borde */ cursor: default; transform: none; }
+.fz-act:disabled { background: transparent; color: rgba(57, 68, 106, 0.45); box-shadow: inset 0 0 0 2px var(--paper); /* taste-skill-ignore: borde */ cursor: default; transform: none; }
 @media (hover: hover) and (pointer: fine) {
     .fz-act:not(:disabled):not(.is-out):hover { background: var(--blue); }
     .fz-act.is-out:hover { background: #d2d9e8; }
