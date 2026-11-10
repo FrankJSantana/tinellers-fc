@@ -1,5 +1,5 @@
 // js/fantasy-logica.js — reglas del Fantasy Tinellers, sin pantalla ni base de datos.
-// Los datos de cada jugador (media, nota, goles, asistencias y MVP de cada jornada)
+// Los datos de cada jugador (media, titular, goles, asistencias, tiros y MVP de cada jornada)
 // salen de js/jugadores-datos.js; aquí solo se decide cuánto vale cada uno y cuánto puntúa.
 
 export const PRESUPUESTO = 47;             // millones ficticios para los 5 jugadores
@@ -14,9 +14,23 @@ export const PRECIO_MIN = 6;
 export const PRECIO_MAX = 9;
 export const PRECIO_NUEVO = 6;
 
-// Puntos de un jugador en una jornada: su nota (redondeada) + 3 por gol + 2 por asistencia
-// + 5 si es MVP. Si no juega, 0. El capitán puntúa doble.
-export const PUNTOS = { gol: 3, asistencia: 2, mvp: 5, capitan: 2 };
+// Puntos por jornada (si no juega, 0). Lo que vale cada acción depende de la posición en la que
+// está alineado: el portero y el central puntúan como defensas.
+//   Titular +1 · MVP +5
+//   Gol: defensa +5, banda y medio +4, delantero +3
+//   Asistencia: defensa +4, banda y medio +3, delantero +2
+//   Cada 2 tiros a puerta: defensa +3, banda y medio +2, delantero +1
+//   Goles encajados: 0 → defensa +4, banda +3, medio +2, delantero +1; 1 → nada; 2 o más → −1 por gol
+// El capitán puntúa doble.
+export const GRUPO = { POR: 'DEF', CEN: 'DEF', BAN: 'BAN', MED: 'MED', DEL: 'DEL' };
+export const NOMBRE_GRUPO = { DEF: 'Defensa', BAN: 'Banda', MED: 'Medio', DEL: 'Delantero' };
+export const TABLA = {
+    gol:        { DEF: 5, BAN: 4, MED: 4, DEL: 3 },
+    asistencia: { DEF: 4, BAN: 3, MED: 3, DEL: 2 },
+    tiros2:     { DEF: 3, BAN: 2, MED: 2, DEL: 1 },
+    porteria0:  { DEF: 4, BAN: 3, MED: 2, DEL: 1 }
+};
+export const PUNTOS = { titular: 1, mvp: 5, porGolEncajado: -1, desdeGoles: 2, capitan: 2 };
 
 // Nombre corto para el campo (si no está aquí, el primer nombre)
 export const CORTOS = { 'alejandro-cuevas': 'Jandro' };
@@ -77,23 +91,31 @@ export function plantilla(D) {
 
 export const jornadaPuntuada = (D, n) => !!D?.PARTIDOS?.[n];
 
-// Puntos de un jugador en la jornada n; null si esa jornada aún no tiene datos.
-// Si jugó pero su nota aún no está, suma goles, asistencias y MVP; la nota se añade cuando llegue.
-export function puntosJugador(D, id, n) {
-    if (!jornadaPuntuada(D, n)) return null;
-    const r = (D.JUGADORES || []).find(j => j.id === id)?.jornadas?.[n];
-    if (!r || r.estado) return 0;
-    const nota = typeof r.nota === 'number' ? redondear(r.nota) : 0;
-    return nota + PUNTOS.gol * (r.goles || 0) + PUNTOS.asistencia * (r.asistencias || 0) + (r.mvp ? PUNTOS.mvp : 0);
+// Posición con la que puntúa un jugador fuera de un equipo (la primera de su lista)
+export function posPrincipal(D, id) {
+    const j = (D?.JUGADORES || []).find(x => x.id === id);
+    return (j ? posicionesDe(j) : POSICIONES[id] || ['MED'])[0];
 }
 
-// Puntos de un equipo guardado ({ jugadores, capitan }) en la jornada n; null si aún no hay datos
+// Puntos de un jugador en la jornada n jugando en la posición pos; null si esa jornada aún no tiene datos.
+export function puntosJugador(D, id, n, pos = posPrincipal(D, id)) {
+    const d = desglose(D, id, n, pos);
+    return d ? d.total : null;
+}
+
+// Posición de cada jugador de un equipo guardado: la de su hueco en la formación
+// (si la formación es antigua y ya no existe, su posición principal).
+export const posEnEquipo = (D, equipo, i) =>
+    FORMACIONES[equipo?.formacion] ? posHueco(equipo.formacion, i) : posPrincipal(D, equipo?.jugadores?.[i]);
+
+// Puntos de un equipo guardado ({ jugadores, capitan, formacion }) en la jornada n; null si aún no hay datos
 export function puntosEquipo(D, equipo, n) {
     if (!equipo || !jornadaPuntuada(D, n)) return null;
-    const detalle = (equipo.jugadores || []).map(id => {
-        const base = puntosJugador(D, id, n) ?? 0;
+    const detalle = (equipo.jugadores || []).map((id, i) => {
+        const pos = posEnEquipo(D, equipo, i);
+        const base = puntosJugador(D, id, n, pos) ?? 0;
         const capitan = id === equipo.capitan;
-        return { id, base, capitan, pts: capitan ? base * PUNTOS.capitan : base };
+        return { id, pos, base, capitan, pts: capitan ? base * PUNTOS.capitan : base };
     });
     return { total: detalle.reduce((s, x) => s + x.pts, 0), detalle };
 }
@@ -198,19 +220,32 @@ export function problemas(estado, porId) {
 export const capitanPorDefecto = (slots, porId) =>
     slots.filter(Boolean).slice().sort((a, b) => (porId[b]?.precio || 0) - (porId[a]?.precio || 0))[0] || null;
 
-// Desglose de los puntos de un jugador en una jornada, para su ficha
-export function desglose(D, id, n) {
-    const r = (D.JUGADORES || []).find(j => j.id === id)?.jornadas?.[n];
+// Puntos por goles encajados según la posición
+export function puntosEncajados(gc, grupo) {
+    if (gc === 0) return TABLA.porteria0[grupo];
+    if (gc >= PUNTOS.desdeGoles) return PUNTOS.porGolEncajado * gc;
+    return 0;
+}
+
+// Desglose de los puntos de un jugador en una jornada, fila a fila, para su ficha:
+// { jugo, estado, pos, grupo, datos, filas: [{ clave, texto, cantidad, pts }], total }; null si no hay datos.
+export function desglose(D, id, n, pos = posPrincipal(D, id)) {
     if (!jornadaPuntuada(D, n)) return null;
-    if (!r) return { jugo: false, estado: 'No jugó', partes: [], total: 0 };
-    if (r.estado) return { jugo: false, estado: r.estado, partes: [], total: 0 };
-    const partes = [];
-    if (typeof r.nota === 'number') partes.push(['Nota ' + String(r.nota).replace('.', ','), redondear(r.nota)]);
-    else partes.push(['Nota pendiente', 0]);
-    if (r.goles) partes.push([r.goles === 1 ? '1 gol' : `${r.goles} goles`, PUNTOS.gol * r.goles]);
-    if (r.asistencias) partes.push([r.asistencias === 1 ? '1 asistencia' : `${r.asistencias} asistencias`, PUNTOS.asistencia * r.asistencias]);
-    if (r.mvp) partes.push(['MVP', PUNTOS.mvp]);
-    return { jugo: true, datos: r, partes, total: partes.reduce((s, x) => s + x[1], 0) };
+    const P = D.PARTIDOS[n];
+    const r = (D.JUGADORES || []).find(j => j.id === id)?.jornadas?.[n];
+    const grupo = GRUPO[pos] || 'MED';
+    if (!r || r.estado) return { jugo: false, estado: r?.estado || 'No jugó', pos, grupo, filas: [], total: 0 };
+    const goles = r.goles || 0, asis = r.asistencias || 0, tiros = r.tiros || 0;
+    const gc = typeof P.gc === 'number' ? P.gc : null;
+    const filas = [
+        { clave: 'titular', texto: 'Titular', cantidad: r.titular === true ? 'Sí' : r.titular === false ? 'No' : '–', pts: r.titular === true ? PUNTOS.titular : 0 },
+        { clave: 'goles', texto: 'Goles', cantidad: goles, pts: goles * TABLA.gol[grupo] },
+        { clave: 'asistencias', texto: 'Asistencias', cantidad: asis, pts: asis * TABLA.asistencia[grupo] },
+        { clave: 'tiros', texto: 'Tiros a puerta', cantidad: tiros, pts: Math.floor(tiros / 2) * TABLA.tiros2[grupo] },
+        { clave: 'encajados', texto: gc === 0 ? 'Portería a cero' : 'Goles encajados', cantidad: gc ?? '–', pts: gc == null ? 0 : puntosEncajados(gc, grupo) },
+        { clave: 'mvp', texto: 'MVP', cantidad: r.mvp ? 'Sí' : 'No', pts: r.mvp ? PUNTOS.mvp : 0 }
+    ];
+    return { jugo: true, pos, grupo, datos: r, filas, total: filas.reduce((s, x) => s + x.pts, 0) };
 }
 
 /* ---------- Clasificación ---------- */

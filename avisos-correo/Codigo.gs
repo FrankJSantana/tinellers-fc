@@ -24,7 +24,21 @@ var FORMACIONES = {
   '2-1-1': ['POR', 'CEN', 'CEN', 'MED', 'DEL']
 };
 var CORTOS = { 'alejandro-cuevas': 'Jandro' };
-var PUNTOS = { gol: 3, asistencia: 2, mvp: 5, capitan: 2 };
+// Puntos: los mismos que js/fantasy-logica.js (si cambian allí, cámbialos aquí también).
+var GRUPO = { POR: 'DEF', CEN: 'DEF', BAN: 'BAN', MED: 'MED', DEL: 'DEL' };
+var TABLA = {
+  gol: { DEF: 5, BAN: 4, MED: 4, DEL: 3 },
+  asistencia: { DEF: 4, BAN: 3, MED: 3, DEL: 2 },
+  tiros2: { DEF: 3, BAN: 2, MED: 2, DEL: 1 },
+  porteria0: { DEF: 4, BAN: 3, MED: 2, DEL: 1 }
+};
+var PUNTOS = { titular: 1, mvp: 5, capitan: 2 };
+// Posición principal de cada jugador (para equipos guardados con una formación antigua)
+var POS_PRINCIPAL = {
+  'arian-burguillo': 'POR', 'gilbert-natanael-de-jesus': 'CEN', 'junior-de-jesus': 'DEL', 'luis-nunez': 'MED',
+  'alejandro-cuevas': 'DEL', 'fidel-escalante-mateo': 'CEN', 'piero-malasquez': 'CEN', 'alfa-junior-umaro': 'BAN',
+  'eloy-marte': 'BAN', 'sebas-rodriguez-yanez': 'BAN', 'esteban-morales': 'MED', 'jefferson-marte': 'MED', 'nacho-escalante': 'BAN'
+};
 
 /* ---------- Puesta en marcha ---------- */
 function instalar() {
@@ -101,17 +115,23 @@ function jugador_(T, id) {
   var j = (T.JUGADORES || []).filter(function (x) { return x.id === id; })[0];
   return { id: id, corto: CORTOS[id] || (j ? j.nombre.split(' ')[0] : id), nombre: j ? j.nombre : id, datos: j };
 }
-function puntosJugador_(T, id, n) {
+function posEnEquipo_(e, i) {
+  var f = FORMACIONES[e.formacion];
+  return f ? f[i] : (POS_PRINCIPAL[e.jugadores[i]] || 'MED');
+}
+function puntosJugador_(T, id, n, pos) {
   if (!T.PARTIDOS || !T.PARTIDOS[n]) return null;
   var j = jugador_(T, id).datos, r = j && j.jornadas && j.jornadas[n];
   if (!r || r.estado) return 0;
-  var nota = typeof r.nota === 'number' ? Math.round(r.nota) : 0;
-  return nota + PUNTOS.gol * (r.goles || 0) + PUNTOS.asistencia * (r.asistencias || 0) + (r.mvp ? PUNTOS.mvp : 0);
+  var g = GRUPO[pos] || 'MED', gc = T.PARTIDOS[n].gc;
+  var enc = typeof gc !== 'number' ? 0 : gc === 0 ? TABLA.porteria0[g] : gc >= 2 ? -gc : 0;
+  return (r.titular === true ? PUNTOS.titular : 0) + TABLA.gol[g] * (r.goles || 0) + TABLA.asistencia[g] * (r.asistencias || 0) +
+    TABLA.tiros2[g] * Math.floor((r.tiros || 0) / 2) + enc + (r.mvp ? PUNTOS.mvp : 0);
 }
 function puntosEquipo_(T, e, n) {
   if (!e) return null;
-  var detalle = e.jugadores.map(function (id) {
-    var b = puntosJugador_(T, id, n) || 0, cap = id === e.capitan;
+  var detalle = e.jugadores.map(function (id, i) {
+    var b = puntosJugador_(T, id, n, posEnEquipo_(e, i)) || 0, cap = id === e.capitan;
     return { id: id, base: b, cap: cap, pts: cap ? b * PUNTOS.capitan : b };
   });
   return { total: detalle.reduce(function (s, x) { return s + x.pts; }, 0), detalle: detalle };
@@ -162,7 +182,7 @@ function puntos_(a, j, c, tabla) {
   return { asunto: 'Fantasy Tinellers: ' + (p ? 'has sumado ' + p.total + ' puntos' : 'puntos') + ' en la jornada ' + j.n, html: plantilla_(cuerpo, 'Ver la clasificación') };
 }
 function listaEquipo_(T, e, p) {
-  var pos = FORMACIONES[e.formacion] || [];
+  var pos = e.jugadores.map(function (id, i) { return posEnEquipo_(e, i); });
   return '<table style="border-collapse:collapse;margin:8px 0 16px">' + e.jugadores.map(function (id, i) {
     var x = p ? p.detalle[i] : null;
     return '<tr><td style="padding:4px 12px 4px 0;color:#39446a;font-size:13px">' + (pos[i] ? POS[pos[i]] : '') + '</td>' +

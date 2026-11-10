@@ -4,7 +4,7 @@
 // Las reglas del juego (precios, presupuesto y puntos) están en js/fantasy-logica.js.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261103c';
-import * as F from './fantasy-logica.js?v=20261110k';
+import * as F from './fantasy-logica.js?v=20261110p';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
@@ -248,39 +248,79 @@ function pintarSelector() {
 }
 
 /* ================= Ficha: registro de puntos de un jugador ================= */
+// Como en las apps de fantasy: cabecera con el jugador, una tira con los puntos de cada jornada
+// y, debajo, la tabla de la jornada elegida (cantidad · estadística · puntos).
 const ficha = $('fz-ficha');
-function abrirFicha(id) {
+let fichaVer = null;                     // { id, pos, n }
+const tono = v => (v == null ? 'is-none' : v > 0 ? 'is-up' : v < 0 ? 'is-down' : 'is-zero');
+const signo = v => (v > 0 ? '+' + v : String(v).replace('-', '−'));
+const marcadorDe = P => (P.local ? `Tinellers ${P.gf}–${P.gc} ${P.rival}` : `${P.rival} ${P.gc}–${P.gf} Tinellers`);
+const resumenPos = pos => {
+    const g = F.GRUPO[pos];
+    return `Gol +${F.TABLA.gol[g]} · asistencia +${F.TABLA.asistencia[g]} · cada 2 tiros a puerta +${F.TABLA.tiros2[g]} · portería a cero +${F.TABLA.porteria0[g]}`;
+};
+
+function abrirFicha(id, pos, n) {
     const j = porId[id]; if (!j) return;
-    const datos = (D.JUGADORES || []).find(x => x.id === id);
-    const ns = Object.keys(D.PARTIDOS || {}).map(Number).sort((a, b) => b - a);
-    const totalF = totalJugador(id);
-    $('fz-ficha-title').textContent = j.nombre;
-    $('fz-ficha-sub').textContent = `#${j.dorsal} · ${posTxt(j)} · ${j.precio} M · ${cap(media(j.media))}`;
-    const filas = ns.map(n => {
-        const P = D.PARTIDOS[n], d = F.desglose(D, id, n), antes = n < F.PRIMERA_JORNADA;
-        const marcador = P.local ? `Tinellers FC ${P.gf}–${P.gc} ${P.rival}` : `${P.rival} ${P.gc}–${P.gf} Tinellers FC`;
-        const r = d?.datos || {};
-        const chips = d?.jugo ? [
-            typeof r.nota === 'number' ? `Nota ${String(r.nota).replace('.', ',')}` : 'Nota pendiente',
-            r.goles ? `${r.goles} ${r.goles === 1 ? 'gol' : 'goles'}` : '',
-            r.asistencias ? `${r.asistencias} ${r.asistencias === 1 ? 'asistencia' : 'asistencias'}` : '',
-            r.paradas ? `${r.paradas} paradas` : '',
-            r.tiros ? `${r.tiros} tiros a puerta` : '',
-            r.mvp ? 'MVP' : ''
-        ].filter(Boolean) : [d?.estado || 'No jugó'];
-        const cuenta = d?.jugo ? d.partes.map(([t, v]) => `${t} <b>${v > 0 ? '+' + v : v}</b>`).join(' · ') : 'No suma puntos';
-        return `<li class="fz-fj${antes ? ' is-antes' : ''}">
-            <div class="fz-fj-head"><b>Jornada ${n}</b><span>${esc(marcador)} · ${esc(P.fecha)}</span>${antes ? '<i>Antes del fantasy</i>' : ''}</div>
-            <p class="fz-chips">${chips.map(c => `<span>${esc(c)}</span>`).join('')}</p>
-            <p class="fz-cuenta">${cuenta}<strong class="num">${d ? d.total : 0} pts</strong></p>
-        </li>`;
-    }).join('') || '<li class="fz-none">Todavía no hay partidos con datos.</li>';
-    $('fz-ficha-body').innerHTML = `<p class="fz-ficha-total">En el fantasy: <b class="num">${totalF} pts</b>${puntuadas.length ? '' : ' (empieza a contar en la jornada ' + F.PRIMERA_JORNADA + ')'}</p>
-        <p class="fz-ficha-reglas">Nota del partido redondeada, +${F.PUNTOS.gol} por gol, +${F.PUNTOS.asistencia} por asistencia y +${F.PUNTOS.mvp} si es MVP. Si es tu capitán, todo por dos.</p>
-        <ol class="fz-fichas">${filas}</ol>
-        ${datos ? `<a class="more" href="jugador.html?id=${encodeURIComponent(id)}">Ficha completa del jugador <span aria-hidden="true">→</span></a>` : ''}`;
+    pos = j.posiciones.includes(pos) ? pos : (pos && F.GRUPO[pos] ? pos : j.posiciones[0]);
+    const ns = Object.keys(D.PARTIDOS || {}).map(Number).sort((a, b) => a - b);
+    fichaVer = { id, pos, n: ns.includes(n) ? n : (ns[ns.length - 1] ?? null) };
+    pintarFicha(true);
     if (sheet.open) sheet.close();
     if (!ficha.open) ficha.showModal();
+}
+
+function pintarFicha(alAbrir) {
+    const { id, pos, n } = fichaVer, j = porId[id];
+    const ns = Object.keys(D.PARTIDOS || {}).map(Number).sort((a, b) => a - b);
+    const total = puntuadas.reduce((s, k) => s + (F.puntosJugador(D, id, k, pos) || 0), 0);
+    const ultima = ns.length ? F.desglose(D, id, ns[ns.length - 1], pos) : null;
+    const estadoTxt = !ultima ? 'Sin partidos todavía' : ultima.jugo ? `Jugó la jornada ${ns[ns.length - 1]}` : `${ultima.estado} la jornada ${ns[ns.length - 1]}`;
+
+    $('fz-ficha-head').innerHTML = `
+        <span class="fz-fk${j.portero ? ' is-gk' : ''}">${camiseta(j.dorsal)}</span>
+        <div class="fz-fh-main">
+          <p class="fz-fh-name"><span class="fz-badge pos-${pos}">${pos}</span><b id="fz-ficha-title">${esc(j.nombre)}</b></p>
+          <p class="fz-fh-line"><span class="fz-dot ${ultima?.jugo ? 'is-ok' : 'is-off'}" aria-hidden="true"></span>${esc(estadoTxt)}</p>
+          <p class="fz-fh-line"><span class="fz-coin" aria-hidden="true">M</span>${j.precio} millones${j.estrella ? ' · Estrella' : ''}</p>
+        </div>
+        <div class="fz-fh-pts">
+          <p><small>Pts</small><b class="num">${puntuadas.length ? total : '–'}</b></p>
+          <p class="fz-fh-media">Media <b class="num">${j.media == null ? '–' : j.media.toFixed(1).replace('.', ',')}</b></p>
+        </div>`;
+
+    $('fz-ficha-pos').innerHTML = j.posiciones.length > 1
+        ? `<span>Puntúa como</span>${j.posiciones.map(p => `<button type="button" class="fz-chip" data-fpos="${p}" aria-pressed="${p === pos}">${F.NOMBRE_POS[p]}</button>`).join('')}`
+        : `<span>Juega de ${F.NOMBRE_POS[pos].toLowerCase()}</span>`;
+
+    const maxAbs = Math.max(1, ...ns.map(k => Math.abs(F.puntosJugador(D, id, k, pos) || 0)));
+    $('fz-ficha-strip').innerHTML = ns.map(k => {
+        const d = F.desglose(D, id, k, pos), v = d && d.jugo ? d.total : null;
+        const h = v == null ? 6 : Math.max(6, Math.round(Math.abs(v) / maxAbs * 34));
+        return `<button type="button" class="fz-sj ${tono(v)}${k < F.PRIMERA_JORNADA ? ' is-antes' : ''}" data-fj="${k}" aria-pressed="${k === n}" aria-label="Jornada ${k}: ${v == null ? (d?.estado || 'sin datos') : v + ' puntos'}">
+            <small>J${k}</small><b class="num">${v == null ? '–' : signo(v)}</b><i style="height:${h}px"></i></button>`;
+    }).join('') || '<p class="fz-none">Todavía no hay partidos con datos.</p>';
+
+    const P = n != null ? D.PARTIDOS[n] : null, d = n != null ? F.desglose(D, id, n, pos) : null;
+    $('fz-ficha-body').innerHTML = !P ? '' : `
+        <div class="fz-jt">
+          <h3>Jornada ${n}</h3>
+          <p>${esc(marcadorDe(P))} · ${esc(P.fecha)}${n < F.PRIMERA_JORNADA ? ' · <span class="fz-tag">No cuenta: el fantasy empieza en la J' + F.PRIMERA_JORNADA + '</span>' : ''}</p>
+        </div>
+        ${d.jugo ? `<table class="fz-tabla">
+          <thead><tr><th scope="col">Cantidad</th><th scope="col">Estadística</th><th scope="col">Puntos</th></tr></thead>
+          <tbody>${d.filas.map(f => `<tr><td class="num">${esc(f.cantidad)}</td><th scope="row">${esc(f.texto)}</th><td class="num ${tono(f.pts)}">${signo(f.pts)}</td></tr>`).join('')}</tbody>
+        </table>` : `<p class="fz-nojugo"><b>${esc(d.estado)}</b>No suma puntos esta jornada.</p>`}
+        <p class="fz-reglas-pos"><b>Como ${F.NOMBRE_POS[pos].toLowerCase()}:</b> ${resumenPos(pos)}. Titular +${F.PUNTOS.titular}, MVP +${F.PUNTOS.mvp}; encajar 2 o más goles resta 1 por gol. Si es tu capitán, todo por dos.</p>
+        ${(D.JUGADORES || []).some(x => x.id === id) ? `<a class="more" href="jugador.html?id=${encodeURIComponent(id)}">Ficha completa del jugador <span aria-hidden="true">→</span></a>` : ''}`;
+    $('fz-ficha-foot').innerHTML = P ? `<span>Total jornada ${n}</span><b class="num">${d.total}</b>` : '';
+    $('fz-ficha-foot').classList.toggle('hidden', !P);
+
+    if (alAbrir) {
+        const sel = $('fz-ficha-strip').querySelector('[aria-pressed="true"]');
+        requestAnimationFrame(() => sel?.scrollIntoView({ block: 'nearest', inline: 'center' }));
+        $('fz-ficha-body').scrollTop = 0;
+    }
 }
 
 /* ================= Cambios en el equipo ================= */
@@ -423,6 +463,7 @@ async function guardar() {
     };
     try {
         await api.guardar(j.n, usuario.id, datos);
+        misPuntosN = j.n;
         guardado = { ...datos }; guardadoEn = j.n; tocado = false; version++;
         toast(`Equipo guardado para la jornada ${j.n}`);
         pintarClasificacion();
@@ -469,10 +510,79 @@ function pintarCabecera() {
 }
 
 /* ================= Clasificación y equipos de todos ================= */
-const chipsEquipo = (e, p) => (e?.jugadores || []).map((id, i) => {
-    const j = porId[id], x = p?.detalle.find(d => d.id === id), pos = F.FORMACIONES[e.formacion] ? F.posHueco(e.formacion, i) : '';
-    return `<li${id === e.capitan ? ' class="is-cap"' : ''}><button type="button" data-ficha="${esc(id)}">${pos ? `<small>${pos}</small>` : ''}<span>${esc(j ? j.corto : id)}${id === e.capitan ? ' <i>C</i>' : ''}</span>${p ? `<b class="num">${x ? x.pts : 0}</b>` : ''}</button></li>`;
+let todos = null;                         // { equipos: { [n]: { [uid]: equipo } }, js: [n…], filas } cuando se cargan
+const chipsEquipo = (e, p, n) => (e?.jugadores || []).map((id, i) => {
+    const j = porId[id], x = p?.detalle[i], pos = F.posEnEquipo(D, e, i);
+    return `<li${id === e.capitan ? ' class="is-cap"' : ''}><button type="button" data-ficha="${esc(id)}" data-pos="${pos}"${n ? ` data-n="${n}"` : ''}><small>${pos}</small><span>${esc(j ? j.corto : id)}${id === e.capitan ? ' <i>C</i>' : ''}</span>${p ? `<b class="num">${x ? x.pts : 0}</b>` : ''}</button></li>`;
 }).join('');
+
+/* ---------- Puntos de un equipo en el campo, jornada a jornada ---------- */
+const lineas = document.querySelector('#fz-pitch .fz-lines').outerHTML;
+function vistaPuntos(uid, n) {
+    if (!todos) return '<p class="fz-empty">Cargando los puntos…</p>';
+    const { equipos, js } = todos;
+    const pills = js.map(k => {
+        const e = F.equipoEnJornada(equipos, uid, k), p = e ? F.puntosEquipo(D, e, k) : null;
+        return `<button type="button" class="fz-pj${p ? ' is-done' : ''}" data-pj="${k}" data-uid="${esc(uid)}" aria-pressed="${k === n}" aria-label="Jornada ${k}${p ? ': ' + p.total + ' puntos' : ''}"><b>J${k}</b>${p ? `<small class="num">${p.total}</small>` : ''}</button>`;
+    }).join('');
+    const e = F.equipoEnJornada(equipos, uid, n), p = e ? F.puntosEquipo(D, e, n) : null;
+    const ab = abierta();
+    const titulo = !e ? `Sin equipo en la jornada ${n}`
+        : p ? `Jornada ${n} · <b class="num">${p.total} pts</b>`
+        : ab && ab.n === n ? `Jornada ${n} · se puede cambiar hasta el ${cuando(ab.cierre)}` : `Jornada ${n} · puntos pendientes`;
+    const def = F.FORMACIONES[e?.formacion] || F.FORMACIONES[F.FORMACION_INICIAL];
+    const cartas = (e?.jugadores || []).map((id, i) => {
+        const j = porId[id], x = p?.detalle[i], pos = F.posEnEquipo(D, e, i), [, left, y] = def.huecos[i];
+        const top = Math.round((12 + (y - 24) * 76 / 63) * 10) / 10;          // las cartas son altas: se separan más las líneas
+        const esCap = id === e.capitan, base = x ? F.desglose(D, id, n, pos) : null;
+        const v = x ? (base?.jugo ? x.pts : null) : undefined;
+        return `<button type="button" class="fz-pc" style="left:${left}%;top:${top}%" data-ficha="${esc(id)}" data-pos="${pos}" data-n="${n}" aria-label="${esc(`${j ? j.nombre : id}, ${F.NOMBRE_POS[pos].toLowerCase()}${esCap ? ', capitán' : ''}: ${v == null ? (x ? 'no jugó' : 'sin puntos todavía') : v + ' puntos'}. Ver detalle`)}">
+            <span class="fz-pc-card">
+              <span class="fz-pc-pts ${v === undefined ? 'is-none' : tono(v)}">${v === undefined ? pos : v == null ? '–' : v}</span>
+              ${esCap ? `<span class="fz-pc-cap" aria-hidden="true">C${x ? ' <i>x2</i>' : ''}</span>` : ''}
+              <span class="fz-kit${j?.portero ? ' is-gk' : ''}">${camiseta(j ? j.dorsal : '')}</span>
+              <span class="fz-pc-name">${esc(j ? j.corto : id)}</span>
+            </span></button>`;
+    }).join('');
+    return `<div class="fz-pjs" role="group" aria-label="Jornada">${pills}</div>
+        <p class="fz-pt-title">${titulo}</p>
+        <div class="fz-pitch is-static">${lineas}${cartas || '<p class="fz-pitch-msg">No hay equipo guardado para esta jornada.</p>'}</div>
+        ${e && !F.FORMACIONES[e.formacion] ? '<p class="meta fz-pt-nota">Equipo guardado con una formación antigua: cada jugador puntúa en su posición principal.</p>' : ''}`;
+}
+const jornadaPorDefecto = () => {
+    if (!todos) return null;
+    const hechas = todos.js.filter(k => F.jornadaPuntuada(D, k));
+    return hechas.length ? hechas[hechas.length - 1] : todos.js[todos.js.length - 1];
+};
+
+// Pestaña «Puntos» de tu equipo
+let pestaña = 'alin', misPuntosN = null;
+function pintarMisPuntos() {
+    const box = $('fz-tab-puntos');
+    if (pestaña !== 'puntos') return;
+    if (!usuario) { box.innerHTML = '<p class="fz-empty">Entra para ver tus puntos.</p>'; return; }
+    if (todos && !todos.js.includes(misPuntosN)) misPuntosN = jornadaPorDefecto();
+    box.innerHTML = vistaPuntos(usuario.id, misPuntosN);
+}
+function verPestaña(t) {
+    pestaña = t;
+    document.querySelectorAll('#fz-tabs [data-tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
+    $('fz-tab-alin').classList.toggle('hidden', t !== 'alin');
+    $('fz-tab-puntos').classList.toggle('hidden', t !== 'puntos');
+    pintarMisPuntos();
+}
+
+// Ventana con el equipo de cualquier participante
+const eqDlg = $('fz-eq');
+let eqVer = null;
+function abrirEquipo(uid) {
+    const f = todos?.filas.find(x => x.uid === uid); if (!f) return;
+    eqVer = { uid, n: jornadaPorDefecto() };
+    $('fz-eq-title').textContent = f.nombre;
+    $('fz-eq-sub').textContent = `${f.pos ? f.pos + 'º · ' : ''}${f.total} pts en total`;
+    $('fz-eq-body').innerHTML = vistaPuntos(uid, eqVer.n);
+    if (!eqDlg.open) eqDlg.showModal();
+}
 
 async function pintarClasificacion() {
     const ab = abierta();
@@ -489,6 +599,8 @@ async function pintarClasificacion() {
         return;
     }
     const { filas, ultima } = F.clasificacion(D, equipos, js);
+    todos = { equipos, js, filas };
+    pintarMisPuntos();
     meta.textContent = filas.length
         ? (ultima ? `Tras la jornada ${ultima}` : `Los puntos empiezan con la jornada ${F.PRIMERA_JORNADA}`) + ` · ${filas.length} ${filas.length === 1 ? 'participante' : 'participantes'}`
         : 'Todavía nadie ha hecho su equipo';
@@ -509,8 +621,9 @@ async function pintarClasificacion() {
             </summary>
             <div class="fz-team">
               <p>${ab ? `Equipo para la jornada ${f.jornadaEquipo}` : `Último equipo (jornada ${f.jornadaEquipo})`}${f.equipo?.formacion && F.FORMACIONES[f.equipo.formacion] ? ` · ${esc(f.equipo.formacion)}` : ''}</p>
-              <ul>${chipsEquipo(f.equipo, ab ? null : F.puntosEquipo(D, f.equipo, f.jornadaEquipo))}</ul>
-              ${hist.length ? `<div class="fz-hist">${hist.map(h => `<div><p>Jornada ${h.n}${h.puntos ? ` · <b>${h.puntos.total} pts</b>` : ' · puntos pendientes'}${h.heredado ? ' · mismo equipo' : ''}</p><ul>${chipsEquipo(h.equipo, h.puntos)}</ul></div>`).join('')}</div>` : ''}
+              <ul>${chipsEquipo(f.equipo, ab ? null : F.puntosEquipo(D, f.equipo, f.jornadaEquipo), f.jornadaEquipo)}</ul>
+              ${hist.length ? `<div class="fz-hist">${hist.map(h => `<div><p>Jornada ${h.n}${h.puntos ? ` · <b>${h.puntos.total} pts</b>` : ' · puntos pendientes'}${h.heredado ? ' · mismo equipo' : ''}</p><ul>${chipsEquipo(h.equipo, h.puntos, h.n)}</ul></div>`).join('')}</div>` : ''}
+              <button type="button" class="btn btn--sm fz-ver-campo" data-eq="${esc(f.uid)}">Ver sus puntos en el campo</button>
             </div>
           </details></li>`;
     }).join('')}</ol>`;
@@ -530,9 +643,31 @@ $('fz-forms').addEventListener('click', e => {
     if (r.fuera.length) toast(`${r.fuera.map(id => porId[id].corto).join(' y ')} no ${r.fuera.length === 1 ? 'tiene' : 'tienen'} sitio en esta formación`);
 });
 document.addEventListener('click', e => {
-    const f = e.target.closest('[data-ficha]'); if (f) { e.preventDefault(); abrirFicha(f.dataset.ficha); }
+    const f = e.target.closest('[data-ficha]');
+    if (f) { e.preventDefault(); abrirFicha(f.dataset.ficha, f.dataset.pos, f.dataset.n ? Number(f.dataset.n) : undefined); }
+});
+$('fz-ficha-strip').addEventListener('click', e => {
+    const b = e.target.closest('[data-fj]'); if (!b || !fichaVer) return;
+    fichaVer.n = Number(b.dataset.fj); pintarFicha();
+});
+$('fz-ficha-pos').addEventListener('click', e => {
+    const b = e.target.closest('[data-fpos]'); if (!b || !fichaVer) return;
+    fichaVer.pos = b.dataset.fpos; pintarFicha();
 });
 $('fz-ficha-x').addEventListener('click', () => ficha.close());
+document.addEventListener('click', e => {
+    const b = e.target.closest('[data-pj]');
+    if (b) {
+        const n = Number(b.dataset.pj), uid = b.dataset.uid;
+        if (b.closest('#fz-eq')) { eqVer.n = n; $('fz-eq-body').innerHTML = vistaPuntos(uid, n); }
+        else { misPuntosN = n; pintarMisPuntos(); }
+        return;
+    }
+    const q = e.target.closest('[data-eq]'); if (q) abrirEquipo(q.dataset.eq);
+});
+$('fz-tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) verPestaña(b.dataset.tab); });
+$('fz-eq-x').addEventListener('click', () => eqDlg.close());
+eqDlg.addEventListener('click', e => { if (e.target === eqDlg) eqDlg.close(); });
 ficha.addEventListener('click', e => { if (e.target === ficha) ficha.close(); });
 $('fz-entrar').addEventListener('click', entrar);
 $('fz-gate-local').addEventListener('submit', e => { e.preventDefault(); entrar(); });
@@ -579,7 +714,7 @@ setInterval(async () => {
 api.onUser(async u => {
     usuario = u;
     if (alEntrar && u) { const r = alEntrar; alEntrar = null; r(); }
-    if (!u) { guardado = null; guardadoEn = null; aviso = undefined; estado = F.vacio(); tocado = false; pintarEquipo(); pintarClasificacion(); return; }
+    if (!u) { guardado = null; guardadoEn = null; aviso = undefined; estado = F.vacio(); tocado = false; verPestaña('alin'); pintarEquipo(); pintarClasificacion(); return; }
     api.aviso(u.id).then(a => { if (usuario === u) { aviso = a ? !!a.activo : null; pintarAviso(); } })
         .catch(() => { if (usuario === u) { aviso = null; pintarAviso(); } });
     if (u.email && ADMINS.includes(u.email.toLowerCase()) && api.activarJornadas) {

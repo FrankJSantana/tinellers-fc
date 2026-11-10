@@ -4,10 +4,12 @@
 //   2) en cada jugador, añade esa jornada en "jornadas" con su nota, goles, asistencias, mvp y el análisis,
 //      por ejemplo: 5: { nota: 8.50, goles: 1, asistencias: 2, mvp: false, analisis: [] },
 //   3) actualiza "media" y los totales de "temporada".
-// El Fantasy (fantasy.html) puntúa solo con estos datos en cuanto la jornada está en PARTIDOS.
+// El Fantasy (fantasy.html) puntúa solo con estos datos en cuanto la jornada está en PARTIDOS:
+//   titular: true/false (+1 si fue titular), goles, asistencias, tiros (a puerta, sin contar los goles), mvp,
+//   y los goles encajados salen de "gc" del partido. La nota no puntúa en el fantasy.
 // Si un jugador no jugó, pon { estado: 'No jugó' } o { estado: 'Sancionado' } en esa jornada.
 // Si jugó pero aún no tiene nota, deja la jornada sin "nota": la ficha muestra «–», la media no cambia
-// y el fantasy le suma solo goles, asistencias y MVP hasta que llegue la nota.
+// y el fantasy puntúa igual (la nota no cuenta para el fantasy).
 // Otros datos opcionales de cada jornada: paradas (porteros) y tiros (tiros a puerta sin contar los goles).
 // "analisis" es el texto que explica la nota; cada elemento de la lista es un párrafo.
 // Mientras esté vacío ([]), la ficha muestra «Análisis próximamente».

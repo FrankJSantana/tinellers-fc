@@ -237,25 +237,152 @@ html:has(.fz-sheet[open]) { overflow: hidden; }
 .fz-rank > li.is-me .fz-hist > div { border-top-color: rgba(255, 255, 255, 0.25); }
 .fz-hist b { font-weight: 700; }
 
+/* ---------- Colores de posición y de puntos ---------- */
+.pos-POR { --pos: #e8a317; }
+.pos-CEN { --pos: #6c3fd9; }
+.pos-BAN { --pos: #0f8f9a; }
+.pos-MED { --pos: #2b8a43; }
+.pos-DEL { --pos: #d2111f; }
+.fz-badge { display: inline-grid; place-items: center; min-width: 46px; padding: 4px 8px 3px; background: var(--pos); color: var(--white); font-family: var(--display); font-weight: 800; font-size: 1rem; line-height: 1; letter-spacing: 0.02em; }
+:root { --up: #2b9a49; --zero: #e0a100; --down: #d2111f; --none: #8a93ad; }
+
 /* ---------- Ficha de puntos de un jugador ---------- */
-.fz-ficha-body { overflow-y: auto; overscroll-behavior: contain; padding: 20px 24px 28px; }
-.fz-ficha-total { font-weight: 600; }
-.fz-ficha-total b { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); }
-.fz-ficha-reglas { margin-top: 6px; font-size: var(--s-small); color: var(--muted); }
-.fz-fichas { margin-top: 18px; display: grid; gap: 8px; }
-.fz-fj { padding: 14px 16px; background: var(--paper); }
-.fz-fj.is-antes { opacity: 0.75; }
-.fz-fj-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-.fz-fj-head b { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); text-transform: uppercase; }
-.fz-fj-head span { font-size: var(--s-small); color: var(--muted); }
-.fz-fj-head i { font-style: normal; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; background: var(--paper-2); }
-.fz-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.fz-chips span { padding: 3px 9px; background: var(--white); font-size: var(--s-small); font-weight: 600; }
-.fz-cuenta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 10px; font-size: var(--s-small); color: var(--muted); }
-.fz-cuenta b { color: var(--ink); }
-.fz-cuenta strong { margin-left: auto; font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); }
-.fz-ficha-body .more { margin-top: 20px; }
-@media (max-width: 700px) { .fz-ficha-body { padding: 16px 16px 24px; } }
+.fz-ficha { --fh-bg: #0b1233; width: min(600px, calc(100vw - 32px)); max-height: min(90svh, 860px); background: var(--white); }
+.fz-fh { position: relative; padding: 20px 64px 20px 20px; background: var(--fh-bg); color: var(--white); }
+.fz-fh .fz-x { position: absolute; top: 12px; right: 12px; }
+.fz-fh-grid { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; align-items: center; }
+.fz-fk { display: grid; place-items: center; width: 84px; height: 96px; background: var(--navy-2); }
+.fz-fk svg { width: 64px; }
+.fz-fk path { fill: var(--white); stroke: var(--navy); stroke-width: 2.5; stroke-linejoin: round; }
+.fz-fk text { fill: var(--navy); font-family: var(--display); font-weight: 800; font-size: 21px; }
+.fz-fk.is-gk path { fill: var(--red); stroke: var(--white); }
+.fz-fk.is-gk text { fill: var(--white); }
+.fz-fh-main { min-width: 0; }
+.fz-fh-name { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.fz-fh-name b { font-family: var(--display); font-weight: 700; font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); line-height: 1; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-fh-line { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--on-dark); font-size: var(--s-small); font-weight: 600; }
+.fz-dot { width: 16px; height: 16px; flex: none; border-radius: 50%; display: grid; place-items: center; }
+.fz-dot.is-ok { background: var(--up); }
+.fz-dot.is-ok::after { content: ""; width: 6px; height: 3px; border: solid var(--white); border-width: 0 0 2px 2px; transform: translateY(-1px) rotate(-45deg); }
+.fz-dot.is-off { background: var(--none); }
+.fz-coin { width: 16px; height: 16px; flex: none; border-radius: 50%; display: grid; place-items: center; background: #e0a100; color: var(--navy); font-family: var(--display); font-weight: 800; font-size: 0.625rem; }
+.fz-fh-pts { text-align: right; align-self: start; }
+.fz-fh-pts p:first-child { display: flex; align-items: baseline; justify-content: flex-end; gap: 6px; }
+.fz-fh-pts small { font-family: var(--display); font-weight: 700; font-size: var(--s-body); text-transform: uppercase; color: var(--on-dark); }
+.fz-fh-pts b { font-family: var(--display); font-weight: 800; font-size: clamp(2.5rem, 2rem + 2vw, 3.25rem); line-height: 0.9; }
+.fz-fh-media { margin-top: 8px; font-family: var(--display); font-weight: 700; text-transform: uppercase; color: var(--on-dark); }
+.fz-fh-media b { color: var(--white); }
+
+.fz-ficha-scroll { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; }
+.fz-fpos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 14px 20px; background: var(--fh-bg); border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--on-dark); font-size: var(--s-small); font-weight: 600; }
+.fz-fpos > span { margin-right: 4px; }
+.fz-chip { min-height: 36px; padding: 0 14px; border: 0; background: var(--navy-2); color: var(--white); font-family: var(--display); font-weight: 700; font-size: var(--s-body); text-transform: uppercase; transition: background-color 160ms ease, transform 160ms var(--ease); }
+.fz-chip:active { transform: scale(0.96); }
+.fz-chip[aria-pressed="true"] { background: var(--white); color: var(--navy); }
+
+/* Tira de jornadas: número arriba y barra abajo (verde suma, amarillo 0, rojo resta) */
+.fz-strip { display: flex; gap: 6px; padding: 14px 20px 18px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; background: #050a22; scrollbar-width: none; }
+.fz-strip::-webkit-scrollbar { display: none; }
+.fz-sj { flex: 0 0 72px; scroll-snap-align: center; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; gap: 4px; height: 112px; padding: 10px 6px 8px; border: 0; background: transparent; color: var(--white); transition: background-color 160ms ease, transform 160ms var(--ease); }
+.fz-sj:active { transform: scale(0.96); }
+.fz-sj small { font-family: var(--display); font-weight: 700; font-size: 0.9375rem; color: var(--on-dark); }
+.fz-sj b { align-self: end; font-family: var(--display); font-weight: 800; font-size: 1.75rem; line-height: 1; }
+.fz-sj i { align-self: end; display: block; width: 100%; min-height: 6px; background: var(--none); }
+.fz-sj.is-up i { background: var(--up); }
+.fz-sj.is-zero i { background: var(--zero); height: 6px !important; }
+.fz-sj.is-down i { background: var(--down); }
+.fz-sj.is-antes { opacity: 0.6; }
+.fz-sj[aria-pressed="true"] { background: var(--white); color: var(--navy); opacity: 1; box-shadow: inset 0 0 0 3px var(--white); }
+.fz-sj[aria-pressed="true"] small { color: var(--navy); }
+@media (hover: hover) and (pointer: fine) { .fz-sj:not([aria-pressed="true"]):hover { background: rgba(255, 255, 255, 0.08); } }
+
+.fz-ficha-body { padding: 0 0 20px; }
+.fz-jt { padding: 18px 20px 14px; text-align: center; border-bottom: 1px solid var(--paper-2); }
+.fz-jt h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; line-height: 1; }
+.fz-jt p { margin-top: 6px; font-size: var(--s-small); color: var(--muted); }
+.fz-tag { display: inline-block; margin-top: 4px; padding: 2px 8px; background: var(--paper-2); color: var(--ink); font-weight: 600; }
+
+.fz-tabla { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.fz-tabla thead th { padding: 12px 8px; font-size: var(--s-small); font-weight: 600; color: var(--muted); background: var(--paper); }
+.fz-tabla td, .fz-tabla tbody th { padding: 14px 8px; border-top: 1px solid var(--paper-2); text-align: center; }
+.fz-tabla tbody th { font-weight: 600; }
+.fz-tabla td:first-child { width: 26%; font-family: var(--display); font-weight: 700; font-size: 1.25rem; }
+.fz-tabla td:last-child { width: 26%; font-family: var(--display); font-weight: 800; font-size: 1.375rem; }
+.fz-tabla .is-up { color: var(--up); }
+.fz-tabla .is-zero { color: var(--zero); }
+.fz-tabla .is-down { color: var(--down); }
+.fz-nojugo { margin: 20px; padding: 24px; background: var(--paper); color: var(--muted); text-align: center; }
+.fz-nojugo b { display: block; margin-bottom: 4px; font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; color: var(--ink); }
+.fz-reglas-pos { margin: 16px 20px 0; font-size: var(--s-small); color: var(--muted); line-height: 1.5; }
+.fz-reglas-pos b { color: var(--ink); font-weight: 600; }
+.fz-ficha-body .more { margin: 16px 20px 0; }
+.fz-ffoot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; background: var(--red); color: var(--white); font-family: var(--display); font-weight: 800; text-transform: uppercase; }
+.fz-ffoot span { font-size: var(--s-lead); }
+.fz-ffoot b { font-size: 1.75rem; line-height: 1; }
+
+/* ---------- Pestañas: alineación / puntos ---------- */
+.fz-tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--navy); }
+.fz-tabs button { position: relative; min-height: 52px; border: 0; background: none; color: var(--on-dark); font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; transition: color 160ms ease; }
+.fz-tabs button::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--red); transform: scaleX(0); transition: transform 200ms var(--ease); }
+.fz-tabs button[aria-selected="true"] { color: var(--white); }
+.fz-tabs button[aria-selected="true"]::after { transform: scaleX(1); }
+.fz-tab-alin { display: flex; flex-direction: column; gap: var(--gap); }
+.fz-tab-alin.hidden { display: none; }
+
+/* ---------- Puntos de un equipo en el campo ---------- */
+.fz-pjs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: none; }
+.fz-pjs::-webkit-scrollbar { display: none; }
+.fz-pj { flex: 0 0 64px; height: 64px; border-radius: 50%; border: 0; display: grid; place-content: center; gap: 2px; background: var(--paper-2); color: var(--ink); font-family: var(--display); transition: background-color 160ms ease, transform 160ms var(--ease); }
+.fz-pj:active { transform: scale(0.95); }
+.fz-pj b { font-weight: 800; font-size: 1.25rem; line-height: 1; }
+.fz-pj small { font-weight: 700; font-size: 0.9375rem; line-height: 1; }
+.fz-pj[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+.fz-pj.is-done[aria-pressed="true"] { background: var(--up); }
+.fz-pt-title { padding: 6px 0 12px; font-weight: 600; color: var(--muted); }
+.fz-pt-title b { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--ink); }
+.fz-pt-nota { margin-top: 10px; }
+.fz-pitch.is-static { -webkit-user-select: auto; user-select: auto; }
+.fz-pitch-msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--white); font-weight: 600; text-align: center; }
+.fz-pc { position: absolute; translate: -50% -50%; padding: 0; border: 0; background: none; color: var(--ink); transition: transform 160ms var(--ease); }
+.fz-pc:active { transform: scale(0.96); }
+.fz-pc:focus-visible { outline: 3px solid var(--white); outline-offset: 3px; }
+.fz-pc-card { position: relative; display: flex; flex-direction: column; align-items: center; width: clamp(66px, 19cqw, 108px); padding-top: clamp(22px, 6.5cqw, 32px); background: #141b3d; box-shadow: 0 6px 16px rgba(7, 13, 38, 0.35); /* taste-skill-ignore: carta sobre el césped */ }
+.fz-pc .fz-kit { width: clamp(32px, 9.5cqw, 54px); }
+.fz-pc-name { align-self: stretch; margin-top: 4px; padding: 5px 4px 4px; background: var(--white); font-family: var(--display); font-weight: 700; font-size: clamp(0.8125rem, 3cqw, 1rem); text-transform: uppercase; line-height: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fz-pc-pts { position: absolute; left: 0; top: 0; min-width: 34px; padding: 4px 6px 3px; color: var(--white); font-family: var(--display); font-weight: 800; font-size: clamp(0.9375rem, 3.6cqw, 1.25rem); line-height: 1; text-align: center; }
+.fz-pc-pts.is-up { background: var(--up); }
+.fz-pc-pts.is-zero { background: var(--zero); }
+.fz-pc-pts.is-down { background: var(--down); }
+.fz-pc-pts.is-none { background: var(--none); font-size: 0.8125rem; }
+.fz-pc-cap { position: absolute; right: -6px; top: -8px; box-shadow: 0 0 0 2px var(--white); /* taste-skill-ignore: brazalete */ padding: 3px 5px 2px; background: var(--red); color: var(--white); font-family: var(--display); font-weight: 800; font-size: 0.8125rem; line-height: 1; }
+.fz-pc-cap i { font-style: normal; margin-left: 2px; padding-left: 4px; border-left: 1px solid rgba(255, 255, 255, 0.5); }
+@media (hover: hover) and (pointer: fine) { .fz-pc:hover .fz-pc-name { background: var(--paper-2); } }
+
+/* Ventana con el equipo de otro participante */
+.fz-eq { width: min(560px, calc(100vw - 32px)); }
+.fz-eq-body { overflow-y: auto; overscroll-behavior: contain; padding: 16px 20px 24px; }
+.fz-ver-campo { margin-top: 14px; }
+.fz-rank > li.is-me .fz-ver-campo { background: var(--white); color: var(--blue); }
+
+/* Tabla de puntos en «Cómo se juega» */
+.fz-pts-tabla { width: 100%; margin: 10px 0; border-collapse: collapse; font-size: var(--s-small); font-variant-numeric: tabular-nums; }
+.fz-pts-tabla th, .fz-pts-tabla td { padding: 7px 6px; border-bottom: 1px solid var(--paper-2); text-align: center; }
+.fz-pts-tabla thead th { font-family: var(--display); font-weight: 700; font-size: 0.875rem; text-transform: uppercase; color: var(--muted); }
+.fz-pts-tabla tbody th { text-align: left; font-weight: 600; }
+.fz-pts-tabla td { font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--up); }
+
+@media (max-width: 700px) {
+    .fz-fh { padding: 16px 60px 16px 16px; }
+    .fz-fh-grid { grid-template-columns: auto minmax(0, 1fr); gap: 12px; }
+    .fz-fk { width: 64px; height: 76px; }
+    .fz-fk svg { width: 48px; }
+    .fz-fh-pts { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; text-align: left; }
+    .fz-fh-media { margin-top: 0; }
+    .fz-fpos, .fz-strip { padding-inline: 16px; }
+    .fz-sj { flex-basis: 64px; }
+    .fz-eq-body { padding: 14px 16px 20px; }
+    .fz-ficha { width: 100%; max-height: 92svh; }
+}
 
 /* ---------- Movimiento (solo si no se pide reducirlo) ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -314,3 +441,4 @@ html:has(.fz-sheet[open]) { overflow: hidden; }
     .fz-sheet[open] { transform: none; }
     @starting-style { .fz-sheet[open] { opacity: 1; transform: translateY(100%); } }
 }
+.fz-ffoot.hidden { display: none; }
