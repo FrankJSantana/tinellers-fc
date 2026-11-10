@@ -31,8 +31,8 @@
     position: relative;
     aspect-ratio: 4 / 5;
     container-type: inline-size;
-    background: repeating-linear-gradient(180deg, var(--blue) 0 12.5%, #1d4fc2 12.5% 25%);
-    color: rgba(255, 255, 255, 0.5);
+    background: repeating-linear-gradient(180deg, #2b8a43 0 12.5%, #31954b 12.5% 25%);
+    color: rgba(255, 255, 255, 0.6);
     -webkit-user-select: none; user-select: none;
 }
 .fz-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
