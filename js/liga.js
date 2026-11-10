@@ -129,10 +129,10 @@
             const f = posDe(e);
             if (nombre) nombre.innerHTML = `<b>${esc(e)}</b><span>${rol}${f && ultimaJ ? ` · ${f.pos}º, ${f.pts} ${f.pts === 1 ? 'punto' : 'puntos'}` : ''}</span>`;
         }
-        // Los botones de quiniela y plantilla van siempre en nuestro lado (sirve aunque el HTML ya venga cambiado)
+        // Los botones del fantasy y de la plantilla van siempre en nuestro lado (sirve aunque el HTML ya venga cambiado)
         const accHome = hero.querySelector('.mp--home .mp-actions'), accAway = hero.querySelector('.mp--away .mp-actions');
         const nuestro = proximo.local === US ? accHome : accAway, suyo = nuestro === accHome ? accAway : accHome;
-        if (nuestro && suyo && !nuestro.querySelector('a[href^="apuestas.html"]')) { const t = nuestro.innerHTML; nuestro.innerHTML = suyo.innerHTML; suyo.innerHTML = t; }
+        if (nuestro && suyo && !nuestro.querySelector('a[href^="fantasy.html"]')) { const t = nuestro.innerHTML; nuestro.innerHTML = suyo.innerHTML; suyo.innerHTML = t; }
         const set = (sel, txt) => { const el = hero.querySelector(sel); if (el) el.textContent = txt; };
         set('.seam-date', diaLargo(proximo.inicio));
         set('.seam-time', fHora.format(proximo.inicio));
@@ -141,9 +141,6 @@
         const count = hero.querySelector('[data-kickoff]');
         if (count) count.dataset.kickoff = proximo.inicio.toISOString();
     }
-
-    /* ---------- Aviso de la quiniela del pie: siempre la jornada que viene ---------- */
-    if (proximo) $$('.wb-note').forEach(el => { el.textContent = el.textContent.replace(/jornada \d+/i, `jornada ${proximo.j}`); });
 
     /* ---------- Calendario completo de Tinellers (Partidos) ---------- */
     $$('[data-liga="calendario"]').forEach(tb => {

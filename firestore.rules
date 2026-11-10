@@ -41,6 +41,37 @@ service cloud.firestore {
           && request.time < ficha().cierre;
       }
     }
+
+    // Fantasy: un equipo por cuenta de Google y jornada (fantasy/j5/equipos/{uid}).
+    // La hora de cierre es la de quinielas/{jornada}, la misma ficha que activa el administrador.
+    // Cada uno ve su equipo; los de los demás se ven cuando cierra la jornada.
+    // Jandro y Alfa no pueden ir juntos (tampoco saltándose la web).
+    match /fantasy/{jornada}/equipos/{uid} {
+      function ficha() { return get(/databases/$(database)/documents/quinielas/$(jornada)).data; }
+      function nuevo() { return request.resource.data; }
+      function valido(i) { return nuevo().jugadores[i] is string && nuevo().jugadores[i].size() <= 60; }
+      allow get: if (request.auth != null && request.auth.uid == uid) || request.time >= ficha().cierre;
+      allow list: if request.time >= ficha().cierre;
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && exists(/databases/$(database)/documents/quinielas/$(jornada))
+        && request.time < ficha().cierre
+        && nuevo().keys().hasOnly(['nombre', 'avatar', 'jugadores', 'capitan', 'formacion', 'jornada', 'actualizada'])
+        && nuevo().nombre is string && nuevo().nombre.size() <= 80
+        && nuevo().avatar is string && nuevo().avatar.size() <= 500
+        && nuevo().jugadores is list && nuevo().jugadores.size() == 5
+        && valido(0) && valido(1) && valido(2) && valido(3) && valido(4)
+        && nuevo().jugadores.toSet().size() == 5
+        && nuevo().capitan is string && nuevo().capitan in nuevo().jugadores
+        && !nuevo().jugadores.hasAll(['alejandro-cuevas', 'alfa-junior-umaro'])
+        && nuevo().formacion in ['2-2', '3-1', '1-2-1']
+        && nuevo().jornada is int && nuevo().jornada >= 5
+        && nuevo().jornada == ficha().n
+        && nuevo().actualizada == request.time;
+      allow delete: if request.auth != null && request.auth.uid == uid
+        && request.time < ficha().cierre;
+    }
+
     // Convocatoria: solo se responde con el ENLACE DEL EQUIPO (?c=código) que el delegado
     // manda al grupo. codigos/{código} -> { jugador: 'equipo' }. Un código solo se puede leer
     // si ya lo conoces; listarlos o crearlos solo pueden los administradores.

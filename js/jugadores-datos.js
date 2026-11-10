@@ -1,8 +1,10 @@
 // js/jugadores-datos.js — fichas de jugador (jugador.html?id=...).
 // Para añadir una jornada:
 //   1) añade el partido en PARTIDOS,
-//   2) en cada jugador, añade esa jornada en "jornadas" con su nota, goles y el análisis,
+//   2) en cada jugador, añade esa jornada en "jornadas" con su nota, goles, asistencias, mvp y el análisis,
+//      por ejemplo: 5: { nota: 8.50, goles: 1, asistencias: 2, mvp: false, analisis: [] },
 //   3) actualiza "media" y los totales de "temporada".
+// El Fantasy (fantasy.html) puntúa solo con estos datos en cuanto la jornada está en PARTIDOS.
 // Si un jugador no jugó, pon { estado: 'No jugó' } o { estado: 'Sancionado' } en esa jornada.
 // "analisis" es el texto que explica la nota; cada elemento de la lista es un párrafo.
 // Mientras esté vacío ([]), la ficha muestra «Análisis próximamente».
@@ -122,6 +124,12 @@ window.TINELLERS = {
         1: { estado: 'No jugó' },
         2: { nota: 9.36, goles: 2, mvp: false, analisis: [] }
       }
+    },
+    {
+      id: 'gilbert-natanael-de-jesus', nombre: 'Gilbert Natanael De Jesus', dorsal: 99, puesto: 'Jugador de campo',
+      media: null,
+      temporada: { pj: 0, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
+      jornadas: {}
     }
   ]
 };

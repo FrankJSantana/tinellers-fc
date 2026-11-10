@@ -25,9 +25,11 @@ const fmtHora = new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-d
 const fmtCierre = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid' });
 
 /* ---------- Jornadas ---------- */
+// La quiniela se jugó hasta la jornada 4; desde la 5 se juega al fantasy (fantasy.html)
+const ULTIMA_QUINIELA = 4;
 const jornadas = JORNADAS
     .map(j => { const inicio = new Date(j.fecha); return { ...j, inicio, cierre: new Date(inicio.getTime() - HORAS_CIERRE * 36e5) }; })
-    .filter(j => !isNaN(j.inicio))
+    .filter(j => !isNaN(j.inicio) && j.n <= ULTIMA_QUINIELA)
     .sort((a, b) => a.n - b.n);
 const abierta = j => Date.now() < j.cierre.getTime();
 // La página muestra solo la jornada en curso: la primera cuyo partido no ha terminado.

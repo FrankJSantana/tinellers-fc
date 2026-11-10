@@ -7,8 +7,17 @@
 <meta name="description" content="Apuesta por diversión quién la rompe en la jornada 4: Tinellers FC contra La Trese FC.">
 <meta name="theme-color" content="#070d26">
 <link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
-<script>document.documentElement.classList.add('js')</script>
+<script>
+  document.documentElement.classList.add('js');
+  // La quiniela terminó con la jornada 4: desde entonces se juega al fantasy
+  if (Date.now() > Date.parse('2026-11-15T22:00:00+01:00')) location.replace('fantasy.html');
+</script>
 <link rel="stylesheet" href="style.css?v=20261103b">
+<style>
+  .q-aviso { background: var(--blue); color: var(--white); }
+  .q-aviso p { padding-block: 14px; font-weight: 500; }
+  .q-aviso a { font-weight: 700; text-underline-offset: 4px; }
+</style>
 </head>
 <body id="top">
 <a class="sr-only skip" href="#main">Saltar al contenido</a>
@@ -21,7 +30,7 @@
       <a href="noticias.html">Noticias</a>
       <a href="estadisticas.html">Estadísticas</a>
       <a href="quienes-somos.html">Club</a>
-      <a class="btn" href="apuestas.html" aria-current="page">Quiniela</a>
+      <a class="btn" href="fantasy.html">Fantasy</a>
     </nav>
     <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false"><span></span></button>
   </div>
@@ -32,7 +41,7 @@
     <a href="noticias.html">Noticias</a>
     <a href="estadisticas.html">Estadísticas</a>
     <a href="quienes-somos.html">Club</a>
-    <a class="btn" href="apuestas.html">Quiniela</a>
+    <a class="btn" href="fantasy.html">Fantasy</a>
   </div>
 </header>
 <main id="main">
@@ -42,6 +51,8 @@
     <div class="ph-crest" data-r><img class="" src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC: dos jarras de cerveza brindando bajo el nombre del club" width="900" height="997"></div>
   </div>
 </section>
+
+<div class="q-aviso"><div class="wrap"><p>Esta es la última quiniela. Desde la jornada 5 jugamos al <a href="fantasy.html">Fantasy Tinellers</a>: ficha a cinco jugadores y suma puntos cada jornada.</p></div></div>
 
 <section class="section section--tight" id="partido" aria-labelledby="h-partido">
   <div class="wrap"><div class="sec-head" data-r><h2 id="h-partido">Partido de la jornada</h2><p class="meta" id="q-meta">Jornada 4 · Liga municipal de fútbol 7</p></div></div>
@@ -135,7 +146,7 @@
   <div class="wrap foot-cols">
     <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="quienes-somos.html#plantilla">Plantilla</a><a href="noticias.html">Noticias</a></div>
     <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="clasificacion.html">Clasificación</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
-    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="apuestas.html">Quiniela de la jornada</a></div>
+    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="fantasy.html">Fantasy</a></div>
     <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
   </div>
   <div class="wrap foot-mid"><div data-r><img class="" src="img/escudo-tinellers-320.webp" alt="Escudo de Tinellers FC" width="320" height="354"></div><h2 class="foot-motto" data-r>El escudo, la cerveza y el césped</h2></div>
@@ -145,6 +156,6 @@
   </div>
 </footer>
 <script src="js/main.js"></script>
-<script type="module" src="js/quiniela.js?v=20261103c"></script>
+<script type="module" src="js/quiniela.js?v=20261110f"></script>
 </body>
 </html>

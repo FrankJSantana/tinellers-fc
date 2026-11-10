@@ -1,0 +1,263 @@
+/* ==========================================================
+   FANTASY TINELLERS — campo con tu equipo, mercado, hoja para
+   fichar y clasificación. Usa los colores y piezas de style.css.
+   ========================================================== */
+
+/* ---------- Cabecera: jornada que se juega y cierre ---------- */
+.fz-deadline .pp-num { font-size: clamp(5rem, 13vw, 12rem); }
+.fz-deadline .pp-cap span { display: block; margin-top: 6px; font-size: var(--s-body); }
+
+/* ---------- Aviso de la quiniela (solo hasta que acaba la jornada 4) ---------- */
+.fz-aviso { background: var(--red); color: var(--white); }
+.fz-aviso p { padding-block: 14px; font-weight: 500; }
+.fz-aviso a { font-weight: 700; white-space: nowrap; text-underline-offset: 4px; }
+
+.fz-section { padding-top: clamp(48px, 6vw, 88px); }
+
+/* ---------- Distribución ---------- */
+.fz-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 3vw, 48px); align-items: start; }
+.fz-main, .fz-side { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
+
+/* Formación y coste */
+.fz-tools { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 8px; }
+.fz-forms { display: flex; gap: 6px; }
+.fz-forms .pick-btn { min-height: 44px; padding: 0 16px; font-size: var(--s-body); }
+.fz-cost { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; line-height: 0.9; white-space: nowrap; }
+.fz-cost b { font-weight: 800; font-size: var(--s-head); }
+.fz-cost span { color: var(--muted); }
+
+/* ---------- Campo ---------- */
+.fz-pitch {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    container-type: inline-size;
+    background: repeating-linear-gradient(180deg, var(--blue) 0 12.5%, #1d4fc2 12.5% 25%);
+    color: rgba(255, 255, 255, 0.5);
+    -webkit-user-select: none; user-select: none;
+}
+.fz-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.fz-slot {
+    position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    width: 96px; width: clamp(80px, 23cqw, 124px);
+    padding: 4px; border: 0; background: none; color: var(--white);
+    transition: left 300ms var(--ease-io), top 300ms var(--ease-io), transform 160ms var(--ease);
+}
+.fz-slot:active { transform: scale(0.96); }
+.fz-slot:focus-visible { outline: 3px solid var(--white); outline-offset: 2px; }
+
+/* Camiseta con el dorsal */
+.fz-kit { position: relative; display: block; width: 56px; width: clamp(46px, 13cqw, 70px); }
+.fz-kit svg { width: 100%; height: auto; }
+.fz-kit path { fill: var(--white); stroke: var(--navy); stroke-width: 2.5; stroke-linejoin: round; }
+.fz-kit text { fill: var(--navy); font-family: var(--display); font-weight: 800; font-size: 21px; }
+.fz-kit.is-gk path { fill: var(--red); stroke: var(--white); }
+.fz-kit.is-gk text { fill: var(--white); }
+.fz-c {
+    position: absolute; top: -4px; right: -10px;
+    width: 24px; height: 24px; display: grid; place-items: center;
+    background: var(--red); color: var(--white); box-shadow: 0 0 0 2px var(--white); /* taste-skill-ignore: anillo del brazalete */
+    font-family: var(--display); font-weight: 800; font-size: 0.9375rem; line-height: 1;
+}
+
+/* Placa con el nombre */
+.fz-plate { display: block; max-width: 100%; padding: 4px 8px 5px; background: var(--navy); text-align: center; line-height: 1; }
+.fz-plate b { display: block; font-family: var(--display); font-weight: 700; font-size: 1rem; font-size: clamp(0.875rem, 3.3cqw, 1.125rem); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fz-plate small { display: block; margin-top: 3px; font-size: 0.75rem; font-weight: 600; color: var(--on-dark); font-variant-numeric: tabular-nums; }
+
+/* Hueco vacío */
+.fz-add {
+    position: relative; display: grid; place-items: center;
+    width: 52px; width: clamp(44px, 12cqw, 64px); aspect-ratio: 1;
+    border: 2px dashed rgba(255, 255, 255, 0.8);
+    transition: background-color 160ms ease;
+}
+.fz-add::before, .fz-add::after { content: ""; position: absolute; width: 38%; height: 2px; background: var(--white); }
+.fz-add::after { transform: rotate(90deg); }
+.fz-slot.is-empty .fz-plate { background: rgba(7, 13, 38, 0.55); }
+@media (hover: hover) and (pointer: fine) {
+    .fz-slot.is-empty:hover .fz-add { background: rgba(255, 255, 255, 0.16); }
+    .fz-slot:not(.is-empty):hover .fz-plate { background: var(--navy-2); }
+}
+
+/* ---------- Presupuesto ---------- */
+.fz-budget { padding: 12px 0 8px; }
+.fz-bar { height: 8px; background: var(--paper-2); overflow: hidden; }
+.fz-bar span { display: block; height: 100%; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform 280ms var(--ease); }
+.fz-bar.is-over span { background: var(--red); }
+.fz-budget p { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-weight: 600; }
+.fz-budget p span:last-child { color: var(--muted); }
+
+/* ---------- Guardar ---------- */
+.fz-save { display: flex; flex-direction: column; gap: 16px; }
+.fz-estado { color: var(--muted); }
+.fz-guardar { width: 100%; }
+.fz-guardar:disabled { background: var(--paper-2); color: var(--muted); cursor: default; transform: none; }
+.fz-guardar.is-saved:disabled { background: var(--navy); color: var(--white); }
+.fz-guardar.is-saved::before { content: "✓"; }
+.fz-save .error { margin-top: -8px; min-height: 0; }
+.fz-save .error:empty { display: none; }
+.fz-local { display: grid; gap: 8px; }
+.fz-local .legend { margin-bottom: 0; }
+
+/* ---------- Mercado ---------- */
+.fz-market-card { background: var(--white); }
+.fz-side-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; padding: 24px 24px 16px; }
+.fz-side-head h3, .fz-rules h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; line-height: 1; }
+.fz-side-head .meta { font-size: var(--s-small); }
+.fz-market li {
+    display: grid; grid-template-columns: 3ch minmax(0, 1fr) auto auto; align-items: center; gap: 12px;
+    padding: 12px 16px 12px 20px; border-top: 1px solid var(--paper-2);
+    transition: background-color 160ms ease;
+}
+.fz-market li.is-in { background: var(--paper); box-shadow: inset 4px 0 0 var(--blue); /* taste-skill-ignore: marca de fichado */ }
+.fz-dor { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); color: var(--blue); text-align: center; line-height: 1; }
+.fz-who { min-width: 0; }
+.fz-who b { display: block; font-weight: 600; line-height: 1.25; }
+.fz-who small { display: block; margin-top: 2px; font-size: var(--s-small); color: var(--muted); }
+.fz-who .fz-why { color: var(--red); font-weight: 600; }
+.fz-star {
+    display: inline-block; margin-left: 6px; padding: 2px 7px 1px; vertical-align: 2px;
+    background: var(--red); color: var(--white);
+    font-family: var(--display); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.2;
+}
+.fz-price { font-family: var(--display); font-weight: 800; font-size: var(--s-lead); white-space: nowrap; }
+.fz-act {
+    min-height: 40px; min-width: 84px; padding: 0 14px; border: 0;
+    background: var(--navy); color: var(--white);
+    font-family: var(--display); font-weight: 700; font-size: var(--s-body); text-transform: uppercase;
+    transition: transform 160ms var(--ease), background-color 160ms ease, color 160ms ease;
+}
+.fz-act:active { transform: scale(0.96); }
+.fz-act.is-out { background: var(--paper-2); color: var(--ink); }
+.fz-act:disabled { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 2px var(--paper-2); /* taste-skill-ignore: borde */ cursor: default; transform: none; }
+@media (hover: hover) and (pointer: fine) {
+    .fz-act:not(:disabled):not(.is-out):hover { background: var(--blue); }
+    .fz-act.is-out:hover { background: #d2d9e8; }
+}
+
+/* ---------- Cómo se juega ---------- */
+.fz-rules ol { margin-top: 20px; display: grid; gap: 14px; counter-reset: regla; }
+.fz-rules li { position: relative; padding-left: 42px; counter-increment: regla; line-height: 1.45; }
+.fz-rules li::before {
+    content: counter(regla); position: absolute; left: 0; top: 0;
+    width: 28px; height: 28px; display: grid; place-items: center;
+    background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 800; font-size: 1rem;
+}
+.fz-rules b { font-weight: 600; }
+
+/* ---------- Clasificación ---------- */
+.fz-rank-head, .fz-rank summary { display: grid; grid-template-columns: 64px minmax(0, 1fr) 88px 88px; align-items: center; gap: 12px; }
+.fz-rank-head { padding: 14px 20px; background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 700; font-size: var(--s-body); text-transform: uppercase; }
+.fz-rank-head span:nth-child(n+3) { text-align: center; }
+.fz-rank > li:nth-child(odd) { background: var(--paper); }
+.fz-rank summary { padding: 14px 20px; cursor: pointer; list-style: none; font-family: var(--display); font-weight: 600; font-size: var(--s-lead); }
+.fz-rank summary::-webkit-details-marker { display: none; }
+.fz-rank summary:focus-visible { outline-offset: -3px; }
+.fz-pos { font-weight: 800; }
+.fz-mgr { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.fz-mgr b { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fz-mgr small { flex: none; padding: 2px 8px; background: var(--red); color: var(--white); font-family: var(--text); font-size: var(--s-small); font-weight: 600; }
+.fz-av { width: 36px; height: 36px; flex: none; object-fit: cover; display: grid; place-items: center; background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 800; font-size: 1.125rem; }
+.fz-last, .fz-total { text-align: center; }
+.fz-total { font-weight: 800; }
+.fz-rank > li.is-me { background: var(--blue); color: var(--white); }
+.fz-rank > li.is-me .fz-av { background: var(--blue-deep); }
+.fz-team { padding: 2px 20px 18px 96px; }
+.fz-team p { font-size: var(--s-small); color: var(--muted); }
+.fz-rank > li.is-me .fz-team p { color: var(--on-dark); }
+.fz-team ul { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.fz-team li { display: inline-flex; align-items: baseline; gap: 10px; padding: 6px 10px; background: var(--white); color: var(--ink); font-family: var(--display); font-weight: 600; text-transform: uppercase; }
+.fz-team li i { font-style: normal; padding: 0 5px; background: var(--red); color: var(--white); font-size: 0.8em; }
+.fz-empty { padding: 40px 24px; background: var(--paper); color: var(--muted); text-align: center; }
+
+/* ---------- Hoja para fichar ---------- */
+html:has(.fz-sheet[open]) { overflow: hidden; }
+.fz-sheet {
+    width: min(560px, calc(100vw - 32px)); max-width: none; max-height: min(84svh, 760px);
+    margin: auto; padding: 0; border: 0; overflow: hidden;
+    background: var(--white); color: var(--ink);
+}
+.fz-sheet[open] { display: flex; flex-direction: column; }
+.fz-sheet::backdrop { background: rgba(7, 13, 38, 0.62); }
+.fz-sheet-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 22px 24px 18px; background: var(--navy); color: var(--white); }
+.fz-sheet-head h2 { font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem); line-height: 0.95; }
+.fz-sheet-head .meta { margin-top: 8px; color: var(--on-dark); font-size: var(--s-body); }
+.fz-x { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border: 0; background: var(--navy-2); color: var(--white); font-size: 1.75rem; line-height: 1; transition: transform 160ms var(--ease), background-color 160ms ease; }
+.fz-x:active { transform: scale(0.94); }
+@media (hover: hover) and (pointer: fine) { .fz-x:hover { background: var(--blue); } }
+.fz-cur { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 16px 24px 0; }
+.fz-cur .pick-btn { min-height: 48px; font-size: var(--s-body); }
+.fz-cur .fz-quitar { background: transparent; box-shadow: inset 0 0 0 2px var(--paper-2); /* taste-skill-ignore: borde */ }
+.fz-pick-title { padding: 18px 24px 4px; font-family: var(--display); font-weight: 700; font-size: var(--s-body); text-transform: uppercase; color: var(--muted); }
+.fz-pick { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; padding: 6px 0 16px; }
+.fz-opt {
+    width: 100%; display: grid; grid-template-columns: 3ch minmax(0, 1fr) auto; align-items: center; gap: 12px;
+    padding: 12px 24px; border: 0; background: none; text-align: left; color: inherit;
+    transition: background-color 120ms ease;
+}
+.fz-opt:active:not(:disabled) { background: var(--paper-2); }
+.fz-opt:disabled { cursor: default; }
+.fz-opt:disabled .fz-dor, .fz-opt:disabled b, .fz-opt:disabled .fz-price { opacity: 0.45; }
+.fz-opt.is-in { box-shadow: inset 4px 0 0 var(--blue); /* taste-skill-ignore: marca de fichado */ }
+@media (hover: hover) and (pointer: fine) { .fz-opt:not(:disabled):hover { background: var(--paper); } }
+.fz-none { padding: 24px; color: var(--muted); }
+
+/* ---------- Movimiento (solo si no se pide reducirlo) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+    .fz-kit.is-new { animation: fz-fichaje 260ms var(--ease) both; }
+    @keyframes fz-fichaje { from { opacity: 0; transform: translateY(6px) scale(0.92); } }
+
+    /* Hoja: entra más despacio de lo que sale */
+    .fz-sheet, .fz-sheet::backdrop {
+        transition: opacity 160ms var(--ease), transform 160ms var(--ease), overlay 160ms allow-discrete, display 160ms allow-discrete;
+    }
+    .fz-sheet { opacity: 0; transform: translateY(12px) scale(0.98); }
+    .fz-sheet[open] { opacity: 1; transform: none; transition-duration: 240ms; }
+    .fz-sheet::backdrop { opacity: 0; }
+    .fz-sheet[open]::backdrop { opacity: 1; transition-duration: 240ms; }
+    @starting-style {
+        .fz-sheet[open] { opacity: 0; transform: translateY(12px) scale(0.98); }
+        .fz-sheet[open]::backdrop { opacity: 0; }
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .fz-slot, .fz-bar span { transition: none; }
+}
+
+/* En escritorio el campo se queda a la vista mientras recorres el mercado */
+@media (min-width: 901px) {
+    .fz-layout { grid-template-columns: auto minmax(0, 1fr); }
+    .fz-main { position: sticky; top: calc(var(--head-h) + 24px); width: clamp(340px, calc((100svh - var(--head-h) - 210px) * 0.8), 620px); }
+}
+
+/* ---------- Tableta y móvil ---------- */
+@media (max-width: 900px) {
+    .fz-layout { grid-template-columns: minmax(0, 1fr); }
+    .fz-main { width: 100%; max-width: 620px; margin-inline: auto; }
+    .fz-deadline .pp-num { font-size: clamp(4.5rem, 24vw, 8rem); }
+}
+@media (max-width: 700px) {
+    .fz-tools { align-items: center; }
+    .fz-cost b { font-size: 2.25rem; }
+    .fz-market li { gap: 10px; padding: 12px 12px 12px 14px; grid-template-columns: 2.5ch minmax(0, 1fr) auto auto; }
+    .fz-act { min-width: 72px; padding: 0 10px; }
+    .fz-side-head { padding: 20px 16px 14px; }
+    .fz-rank-head, .fz-rank summary { grid-template-columns: 40px minmax(0, 1fr) 52px 52px; gap: 8px; padding-inline: 12px; }
+    .fz-rank summary { font-size: 1.125rem; }
+    .fz-av { width: 30px; height: 30px; }
+    .fz-team { padding: 2px 12px 16px; }
+
+    /* La hoja sube desde abajo, como en el móvil */
+    .fz-sheet { width: 100%; max-height: 88svh; margin: auto 0 0; }
+    .fz-sheet-head { padding: 20px 16px 16px; }
+    .fz-cur { padding: 14px 16px 0; }
+    .fz-pick-title { padding: 16px 16px 4px; }
+    .fz-opt { padding: 12px 16px; }
+}
+@media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
+    .fz-sheet { opacity: 1; transform: translateY(100%); transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1); }
+    .fz-sheet[open] { transform: none; }
+    @starting-style { .fz-sheet[open] { opacity: 1; transform: translateY(100%); } }
+}
