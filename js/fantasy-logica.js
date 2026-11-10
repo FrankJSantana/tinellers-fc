@@ -53,12 +53,14 @@ export function plantilla(D) {
 
 export const jornadaPuntuada = (D, n) => !!D?.PARTIDOS?.[n];
 
-// Puntos de un jugador en la jornada n; null si esa jornada aún no tiene datos
+// Puntos de un jugador en la jornada n; null si esa jornada aún no tiene datos.
+// Si jugó pero su nota aún no está, suma goles, asistencias y MVP; la nota se añade cuando llegue.
 export function puntosJugador(D, id, n) {
     if (!jornadaPuntuada(D, n)) return null;
     const r = (D.JUGADORES || []).find(j => j.id === id)?.jornadas?.[n];
-    if (!r || r.estado || typeof r.nota !== 'number') return 0;
-    return redondear(r.nota) + PUNTOS.gol * (r.goles || 0) + PUNTOS.asistencia * (r.asistencias || 0) + (r.mvp ? PUNTOS.mvp : 0);
+    if (!r || r.estado) return 0;
+    const nota = typeof r.nota === 'number' ? redondear(r.nota) : 0;
+    return nota + PUNTOS.gol * (r.goles || 0) + PUNTOS.asistencia * (r.asistencias || 0) + (r.mvp ? PUNTOS.mvp : 0);
 }
 
 // Puntos de un equipo guardado ({ jugadores, capitan }) en la jornada n; null si aún no hay datos
