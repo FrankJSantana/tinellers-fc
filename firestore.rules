@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Correos que pueden activar jornadas (los mismos que ADMINS en js/quiniela.js)
+    // Correos que pueden activar jornadas (los mismos que ADMINS en js/fantasy.js)
     function esAdmin() {
       return request.auth != null
         && request.auth.token.email_verified == true
@@ -10,7 +10,8 @@ service cloud.firestore {
     }
 
     // Una ficha por jornada con su hora de cierre (24 h antes del partido).
-    // La crea la web automáticamente cuando el administrador entra en la quiniela.
+    // La crea la web automáticamente cuando el administrador entra en el fantasy.
+    // (Se llama "quinielas" porque nació con la quiniela, que ya no existe.)
     match /quinielas/{jornada} {
       allow read: if true;
       allow create, update: if esAdmin()
@@ -20,29 +21,9 @@ service cloud.firestore {
         && request.resource.data.cierre is timestamp
         && request.resource.data.inicio is timestamp;
       allow delete: if esAdmin();
-
-      // Apuestas: cualquiera las ve; cada persona solo crea o cambia la suya
-      // y solo antes del cierre de esa jornada.
-      match /apuestas/{uid} {
-        function ficha() { return get(/databases/$(database)/documents/quinielas/$(jornada)).data; }
-        allow read: if true;
-        allow create, update: if request.auth != null
-          && request.auth.uid == uid
-          && exists(/databases/$(database)/documents/quinielas/$(jornada))
-          && request.time < ficha().cierre
-          && request.resource.data.keys().hasOnly(['nombre', 'avatar', 'jugador', 'categoria', 'prediccion', 'jornada', 'actualizada'])
-          && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 80
-          && request.resource.data.avatar is string && request.resource.data.avatar.size() <= 500
-          && request.resource.data.jugador is string && request.resource.data.jugador.size() <= 60
-          && request.resource.data.categoria in ['goles', 'asistencias', 'tarjetas']
-          && request.resource.data.prediccion in ['0', '1', '2', '3+', 'Ninguna', 'Amarilla', 'Doble amarilla', 'Roja']
-          && request.resource.data.jornada == ficha().n;
-        allow delete: if request.auth != null && request.auth.uid == uid
-          && request.time < ficha().cierre;
-      }
     }
 
-    // Fantasy: un equipo por cuenta de Google y jornada (fantasy/j5/equipos/{uid}).
+    // Fantasy: un equipo por cuenta de Google y jornada (fantasy/j4/equipos/{uid}).
     // La hora de cierre es la de quinielas/{jornada}, la misma ficha que activa el administrador.
     // Cada uno ve su equipo; los de los demás se ven cuando cierra la jornada.
     // Jandro y Alfa no pueden ir juntos (tampoco saltándose la web).
@@ -65,7 +46,7 @@ service cloud.firestore {
         && nuevo().capitan is string && nuevo().capitan in nuevo().jugadores
         && !nuevo().jugadores.hasAll(['alejandro-cuevas', 'alfa-junior-umaro'])
         && nuevo().formacion in ['2-2', '3-1', '1-2-1']
-        && nuevo().jornada is int && nuevo().jornada >= 5
+        && nuevo().jornada is int && nuevo().jornada >= 4
         && nuevo().jornada == ficha().n
         && nuevo().actualizada == request.time;
       allow delete: if request.auth != null && request.auth.uid == uid

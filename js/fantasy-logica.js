@@ -3,7 +3,7 @@
 // salen de js/jugadores-datos.js; aquí solo se decide cuánto vale cada uno y cuánto puntúa.
 
 export const PRESUPUESTO = 47;             // millones ficticios para los 5 jugadores
-export const PRIMERA_JORNADA = 5;          // el fantasy empieza a contar en esta jornada
+export const PRIMERA_JORNADA = 4;          // el fantasy empieza a contar en esta jornada
 export const TAMANO = 5;                   // 1 portero + 4 jugadores de campo
 
 // Los dos que más marcan valen 15 M: con uno de ellos te caben los demás que quieras,

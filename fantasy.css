@@ -7,11 +7,6 @@
 .fz-deadline .pp-num { font-size: clamp(5rem, 13vw, 12rem); }
 .fz-deadline .pp-cap span { display: block; margin-top: 6px; font-size: var(--s-body); }
 
-/* ---------- Aviso de la quiniela (solo hasta que acaba la jornada 4) ---------- */
-.fz-aviso { background: var(--red); color: var(--white); }
-.fz-aviso p { padding-block: 14px; font-weight: 500; }
-.fz-aviso a { font-weight: 700; white-space: nowrap; text-underline-offset: 4px; }
-
 .fz-section { padding-top: clamp(48px, 6vw, 88px); }
 
 /* ---------- Distribución ---------- */

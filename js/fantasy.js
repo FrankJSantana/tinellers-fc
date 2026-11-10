@@ -1,15 +1,14 @@
 // js/fantasy.js — Fantasy Tinellers: tu equipo de 5 en el campo, mercado, guardado y clasificación.
 // Con Firebase configurado cada cuenta de Google guarda su equipo en la base de datos
-// (fantasy/j5/equipos/{uid}, uno por jornada); sin configurar, modo local para probar.
+// (fantasy/j4/equipos/{uid}, uno por jornada); sin configurar, modo local para probar.
 // Las reglas del juego (precios, presupuesto y puntos) están en js/fantasy-logica.js.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261103c';
-import * as F from './fantasy-logica.js?v=20261110f';
+import * as F from './fantasy-logica.js?v=20261110i';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
 const HORAS_PARTIDO = 3;
-const QUINIELA = 4;   // última jornada con quiniela
 
 const D = window.TINELLERS || { JUGADORES: [], PARTIDOS: {} };
 const PL = F.plantilla(D);
@@ -59,7 +58,7 @@ if (conFirebase) {
             const q = await S.getDocs(S.collection(db, 'fantasy', 'j' + n, 'equipos'));
             return Object.fromEntries(q.docs.map(d => [d.id, d.data()]));
         },
-        // El administrador deja registrada la hora de cierre de cada jornada (la misma ficha que usaba la quiniela);
+        // El administrador deja registrada la hora de cierre de cada jornada (fichas quinielas/jN, de cuando había quiniela);
         // las reglas de Firestore la usan para rechazar cambios fuera de plazo.
         activarJornadas: () => Promise.all(jornadas.map(j => S.setDoc(S.doc(db, 'quinielas', 'j' + j.n), {
             n: j.n, partido: `${j.local} - ${j.visitante}`,
@@ -351,7 +350,7 @@ async function cargarMio() {
     if (guardado && !tocado) estado = deGuardado(guardado);
 }
 
-/* ================= Cabecera y avisos ================= */
+/* ================= Cabecera ================= */
 function pintarCabecera() {
     const j = abierta();
     if (!j) {
@@ -367,14 +366,6 @@ function pintarCabecera() {
     const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.max(1, Math.floor(ms % 36e5 / 6e4));
     $('fz-quedan').textContent = d > 0 ? `Quedan ${d} ${d === 1 ? 'día' : 'días'} y ${h} h` : h > 0 ? `Quedan ${h} h y ${m} min` : `Quedan ${m} min`;
     $('fz-para').textContent = `Jornada ${j.n} · ${j.local} – ${j.visitante} · ${corto(j.inicio)}`;
-
-    const q = jornadas.find(x => x.n === QUINIELA);
-    const aviso = $('fz-aviso');
-    if (!q || Date.now() >= q.fin.getTime()) { aviso.classList.add('hidden'); return; }
-    aviso.classList.remove('hidden');
-    $('fz-aviso-t').textContent = Date.now() < q.cierre.getTime()
-        ? `La quiniela de la jornada ${QUINIELA} sigue abierta hasta el ${cuando(q.cierre)}. El fantasy empieza en la jornada ${F.PRIMERA_JORNADA}.`
-        : `La quiniela de la jornada ${QUINIELA} ya está cerrada: mira las apuestas durante el partido.`;
 }
 
 /* ================= Clasificación ================= */
