@@ -30,7 +30,13 @@
         return a > b ? 'G' : a === b ? 'E' : 'P';
     };
 
-    /* ---------- Clasificación (mismo orden que la oficial: puntos, enfrentamiento directo, diferencia de goles, goles a favor) ---------- */
+    /* ---------- Clasificación (mismo orden que la oficial) ----------
+       1. Puntos.
+       2. Empatados a puntos: mini-liga solo con los partidos entre ellos. Si sus puntos
+          separan al grupo, cada subgrupo que siga empatado se vuelve a desempatar igual,
+          con su propia mini-liga.
+       3. Si la mini-liga no los separa: diferencia de goles entre ellos, diferencia de
+          goles general y goles a favor. */
     function clasificacion(hasta) {
         const jugados = P.filter(m => m.jugado && m.j <= hasta);
         const T = Object.fromEntries(equipos.map(e => [e, { equipo: e, pj: 0, g: 0, e: 0, p: 0, gf: 0, gc: 0, forma: [] }]));
@@ -42,24 +48,31 @@
             }
         }
         const filas = Object.values(T).map(t => ({ ...t, pts: t.g * 3 + t.e - (L.sanciones?.[t.equipo] || 0), dg: t.gf - t.gc }));
-        const directo = (a, b) => {
-            let pa = 0, pb = 0, ga = 0, gb = 0, n = 0;
-            for (const m of jugados) {
-                if (!((m.local === a && m.visitante === b) || (m.local === b && m.visitante === a))) continue;
-                n++;
-                const [x, y] = m.local === a ? [m.gl, m.gv] : [m.gv, m.gl];
-                ga += x; gb += y; pa += x > y ? 3 : x === y ? 1 : 0; pb += y > x ? 3 : x === y ? 1 : 0;
-            }
-            return { n, pa, pb, dg: ga - gb };
+        // Agrupa filas por una clave numérica, de mayor a menor
+        const agrupar = (lista, clave) => {
+            const g = new Map();
+            for (const f of lista) { const k = clave(f); if (!g.has(k)) g.set(k, []); g.get(k).push(f); }
+            return [...g.entries()].sort((a, b) => b[0] - a[0]).map(([, v]) => v);
         };
-        filas.sort((a, b) => {
-            if (b.pts !== a.pts) return b.pts - a.pts;
-            const d = directo(a.equipo, b.equipo);
-            if (d.n) { if (d.pa !== d.pb) return d.pb - d.pa; if (d.dg) return -d.dg; }
-            return b.dg - a.dg || b.gf - a.gf || a.equipo.localeCompare(b.equipo, 'es');
-        });
-        filas.forEach((f, i) => { f.pos = i + 1; });
-        return filas;
+        // Ordena un grupo de equipos empatados a puntos
+        const desempatar = grupo => {
+            if (grupo.length < 2) return grupo;
+            const dentro = new Set(grupo.map(f => f.equipo));
+            const mini = Object.fromEntries(grupo.map(f => [f.equipo, { pts: 0, dg: 0 }]));
+            for (const m of jugados) {
+                if (!dentro.has(m.local) || !dentro.has(m.visitante)) continue;
+                const a = mini[m.local], b = mini[m.visitante];
+                a.dg += m.gl - m.gv; b.dg += m.gv - m.gl;
+                if (m.gl > m.gv) a.pts += 3; else if (m.gl < m.gv) b.pts += 3; else { a.pts++; b.pts++; }
+            }
+            const porMini = agrupar(grupo, f => mini[f.equipo].pts);
+            if (porMini.length > 1) return porMini.flatMap(desempatar);
+            return [...grupo].sort((a, b) => mini[b.equipo].dg - mini[a.equipo].dg || b.dg - a.dg || b.gf - a.gf
+                || a.equipo.localeCompare(b.equipo, 'es'));
+        };
+        const orden = agrupar(filas, f => f.pts).flatMap(desempatar);
+        orden.forEach((f, i) => { f.pos = i + 1; });
+        return orden;
     }
     const tabla = clasificacion(ultimaJ);
     const antes = ultimaJ > 1 ? Object.fromEntries(clasificacion(ultimaJ - 1).map(f => [f.equipo, f.pos])) : {};
@@ -116,9 +129,10 @@
             const f = posDe(e);
             if (nombre) nombre.innerHTML = `<b>${esc(e)}</b><span>${rol}${f && ultimaJ ? ` · ${f.pos}º, ${f.pts} ${f.pts === 1 ? 'punto' : 'puntos'}` : ''}</span>`;
         }
-        // Los botones de quiniela y plantilla van siempre en nuestro lado
+        // Los botones de quiniela y plantilla van siempre en nuestro lado (sirve aunque el HTML ya venga cambiado)
         const accHome = hero.querySelector('.mp--home .mp-actions'), accAway = hero.querySelector('.mp--away .mp-actions');
-        if (proximo.local === US && accHome && accAway) { const t = accHome.innerHTML; accHome.innerHTML = accAway.innerHTML; accAway.innerHTML = t; }
+        const nuestro = proximo.local === US ? accHome : accAway, suyo = nuestro === accHome ? accAway : accHome;
+        if (nuestro && suyo && !nuestro.querySelector('a[href^="apuestas.html"]')) { const t = nuestro.innerHTML; nuestro.innerHTML = suyo.innerHTML; suyo.innerHTML = t; }
         const set = (sel, txt) => { const el = hero.querySelector(sel); if (el) el.textContent = txt; };
         set('.seam-date', diaLargo(proximo.inicio));
         set('.seam-time', fHora.format(proximo.inicio));
@@ -127,6 +141,9 @@
         const count = hero.querySelector('[data-kickoff]');
         if (count) count.dataset.kickoff = proximo.inicio.toISOString();
     }
+
+    /* ---------- Aviso de la quiniela del pie: siempre la jornada que viene ---------- */
+    if (proximo) $$('.wb-note').forEach(el => { el.textContent = el.textContent.replace(/jornada \d+/i, `jornada ${proximo.j}`); });
 
     /* ---------- Calendario completo de Tinellers (Partidos) ---------- */
     $$('[data-liga="calendario"]').forEach(tb => {
