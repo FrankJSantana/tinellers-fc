@@ -74,47 +74,47 @@
     $('fx-tiles').innerHTML = `<h2 id="h-temp" data-r>Temporada ${esc(D.temporada)} <span>tras la jornada ${ult}</span></h2>` +
         tiles.map(([v, l]) => `<p class="bal" data-r><b class="num">${esc(v)}</b><span>${esc(l)}</span></p>`).join('');
 
-    /* ---------- Gráfica: nota de cada jornada (barras) y media acumulada (línea) ---------- */
+    /* ---------- Gráfica: nota de cada jornada (línea con área) y media de la temporada ---------- */
     function grafica() {
         const box = $('fx-chart');
-        const pts = []; let suma = 0, n = 0;
-        jornadas.forEach(k => {
+        const pts = jornadas.map(k => {
             const R = J.jornadas[k] || { estado: 'No jugó' };
-            const v = !R.estado && typeof R.nota === 'number' ? R.nota : null;
-            if (v != null) { suma += v; n++; }
-            pts.push({ k, P: D.PARTIDOS[k], R, v, media: n ? suma / n : null });
+            return { k, P: D.PARTIDOS[k], R, v: !R.estado && typeof R.nota === 'number' ? R.nota : null };
         });
         if (!pts.some(p => p.v != null)) { box.innerHTML = '<p class="fx-chart-vacio">Todavía no tiene notas.</p>'; return; }
         const cs = getComputedStyle(box);
         const W = Math.max(300, Math.min(960, Math.round(box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight))));
-        const H = W < 500 ? 240 : 300, L = 32, R = 8, T = 26, B = 36;
-        const iw = W - L - R, ih = H - T - B, cw = iw / pts.length;
-        const y = v => T + ih - (v / 10) * ih, x = i => L + cw * i + cw / 2;
-        const bw = Math.min(56, cw * 0.46);
-        const grid = [0, 2, 4, 6, 8, 10].map(g => `<line x1="${L}" x2="${W - R}" y1="${y(g)}" y2="${y(g)}" class="g${g === 0 ? ' g0' : ''}"/><text x="${L - 8}" y="${y(g) + 4}" class="ax" text-anchor="end">${g}</text>`).join('');
-        const barras = pts.map((p, i) => {
-            const lbl = `<text x="${x(i)}" y="${H - B + 22}" class="ax xl" text-anchor="middle">J${p.k}</text>`;
-            if (p.v == null) return lbl + `<text x="${x(i)}" y="${y(0) - 10}" class="nj" text-anchor="middle">${p.R.estado ? esc(p.R.estado) : 'Sin nota'}</text>`;
-            const top = y(p.v), h = y(0) - top, r = Math.min(4, h);
-            return lbl + `<path class="bar" d="M${x(i) - bw / 2},${y(0)} V${top + r} Q${x(i) - bw / 2},${top} ${x(i) - bw / 2 + r},${top} H${x(i) + bw / 2 - r} Q${x(i) + bw / 2},${top} ${x(i) + bw / 2},${top + r} V${y(0)} Z"/>` +
-                (h >= 34 ? `<text x="${x(i)}" y="${top + 24}" class="val in" text-anchor="middle">${nota(p.v)}</text>`
-                         : `<text x="${x(i)}" y="${top - 8}" class="val" text-anchor="middle">${nota(p.v)}</text>`);
+        const H = W < 500 ? 230 : 280, L = 28, R = W < 500 ? 16 : 24, T = 34, B = 54;
+        const iw = W - L - R, ih = H - T - B;
+        const PAD = W < 500 ? 40 : 56;                      // los puntos de los extremos no tocan los bordes
+        const paso = pts.length > 1 ? (iw - 2 * PAD) / (pts.length - 1) : 0;
+        const x = i => (pts.length > 1 ? L + PAD + paso * i : L + iw / 2), y = v => T + ih - (v / 10) * ih;
+        const rivalCorto = r => { const w = r.replace(/ FC$/, '').split(' '); return ['La', 'El', 'Les', 'Los', 'Club'].includes(w[0]) ? w.slice(0, 2).join(' ') : w[0]; };
+        const grid = [0, 5, 10].map(g => `<line x1="${L}" x2="${W - R}" y1="${y(g)}" y2="${y(g)}" class="g${g === 0 ? ' g0' : ''}"/><text x="${L - 8}" y="${y(g) + 4}" class="ax" text-anchor="end">${g}</text>`).join('');
+        // tramos seguidos de partidos con nota (si no jugó, la línea se corta)
+        const tramos = []; let t = [];
+        pts.forEach((p, i) => { if (p.v == null) { if (t.length) tramos.push(t); t = []; } else t.push(i); });
+        if (t.length) tramos.push(t);
+        const area = tramos.filter(t => t.length > 1).map(t => `<path class="area" d="M${x(t[0])},${y(0)} ${t.map(i => `L${x(i)},${y(pts[i].v)}`).join(' ')} L${x(t[t.length - 1])},${y(0)} Z"/>`).join('');
+        const linea = tramos.filter(t => t.length > 1).map(t => `<polyline class="line" points="${t.map(i => `${x(i)},${y(pts[i].v)}`).join(' ')}"/>`).join('');
+        const media = typeof J.media === 'number' ? `<line class="media" x1="${L}" x2="${W - R}" y1="${y(J.media)}" y2="${y(J.media)}"/>` : '';
+        const marcas = pts.map((p, i) => {
+            const eje = `<text x="${x(i)}" y="${H - B + 24}" class="xl" text-anchor="middle">J${p.k}</text><text x="${x(i)}" y="${H - B + 42}" class="xs" text-anchor="middle">${esc(rivalCorto(p.P.rival))}</text>`;
+            if (p.v == null) return eje + `<circle class="nodot" cx="${x(i)}" cy="${y(0)}" r="5"/><text x="${x(i)}" y="${y(0) - 12}" class="nj" text-anchor="middle">${esc(p.R.estado || 'Sin nota')}</text>`;
+            return eje + `<circle class="dot dot--${tono(p.v)}" cx="${x(i)}" cy="${y(p.v)}" r="6"/><text x="${x(i)}" y="${y(p.v) - 14}" class="val" text-anchor="middle">${nota(p.v)}</text>`;
         }).join('');
-        const conMedia = pts.map((p, i) => [p, i]).filter(([p]) => p.media != null);
-        const linea = conMedia.length > 1 ? `<polyline class="line" points="${conMedia.map(([p, i]) => `${x(i)},${y(p.media)}`).join(' ')}"/>` : '';
-        const puntos = conMedia.map(([p, i]) => `<circle class="dot" cx="${x(i)}" cy="${y(p.media)}" r="5"/>`).join('');
-        const zonas = pts.map((p, i) => `<rect class="hit" x="${L + cw * i}" y="${T}" width="${cw}" height="${ih}" data-i="${i}"/>`).join('');
-        box.innerHTML = `<div class="fx-legend" aria-hidden="true"><span><i class="lg-bar"></i>Nota de la jornada</span><span><i class="lg-line"></i>Media acumulada</span></div>
-          <div class="fx-chart-plot"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`Nota de ${J.nombre} en cada jornada y su media acumulada`)}">${grid}${barras}${linea}${puntos}${zonas}</svg><div class="fx-tip" hidden></div></div>
-          <table class="sr-only"><caption>Nota y media acumulada por jornada</caption><thead><tr><th>Jornada</th><th>Nota</th><th>Media acumulada</th></tr></thead><tbody>${pts.map(p => `<tr><td>J${p.k}</td><td>${p.v == null ? esc(p.R.estado || 'Sin nota') : nota(p.v)}</td><td>${nota(p.media)}</td></tr>`).join('')}</tbody></table>`;
+        const zonas = pts.map((p, i) => { const w = pts.length > 1 ? paso : iw; return `<rect class="hit" x="${x(i) - w / 2}" y="${T - 20}" width="${w}" height="${ih + 20}" data-i="${i}"/>`; }).join('');
+        box.innerHTML = `<div class="fx-legend" aria-hidden="true"><span><i class="lg-line"></i>Nota de la jornada</span>${typeof J.media === 'number' ? `<span><i class="lg-media"></i>Media de la temporada · <b>${nota(J.media)}</b></span>` : ''}</div>
+          <div class="fx-chart-plot"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`Nota de ${J.nombre} en cada jornada`)}"><defs><linearGradient id="fx-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a48b7" stop-opacity="0.22"/><stop offset="1" stop-color="#1a48b7" stop-opacity="0"/></linearGradient></defs>${grid}${area}${media}${linea}${marcas}${zonas}</svg><div class="fx-tip" hidden></div></div>
+          <table class="sr-only"><caption>Nota por jornada</caption><thead><tr><th>Jornada</th><th>Rival</th><th>Nota</th></tr></thead><tbody>${pts.map(p => `<tr><td>J${p.k}</td><td>${esc(p.P.rival)}</td><td>${p.v == null ? esc(p.R.estado || 'Sin nota') : nota(p.v)}</td></tr>`).join('')}</tbody></table>`;
         const tip = box.querySelector('.fx-tip'), svg = box.querySelector('svg');
         const mostrar = i => {
             const p = pts[i], m = p.P.local ? `${p.P.gf}–${p.P.gc}` : `${p.P.gc}–${p.P.gf}`;
-            tip.innerHTML = `<b>Jornada ${p.k}</b><span>${esc(p.P.rival)} · ${m}</span><span>Nota <strong>${p.v == null ? esc(p.R.estado || 'sin nota') : nota(p.v)}</strong></span><span>Media <strong>${nota(p.media)}</strong></span>`;
+            tip.innerHTML = `<b>Jornada ${p.k} · ${esc(p.P.fecha)}</b><span>${esc(p.P.rival)} · ${m}</span><span>${p.v == null ? esc(p.R.estado || 'Sin nota') : `Nota <strong>${nota(p.v)}</strong>${p.R.mvp ? ' · MVP' : ''}`}</span>`;
             tip.hidden = false;
             const r = svg.getBoundingClientRect(), k = r.width / W;
-            const left = Math.min(Math.max(x(i) * k, 70), r.width - 70);
-            tip.style.left = left + 'px';
+            tip.style.left = Math.min(Math.max(x(i) * k, 80), r.width - 80) + 'px';
+            tip.style.top = Math.max(0, (p.v == null ? y(0) : y(p.v)) * k - 92) + 'px';
             svg.querySelectorAll('.hit').forEach(h => h.classList.toggle('is-on', +h.dataset.i === i));
         };
         svg.addEventListener('pointermove', e => { const h = e.target.closest('.hit'); if (h) mostrar(+h.dataset.i); });

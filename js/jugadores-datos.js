@@ -118,11 +118,11 @@ window.TINELLERS = {
     {
       id: 'nacho-escalante', nombre: 'Nacho Escalante', dorsal: 23, puesto: 'Jugador de campo',
       media: 7.00,
-      temporada: { pj: 3, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
+      temporada: { pj: 2, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
       jornadas: {
         1: { nota: 6.88, goles: 0, mvp: false, analisis: ["Entró de suplente. Buen ataque pero mala organización en defensa en la primera parte. En la segunda dejó de regatear en la salida de defensa, se posicionó donde correspondía y basculó bien la pelota. Su nivel le ganó la titularidad para la jornada 2."] },
         2: { nota: 7.08, goles: 0, mvp: false, analisis: ["Titular de lateral izquierdo. Partido desapercibido con buena comunicación y posicionamiento. Se la jugó atrás varias veces, pero esta vez fue más culpa del equipo que suya: hubo tramos sin apoyo y con descolocación total, y tuvo que ir un par de veces a la banda opuesta a recuperar por un compañero descolgado. A mejorar: las decisiones en el medio campo."] },
-        3: { goles: 0, asistencias: 0, mvp: false, analisis: [] }
+        3: { estado: 'No jugó' }
       }
     },
     {
@@ -148,9 +148,9 @@ window.TINELLERS = {
     {
       id: 'gilbert-natanael-de-jesus', foto: 'img/jugadores/gilbert-natanael-de-jesus.webp', nombre: 'Gilbert Natanael De Jesus', dorsal: 99, puesto: 'Jugador de campo',
       media: null,
-      temporada: { pj: 1, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
+      temporada: { pj: 0, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
       jornadas: {
-        3: { goles: 0, asistencias: 0, mvp: false, analisis: [] }
+        3: { estado: 'No jugó' }
       }
     }
   ]
