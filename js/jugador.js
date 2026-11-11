@@ -12,10 +12,39 @@
     const J = D.JUGADORES.find(p => p.id === id);
     const main = $('main');
 
+    const retrato = (p, cls) => p.foto
+        ? `<img class="${cls}" src="${esc(p.foto)}" alt="" width="400" height="400" loading="lazy">`
+        : cls === 'fx-mini'
+            ? `<span class="${cls} is-ini" aria-hidden="true">${esc(p.nombre.split(' ').slice(0, 2).map(w => w[0]).join(''))}</span>`
+            : `<span class="${cls} is-dorsal num" aria-hidden="true">${esc(p.dorsal)}</span>`;
+
+    /* ---------- Sin jugador elegido: la plantilla entera ---------- */
+    if (!id) {
+        const ult = Math.max(...Object.keys(D.PARTIDOS).map(Number));
+        document.title = 'Jugadores · Tinellers FC';
+        const desc = document.querySelector('meta[name="description"]');
+        if (desc) desc.content = 'La plantilla de Tinellers FC: ficha de cada jugador con su media, goles, asistencias y nota de cada jornada.';
+        main.innerHTML = `<section class="page-head" aria-labelledby="h1">
+            <div class="wrap ph-grid">
+              <div><h1 id="h1" data-r>Jugadores</h1><p class="ph-sub" data-r>La plantilla de Tinellers FC. Elige un jugador para ver su ficha: media, nota de cada jornada y análisis.</p></div>
+              <div class="ph-crest" data-r><img src="img/escudo-tinellers.webp" alt="Escudo de Tinellers FC" width="900" height="997"></div>
+            </div></section>
+          <section class="section" aria-labelledby="h-plantilla">
+            <div class="wrap">
+              <div class="sec-head" data-r><h2 id="h-plantilla">Plantilla ${esc(D.temporada)}</h2><p class="meta">Por dorsal · Medias tras la jornada ${ult}</p></div>
+              <ul class="jg-grid">${D.JUGADORES.slice().sort((a, b) => a.dorsal - b.dorsal).map(p => `<li data-r><a class="jg-card" href="jugador.html?id=${encodeURIComponent(p.id)}">
+                  ${retrato(p, 'jg-foto')}
+                  <span class="jg-info"><span class="jg-dor num">${esc(p.dorsal)}</span><b>${esc(p.nombre)}</b><small>${esc(p.puesto)}</small></span>
+                  <span class="jg-nums"><span>${badge(p.media)}<small>Media</small></span><span><b class="num">${p.temporada.pj}</b><small>PJ</small></span><span><b class="num">${p.temporada.goles}</b><small>Goles</small></span></span>
+                </a></li>`).join('')}</ul>
+            </div></section>`;
+        document.querySelectorAll('.nav a[href="jugador.html"], .mobile-menu a[href="jugador.html"]').forEach(a => a.setAttribute('aria-current', 'page'));
+        return;
+    }
     if (!J) {
         main.innerHTML = `<section class="section"><div class="wrap"><h2>Jugador no encontrado</h2>
-            <p class="meta" style="margin-top:16px">Vuelve a las estadísticas y elige un jugador de la tabla.</p>
-            <a class="more" style="margin-top:24px" href="estadisticas.html">Ver estadísticas <span aria-hidden="true">→</span></a></div></section>`;
+            <p class="meta" style="margin-top:16px">Ese jugador no está en la plantilla. Elige uno de la lista.</p>
+            <a class="more" style="margin-top:24px" href="jugador.html">Ver jugadores <span aria-hidden="true">→</span></a></div></section>`;
         return;
     }
 
@@ -29,6 +58,7 @@
 
     /* ---------- Cabecera ---------- */
     $('ph-dorsal').textContent = J.dorsal;
+    if (J.foto) { const f = $('ph-foto'); f.src = J.foto; f.alt = `Foto de ${J.nombre}`; f.classList.remove('hidden'); }
     $('ph-nombre').textContent = J.nombre;
     $('ph-puesto').textContent = `${J.puesto} · Temporada ${D.temporada}`;
 
@@ -43,6 +73,59 @@
     ];
     $('fx-tiles').innerHTML = `<h2 id="h-temp" data-r>Temporada ${esc(D.temporada)} <span>tras la jornada ${ult}</span></h2>` +
         tiles.map(([v, l]) => `<p class="bal" data-r><b class="num">${esc(v)}</b><span>${esc(l)}</span></p>`).join('');
+
+    /* ---------- Gráfica: nota de cada jornada (barras) y media acumulada (línea) ---------- */
+    function grafica() {
+        const box = $('fx-chart');
+        const pts = []; let suma = 0, n = 0;
+        jornadas.forEach(k => {
+            const R = J.jornadas[k] || { estado: 'No jugó' };
+            const v = !R.estado && typeof R.nota === 'number' ? R.nota : null;
+            if (v != null) { suma += v; n++; }
+            pts.push({ k, P: D.PARTIDOS[k], R, v, media: n ? suma / n : null });
+        });
+        if (!pts.some(p => p.v != null)) { box.innerHTML = '<p class="fx-chart-vacio">Todavía no tiene notas.</p>'; return; }
+        const cs = getComputedStyle(box);
+        const W = Math.max(300, Math.min(960, Math.round(box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight))));
+        const H = W < 500 ? 240 : 300, L = 32, R = 8, T = 26, B = 36;
+        const iw = W - L - R, ih = H - T - B, cw = iw / pts.length;
+        const y = v => T + ih - (v / 10) * ih, x = i => L + cw * i + cw / 2;
+        const bw = Math.min(56, cw * 0.46);
+        const grid = [0, 2, 4, 6, 8, 10].map(g => `<line x1="${L}" x2="${W - R}" y1="${y(g)}" y2="${y(g)}" class="g${g === 0 ? ' g0' : ''}"/><text x="${L - 8}" y="${y(g) + 4}" class="ax" text-anchor="end">${g}</text>`).join('');
+        const barras = pts.map((p, i) => {
+            const lbl = `<text x="${x(i)}" y="${H - B + 22}" class="ax xl" text-anchor="middle">J${p.k}</text>`;
+            if (p.v == null) return lbl + `<text x="${x(i)}" y="${y(0) - 10}" class="nj" text-anchor="middle">${p.R.estado ? esc(p.R.estado) : 'Sin nota'}</text>`;
+            const top = y(p.v), h = y(0) - top, r = Math.min(4, h);
+            return lbl + `<path class="bar" d="M${x(i) - bw / 2},${y(0)} V${top + r} Q${x(i) - bw / 2},${top} ${x(i) - bw / 2 + r},${top} H${x(i) + bw / 2 - r} Q${x(i) + bw / 2},${top} ${x(i) + bw / 2},${top + r} V${y(0)} Z"/>` +
+                (h >= 34 ? `<text x="${x(i)}" y="${top + 24}" class="val in" text-anchor="middle">${nota(p.v)}</text>`
+                         : `<text x="${x(i)}" y="${top - 8}" class="val" text-anchor="middle">${nota(p.v)}</text>`);
+        }).join('');
+        const conMedia = pts.map((p, i) => [p, i]).filter(([p]) => p.media != null);
+        const linea = conMedia.length > 1 ? `<polyline class="line" points="${conMedia.map(([p, i]) => `${x(i)},${y(p.media)}`).join(' ')}"/>` : '';
+        const puntos = conMedia.map(([p, i]) => `<circle class="dot" cx="${x(i)}" cy="${y(p.media)}" r="5"/>`).join('');
+        const zonas = pts.map((p, i) => `<rect class="hit" x="${L + cw * i}" y="${T}" width="${cw}" height="${ih}" data-i="${i}"/>`).join('');
+        box.innerHTML = `<div class="fx-legend" aria-hidden="true"><span><i class="lg-bar"></i>Nota de la jornada</span><span><i class="lg-line"></i>Media acumulada</span></div>
+          <div class="fx-chart-plot"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`Nota de ${J.nombre} en cada jornada y su media acumulada`)}">${grid}${barras}${linea}${puntos}${zonas}</svg><div class="fx-tip" hidden></div></div>
+          <table class="sr-only"><caption>Nota y media acumulada por jornada</caption><thead><tr><th>Jornada</th><th>Nota</th><th>Media acumulada</th></tr></thead><tbody>${pts.map(p => `<tr><td>J${p.k}</td><td>${p.v == null ? esc(p.R.estado || 'Sin nota') : nota(p.v)}</td><td>${nota(p.media)}</td></tr>`).join('')}</tbody></table>`;
+        const tip = box.querySelector('.fx-tip'), svg = box.querySelector('svg');
+        const mostrar = i => {
+            const p = pts[i], m = p.P.local ? `${p.P.gf}–${p.P.gc}` : `${p.P.gc}–${p.P.gf}`;
+            tip.innerHTML = `<b>Jornada ${p.k}</b><span>${esc(p.P.rival)} · ${m}</span><span>Nota <strong>${p.v == null ? esc(p.R.estado || 'sin nota') : nota(p.v)}</strong></span><span>Media <strong>${nota(p.media)}</strong></span>`;
+            tip.hidden = false;
+            const r = svg.getBoundingClientRect(), k = r.width / W;
+            const left = Math.min(Math.max(x(i) * k, 70), r.width - 70);
+            tip.style.left = left + 'px';
+            svg.querySelectorAll('.hit').forEach(h => h.classList.toggle('is-on', +h.dataset.i === i));
+        };
+        svg.addEventListener('pointermove', e => { const h = e.target.closest('.hit'); if (h) mostrar(+h.dataset.i); });
+        svg.addEventListener('pointerleave', () => { tip.hidden = true; svg.querySelectorAll('.hit').forEach(h => h.classList.remove('is-on')); });
+    }
+    grafica();
+    let anchoGrafica = $('fx-chart').clientWidth;
+    window.addEventListener('resize', () => {
+        const w = $('fx-chart').clientWidth;
+        if (w !== anchoGrafica) { anchoGrafica = w; grafica(); }
+    });
 
     /* ---------- Partido a partido ---------- */
     const filas = jornadas.slice().reverse().map(n => {
@@ -86,6 +169,6 @@
 
     /* ---------- Resto de la plantilla ---------- */
     $('fx-plantilla').innerHTML = D.JUGADORES.filter(p => p.id !== J.id).map(p =>
-        `<li data-r><a href="jugador.html?id=${encodeURIComponent(p.id)}"><span class="num fx-dor">${p.dorsal}</span><span class="fx-nom">${esc(p.nombre)}</span>${badge(p.media)}</a></li>`
+        `<li data-r><a href="jugador.html?id=${encodeURIComponent(p.id)}">${retrato(p, 'fx-mini')}<span class="num fx-dor">${p.dorsal}</span><span class="fx-nom">${esc(p.nombre)}</span>${badge(p.media)}</a></li>`
     ).join('');
 })();

@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#070d26">
 <link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="style.css?v=20261110b">
+<link rel="stylesheet" href="style.css?v=20261111j">
 </head>
 <body id="top">
 <a class="sr-only skip" href="#main">Saltar al contenido</a>
@@ -19,7 +19,8 @@
       <a href="partidos.html">Partidos</a>
       <a href="clasificacion.html">Clasificación</a>
       <a href="noticias.html">Noticias</a>
-      <a href="estadisticas.html" aria-current="page">Estadísticas</a>
+      <a href="estadisticas.html">Estadísticas</a>
+      <a href="jugador.html" aria-current="page">Jugadores</a>
       <a href="quienes-somos.html">Club</a>
       <a class="btn" href="fantasy.html">Fantasy</a>
     </nav>
@@ -30,7 +31,8 @@
     <a href="partidos.html">Partidos</a>
     <a href="clasificacion.html">Clasificación</a>
     <a href="noticias.html">Noticias</a>
-    <a href="estadisticas.html" aria-current="page">Estadísticas</a>
+    <a href="estadisticas.html">Estadísticas</a>
+    <a href="jugador.html" aria-current="page">Jugadores</a>
     <a href="quienes-somos.html">Club</a>
     <a class="btn" href="fantasy.html">Fantasy</a>
   </div>
@@ -39,8 +41,11 @@
 <section class="page-head" aria-labelledby="ph-nombre">
   <div class="wrap ph-grid">
     <div>
-      <a class="crumb" href="estadisticas.html" data-r><span aria-hidden="true">←</span> Estadísticas</a>
-      <p class="ph-dorsal num" id="ph-dorsal" data-r aria-hidden="true"></p>
+      <a class="crumb" href="jugador.html" id="ph-crumb" data-r><span aria-hidden="true">←</span> Jugadores</a>
+      <div class="ph-id" data-r>
+        <p class="ph-dorsal num" id="ph-dorsal" aria-hidden="true"></p>
+        <img class="ph-foto hidden" id="ph-foto" alt="" width="400" height="400">
+      </div>
       <h1 id="ph-nombre" data-r>Jugador</h1>
       <p class="ph-sub" id="ph-puesto" data-r></p>
     </div>
@@ -50,6 +55,13 @@
 
 <section class="balance" aria-labelledby="h-temp">
   <div class="wrap balance-grid" id="fx-tiles"></div>
+</section>
+
+<section class="section fx-chart-sec" aria-labelledby="h-grafica">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-grafica">Nota por jornada</h2><p class="meta" id="fx-chart-meta">Nota de cada partido y cómo evoluciona su media</p></div>
+    <div class="fx-chart" id="fx-chart" data-r></div>
+  </div>
 </section>
 
 <section class="section section--white" aria-labelledby="h-partidos">
@@ -82,7 +94,7 @@
 </main>
 <footer class="site-foot">
   <div class="wrap foot-cols">
-    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="quienes-somos.html#plantilla">Plantilla</a><a href="noticias.html">Noticias</a></div>
+    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="jugador.html">Jugadores</a><a href="noticias.html">Noticias</a></div>
     <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="clasificacion.html">Clasificación</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
     <div class="fcol" data-r><p class="fh">Comunidad</p><a href="fantasy.html">Fantasy</a></div>
     <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
@@ -93,8 +105,8 @@
     <div class="legal"><p>© 2026 Tinellers FC. Web creada por Franklin Jiménez Santana.</p><a href="privacidad.html">Privacidad</a> · <a href="#top">Volver arriba</a></div>
   </div>
 </footer>
-<script src="js/jugadores-datos.js?v=20261111a"></script>
-<script src="js/jugador.js?v=20261110b"></script>
+<script src="js/jugadores-datos.js?v=20261111j"></script>
+<script src="js/jugador.js?v=20261111j"></script>
 <script src="js/main.js?v=20261110b"></script>
 </body>
 </html>

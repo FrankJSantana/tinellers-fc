@@ -11,6 +11,7 @@
 // Si jugó pero aún no tiene nota, deja la jornada sin "nota": la ficha muestra «–», la media no cambia
 // y el fantasy puntúa igual (la nota no cuenta para el fantasy).
 // Otros datos opcionales de cada jornada: paradas (porteros) y tiros (tiros a puerta sin contar los goles).
+// "foto" (opcional) es la foto de perfil de la ficha, cuadrada (img/jugadores/<id>.webp, 400×400).
 // "analisis" es el texto que explica la nota; cada elemento de la lista es un párrafo.
 // Mientras esté vacío ([]), la ficha muestra «Análisis próximamente».
 window.TINELLERS = {
@@ -25,7 +26,7 @@ window.TINELLERS = {
 
   JUGADORES: [
     {
-      id: 'arian-burguillo', nombre: 'Arian Burguillo', dorsal: 1, puesto: 'Portero y capitán', portero: true,
+      id: 'arian-burguillo', foto: 'img/jugadores/arian-burguillo.webp', nombre: 'Arian Burguillo', dorsal: 1, puesto: 'Portero y capitán', portero: true,
       media: 8.63,
       temporada: { pj: 3, goles: 0, asistencias: 0, paradas: 20, mvp: 1, amarillas: 0 },
       jornadas: {
@@ -55,7 +56,7 @@ window.TINELLERS = {
       }
     },
     {
-      id: 'esteban-morales', nombre: 'Esteban Morales', dorsal: 8, puesto: 'Capitán',
+      id: 'esteban-morales', foto: 'img/jugadores/esteban-morales.webp', nombre: 'Esteban Morales', dorsal: 8, puesto: 'Capitán',
       media: 5.48,
       temporada: { pj: 3, goles: 0, asistencias: 1, paradas: 0, mvp: 0, amarillas: 1 },
       jornadas: {
@@ -65,7 +66,7 @@ window.TINELLERS = {
       }
     },
     {
-      id: 'jefferson-marte', nombre: 'Jefferson Marte', dorsal: 10, puesto: 'Jugador de campo',
+      id: 'jefferson-marte', foto: 'img/jugadores/jefferson-marte.webp', nombre: 'Jefferson Marte', dorsal: 10, puesto: 'Jugador de campo',
       media: 5.40,
       temporada: { pj: 3, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
       jornadas: {
@@ -95,7 +96,7 @@ window.TINELLERS = {
       }
     },
     {
-      id: 'piero-malasquez', nombre: 'Piero Malasquez', dorsal: 16, puesto: 'Jugador de campo',
+      id: 'piero-malasquez', foto: 'img/jugadores/piero-malasquez.webp', nombre: 'Piero Malasquez', dorsal: 16, puesto: 'Jugador de campo',
       media: 8.43,
       temporada: { pj: 3, goles: 2, asistencias: 1, paradas: 0, mvp: 1, amarillas: 0 },
       jornadas: {
@@ -135,7 +136,7 @@ window.TINELLERS = {
       }
     },
     {
-      id: 'alejandro-cuevas', nombre: 'Alejandro Cuevas', dorsal: 90, puesto: 'Jugador de campo',
+      id: 'alejandro-cuevas', foto: 'img/jugadores/alejandro-cuevas.webp', nombre: 'Alejandro Cuevas', dorsal: 90, puesto: 'Jugador de campo',
       media: 8.63,
       temporada: { pj: 2, goles: 5, asistencias: 1, paradas: 0, mvp: 1, amarillas: 0 },
       jornadas: {
@@ -145,7 +146,7 @@ window.TINELLERS = {
       }
     },
     {
-      id: 'gilbert-natanael-de-jesus', nombre: 'Gilbert Natanael De Jesus', dorsal: 99, puesto: 'Jugador de campo',
+      id: 'gilbert-natanael-de-jesus', foto: 'img/jugadores/gilbert-natanael-de-jesus.webp', nombre: 'Gilbert Natanael De Jesus', dorsal: 99, puesto: 'Jugador de campo',
       media: null,
       temporada: { pj: 1, goles: 0, asistencias: 0, paradas: 0, mvp: 0, amarillas: 0 },
       jornadas: {

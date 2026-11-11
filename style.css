@@ -819,3 +819,64 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .article:nth-of-type(odd) .convocados div { background: var(--white); }
 .convocados dt { font-family: var(--display); font-weight: 700; font-size: var(--s-small); text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 .convocados dd { margin: 4px 0 0; font-size: var(--s-body); font-weight: 600; line-height: 1.45; }
+
+/* ==========================================================
+   Jugadores: foto de perfil, plantilla y gráfica de notas
+   ========================================================== */
+.ph-id { display: flex; align-items: center; gap: clamp(16px, 2vw, 28px); margin-bottom: 12px; }
+.ph-id .ph-dorsal { margin-bottom: 0; }
+.ph-foto { width: clamp(84px, 9vw, 128px); height: auto; aspect-ratio: 1; flex: none; object-fit: cover; box-shadow: 0 0 0 3px var(--white); /* taste-skill-ignore: marco de la foto */ }
+
+/* Resto de la plantilla con foto pequeña */
+.fx-squad a { grid-template-columns: 44px 2.4em minmax(0, 1fr) auto; }
+.fx-mini { width: 44px; height: 44px; object-fit: cover; display: grid; place-items: center; background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 800; font-size: 1rem; }
+
+/* Página de jugadores (jugador.html sin id) */
+.jg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--gap); }
+.jg-card { display: grid; grid-template-columns: 96px minmax(0, 1fr); grid-template-rows: auto auto; gap: 14px 18px; padding: 16px; background: var(--white); color: inherit; text-decoration: none; transition: background-color 160ms ease; }
+.jg-card:active { background: var(--paper-2); }
+@media (hover: hover) and (pointer: fine) { .jg-card:hover b { color: var(--red); } }
+.jg-foto { grid-row: 1 / 3; width: 96px; height: 96px; object-fit: cover; }
+.jg-foto.is-dorsal { display: grid; place-items: center; background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 800; font-size: 2.75rem; letter-spacing: -0.03em; }
+.jg-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.jg-dor { font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--blue); line-height: 1; }
+.jg-info b { font-family: var(--display); font-weight: 700; font-size: 1.375rem; line-height: 1.05; text-transform: uppercase; transition: color 160ms ease; }
+.jg-info small { font-size: var(--s-small); color: var(--muted); }
+.jg-nums { display: flex; gap: 18px; align-items: flex-end; }
+.jg-nums > span { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.jg-nums b { font-family: var(--display); font-weight: 800; font-size: 1.375rem; line-height: 1.2; }
+.jg-nums small { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.jg-nums .rating { font-size: 1rem; padding: 3px 8px; }
+
+/* Gráfica de notas */
+.fx-chart { background: var(--white); padding: clamp(16px, 2.4vw, 32px); }
+.fx-legend { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 12px; font-size: var(--s-small); font-weight: 600; color: var(--muted); }
+.fx-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.lg-bar { width: 14px; height: 14px; border-radius: 3px; background: var(--blue); }
+.lg-line { width: 22px; height: 2px; background: var(--red); position: relative; }
+.lg-line::after { content: ""; position: absolute; left: 7px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+.fx-chart-plot { position: relative; }
+.fx-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.fx-chart .g { stroke: var(--paper-2); stroke-width: 1; }
+.fx-chart .g0 { stroke: #b9c1d6; }
+.fx-chart .ax { fill: var(--muted); font-family: var(--text); font-size: 12px; }
+.fx-chart .xl { font-family: var(--display); font-weight: 700; font-size: 15px; fill: var(--ink); }
+.fx-chart .bar { fill: var(--blue); }
+.fx-chart .val { fill: var(--ink); font-family: var(--display); font-weight: 800; font-size: 17px; }
+.fx-chart .val.in { fill: var(--white); }
+.fx-chart .nj { fill: var(--muted); font-family: var(--text); font-size: 12px; font-weight: 600; }
+.fx-chart .line { fill: none; stroke: var(--red); stroke-width: 2; stroke-linejoin: round; }
+.fx-chart .dot { fill: var(--red); stroke: var(--white); stroke-width: 2; }
+.fx-chart .hit { fill: transparent; }
+.fx-chart .hit.is-on { fill: rgba(26, 72, 183, 0.06); }
+.fx-tip { position: absolute; top: 0; translate: -50% 0; display: flex; flex-direction: column; gap: 2px; min-width: 132px; padding: 10px 12px; background: var(--navy); color: var(--white); font-size: 0.8125rem; pointer-events: none; }
+.fx-tip b { font-family: var(--display); font-weight: 700; font-size: 1rem; text-transform: uppercase; }
+.fx-tip span { color: var(--on-dark); }
+.fx-tip strong { color: var(--white); }
+.fx-chart-vacio { padding: 24px 0; color: var(--muted); }
+@media (max-width: 700px) {
+    .ph-id { align-items: center; }
+    .fx-chart { padding: 14px 10px; }
+    .jg-card { grid-template-columns: 80px minmax(0, 1fr); }
+    .jg-foto { width: 80px; height: 80px; }
+}
