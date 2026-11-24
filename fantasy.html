@@ -12,7 +12,7 @@
 <link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="style.css?v=20261124d">
-<link rel="stylesheet" href="fantasy.css?v=20261124c">
+<link rel="stylesheet" href="fantasy.css?v=20261124e">
 </head>
 <body id="top">
 <script src="js/layout.js?v=20261111a" data-part="header"></script>
@@ -52,14 +52,21 @@
       <div class="fz-main">
         <div class="fz-tabs" id="fz-tabs" role="tablist" aria-label="Tu equipo" data-r>
           <button type="button" role="tab" data-tab="alin" aria-selected="true" aria-controls="fz-tab-alin">Alineación</button>
+          <button type="button" role="tab" data-tab="mercado" aria-selected="false" aria-controls="fz-tab-mercado">Mercado</button>
           <button type="button" role="tab" data-tab="puntos" aria-selected="false" aria-controls="fz-tab-puntos">Puntos</button>
+        </div>
+        <div class="fz-tab-mercado hidden" id="fz-tab-mercado" role="tabpanel" aria-labelledby="h-mercado">
+          <div class="fz-side-head"><h3 id="h-mercado">Mercado</h3><p class="meta" id="fz-mercado-meta">Precios en millones</p></div>
+          <p class="fz-mercado-nota">Los precios cambian tras cada jornada según los puntos de cada jugador: <span class="fz-trend is-up">▲</span> sube, <span class="fz-trend is-down">▼</span> baja.</p>
+          <div class="fz-mercado-tools" id="fz-mercado-tools"></div>
+          <ul class="fz-market" id="fz-mercado"></ul>
         </div>
         <div class="fz-tab-puntos hidden" id="fz-tab-puntos" role="tabpanel" aria-label="Puntos de tu equipo"></div>
         <div class="fz-tab-alin" id="fz-tab-alin" role="tabpanel" aria-label="Alineación">
         <div class="fz-tools" data-r>
           <div class="fz-forms" id="fz-forms" role="group" aria-label="Formación"></div>
           <p class="fz-form-nombre" id="fz-form-nombre"></p>
-          <p class="fz-cost"><b id="fz-gastado" class="num">0</b> <span>/ 47 M</span></p>
+          <p class="fz-cost"><b id="fz-gastado" class="num">0</b> <span id="fz-tope">/ 47 M</span></p>
         </div>
 
         <div class="fz-pitch" id="fz-pitch" data-r>
@@ -109,16 +116,12 @@
           <button type="button" class="btn fz-guardar" id="fz-guardar" disabled>Faltan 5 jugadores</button>
           <p id="fz-error" class="error" role="alert"></p>
         </section>
-        <section class="fz-market-card" aria-labelledby="h-mercado" data-r>
-          <div class="fz-side-head"><h3 id="h-mercado">Mercado</h3><p class="meta" id="fz-mercado-meta">Precios en millones · Presupuesto 47 M</p></div>
-          <ul class="fz-market" id="fz-mercado"></ul>
-        </section>
 
         <section class="card fz-rules" aria-labelledby="h-reglas" data-r>
           <h3 id="h-reglas">Cómo se juega</h3>
           <ol>
             <li><b>Cinco jugadores:</b> el portero y cuatro de campo. Cada uno solo puede jugar en sus posiciones (central, banda, medio o delantero), así que elige bien la formación.</li>
-            <li><b>47 M de presupuesto.</b> Jandro y Alfa valen 15 M cada uno, así que solo te cabe uno de los dos. El resto cuesta entre 6 y 9 M según su media.</li>
+            <li><b>47 M de presupuesto y precios vivos.</b> Jandro y Alfa salieron a 15 M y no pueden ir juntos; el resto, entre 6 y 9 M según su media. Tras cada jornada cada jugador <b>sube o baja</b> según sus puntos: 20 o más +1,5 M · 16 a 19 +1 · 12 a 15 +0,5 · 8 a 11 igual · 4 a 7 −0,5 · 3 o menos −1 · si no juega −0,5 (entre 4 y 20 M). Si tus jugadores se revalorizan y tu equipo pasa de 47 M, puedes mantenerlo: tu presupuesto pasa a ser lo que vale.</li>
             <li><b>Puntos:</b> la base es la <b>nota del partido</b> (redondeada, de 0 a 10) y el <b>resultado</b>: +2 si ganamos, +1 si empatamos. Encima, lo que hace según la posición en la que lo alineas. Si no juega, 0.
               <table class="fz-pts-tabla">
                 <thead><tr><th scope="col"></th><th scope="col" title="Portero y central">Def.</th><th scope="col">Banda</th><th scope="col">Medio</th><th scope="col">Del.</th></tr></thead>
@@ -153,6 +156,13 @@
     <div class="sec-head" data-r><h2 id="h-mejores">Los mejores de la jornada</h2><p class="meta" id="fz-mejores-meta">Jugadores de Tinellers FC con más puntos de fantasy</p></div>
     <div class="fz-vista" id="fz-mejores-j" role="group" aria-label="Elige la jornada" data-r></div>
     <div id="fz-mejores" data-r></div>
+  </div>
+</section>
+<section class="section section--white fz-ideal-sec" aria-labelledby="h-ideal">
+  <div class="wrap">
+    <div class="sec-head" data-r><h2 id="h-ideal">Equipo ideal de la jornada</h2><p class="meta" id="fz-ideal-meta">La alineación que más puntos habría sumado</p></div>
+    <div class="fz-vista" id="fz-ideal-j" role="group" aria-label="Elige la jornada" data-r></div>
+    <div id="fz-ideal" data-r></div>
   </div>
 </section>
 </main>
@@ -191,6 +201,6 @@
 <script src="js/layout.js?v=20261111a" data-part="footer"></script>
 <script src="js/main.js"></script>
 <script src="js/jugadores-datos.js?v=20261124d"></script>
-<script type="module" src="js/fantasy.js?v=20261124d"></script>
+<script type="module" src="js/fantasy.js?v=20261124e"></script>
 </body>
 </html>

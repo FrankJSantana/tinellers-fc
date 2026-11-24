@@ -4,7 +4,7 @@
 // Las reglas del juego (precios, presupuesto y puntos) están en js/fantasy-logica.js.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261103c';
-import * as F from './fantasy-logica.js?v=20261124d';
+import * as F from './fantasy-logica.js?v=20261124e';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
@@ -116,6 +116,11 @@ const deGuardado = g => {
     return { formacion: F.FORMACION_INICIAL, slots: r.slots, capitan: r.slots.includes(g.capitan) ? g.capitan : null };
 };
 const posTxt = j => j.posiciones.map(p => F.NOMBRE_POS[p]).join(' / ');
+// Presupuesto: 47 M, o lo que vale hoy tu equipo guardado si se ha revalorizado (los jugadores suben y bajan tras cada jornada)
+const tope = () => Math.max(F.PRESUPUESTO, guardado?.jugadores?.length ? F.coste(guardado.jugadores, porId) : 0);
+const flecha = c => (c == null ? '' : c > 0 ? `<span class="fz-trend is-up" title="Sube ${F.millones(c)} tras la última jornada">▲ ${F.millones(c).replace(' M', '')}</span>`
+    : c < 0 ? `<span class="fz-trend is-down" title="Baja ${F.millones(-c)} tras la última jornada">▼ ${F.millones(-c).replace(' M', '')}</span>`
+    : '<span class="fz-trend is-same" title="Mismo precio que la jornada anterior">=</span>');
 
 /* ================= Puntos de cada jugador en el fantasy ================= */
 const puntuadas = delFantasy.map(j => j.n).filter(n => F.jornadaPuntuada(D, n));
@@ -158,11 +163,11 @@ function pintarCampo() {
         b.dataset.clave = clave; b.dataset.id = id || '';
         b.classList.toggle('is-empty', !j);
         b.setAttribute('aria-label', j
-            ? `${F.NOMBRE_POS[pos]}: ${j.nombre}, ${j.precio} millones${esCap ? ', capitán' : ''}. Cambiar o hacer capitán`
+            ? `${F.NOMBRE_POS[pos]}: ${j.nombre}, ${F.millones(j.precio).replace(' M', ' millones')}${esCap ? ', capitán' : ''}. Cambiar o hacer capitán`
             : `Fichar ${F.NOMBRE_POS[pos].toLowerCase()}`);
         b.innerHTML = j
             ? `<span class="fz-kit${j.portero ? ' is-gk' : ''}${nuevo ? ' is-new' : ''}">${camiseta(j.dorsal)}${esCap ? '<span class="fz-c" aria-hidden="true">C</span>' : ''}</span>
-               <span class="fz-plate"><b>${esc(j.corto)}</b><small>${pos} · ${j.precio} M</small></span>`
+               <span class="fz-plate"><b>${esc(j.corto)}</b><small>${pos} · ${F.millones(j.precio)}</small></span>`
             : `<span class="fz-add" aria-hidden="true"></span><span class="fz-plate"><b>${F.NOMBRE_POS[pos]}</b></span>`;
     });
     $('fz-forms').innerHTML = Object.entries(F.FORMACIONES).map(([k, f]) =>
@@ -171,17 +176,18 @@ function pintarCampo() {
 }
 
 function pintarPresupuesto() {
-    const gasto = F.coste(estado.slots, porId), queda = F.PRESUPUESTO - gasto;
-    $('fz-gastado').textContent = gasto;
-    $('fz-bar-fill').style.transform = `scaleX(${Math.min(1, gasto / F.PRESUPUESTO)})`;
+    const t = tope(), gasto = F.coste(estado.slots, porId), queda = t - gasto;
+    $('fz-gastado').textContent = F.millones(gasto).replace(' M', '');
+    $('fz-tope').textContent = `/ ${F.millones(t)}`;
+    $('fz-bar-fill').style.transform = `scaleX(${Math.min(1, gasto / t)})`;
     $('fz-bar').classList.toggle('is-over', queda < 0);
-    $('fz-queda').textContent = queda >= 0 ? `Te quedan ${queda} M` : `Te pasas ${-queda} M`;
+    $('fz-queda').textContent = queda >= 0 ? `Te quedan ${F.millones(queda)}` : `Te pasas ${F.millones(-queda)}`;
     const faltan = estado.slots.filter(x => !x).length;
     $('fz-faltan').textContent = faltan ? (faltan === 1 ? 'Falta 1 jugador' : `Faltan ${faltan} jugadores`) : 'Equipo completo';
 }
 
 const problemasConSancion = () => {
-    const n = abierta()?.n, p = F.problemas(estado, porId);
+    const n = abierta()?.n, p = F.problemas(estado, porId, tope());
     estado.slots.forEach(id => { if (id && sancionado(id, n)) p.push(`${porId[id]?.corto || id} está sancionado en la jornada ${n}: cámbialo`); });
     return p;
 };
@@ -195,25 +201,42 @@ function enMercado(j) {
     const h = F.huecoLibre(estado, j);
     if (h < 0) return estado.slots.every(Boolean) ? { accion: '', texto: 'Fichar' }      // equipo lleno: lo explica la cabecera
         : { accion: '', texto: 'Fichar', motivo: `Sin hueco de ${j.posiciones.map(p => F.NOMBRE_POS[p].toLowerCase()).join(' ni de ')} en esta formación` };
-    const r = F.colocar(estado, h, j.id, porId);
+    const r = F.colocar(estado, h, j.id, porId, tope());
     return r.ok ? { accion: 'fichar', texto: 'Fichar', hueco: h } : { accion: '', texto: 'Fichar', motivo: r.motivo };
 }
 
+let mercadoPos = 'todos', mercadoOrden = 'precio';
+const ultimaPts = id => (ultimaPuntuada == null ? null : F.desglose(D, id, ultimaPuntuada));
 function pintarMercado() {
     const completo = estado.slots.every(Boolean);
-    $('fz-mercado-meta').textContent = completo ? 'Equipo completo: toca a un jugador del campo para cambiarlo' : `Precios en millones · Presupuesto ${F.PRESUPUESTO} M`;
-    $('fz-mercado').innerHTML = PL.map(j => {
-        const s = enMercado(j);
-        const pts = puntuadas.length ? ` · ${totalJugador(j.id)} pts` : '';
+    $('fz-mercado-meta').textContent = completo ? 'Equipo completo: quita a uno o toca un jugador del campo para cambiarlo'
+        : `Precios en millones · Te quedan ${F.millones(tope() - F.coste(estado.slots, porId))}`;
+    $('fz-mercado-tools').innerHTML = `
+        <div class="fz-vista" role="group" aria-label="Filtrar por posición">${[['todos', 'Todos'], ...Object.entries(F.NOMBRE_POS)]
+            .map(([k, t]) => `<button type="button" class="fz-chip" data-mpos="${k}" aria-pressed="${k === mercadoPos}">${t}</button>`).join('')}</div>
+        <label class="fz-orden">Ordenar <select id="fz-orden">${[['precio', 'Precio'], ['puntos', 'Puntos totales'], ['ultima', 'Puntos última jornada'], ['tendencia', 'Más suben']]
+            .map(([k, t]) => `<option value="${k}"${k === mercadoOrden ? ' selected' : ''}>${t}</option>`).join('')}</select></label>`;
+    const ult = id => { const d = ultimaPts(id); return d?.jugo ? d.total : -99; };
+    const orden = {
+        precio: (a, b) => b.precio - a.precio,
+        puntos: (a, b) => totalJugador(b.id) - totalJugador(a.id),
+        ultima: (a, b) => ult(b.id) - ult(a.id),
+        tendencia: (a, b) => (b.cambio ?? 0) - (a.cambio ?? 0)
+    }[mercadoOrden];
+    const lista = PL.filter(j => mercadoPos === 'todos' || j.posiciones.includes(mercadoPos))
+        .slice().sort((a, b) => orden(a, b) || b.precio - a.precio || a.nombre.localeCompare(b.nombre, 'es'));
+    $('fz-mercado').innerHTML = lista.map(j => {
+        const s = enMercado(j), d = ultimaPts(j.id);
+        const pts = puntuadas.length ? ` · ${totalJugador(j.id)} pts${d ? ` (J${ultimaPuntuada}: ${d.jugo ? d.total : '–'})` : ''}` : '';
         return `<li class="fz-row${s.accion === 'quitar' ? ' is-in' : ''}">
             <span class="fz-dor num">${esc(j.dorsal)}</span>
             <button type="button" class="fz-who fz-ver" data-ficha="${esc(j.id)}" aria-label="${esc(`Ver los puntos de ${j.nombre}`)}"><b>${esc(j.nombre)}${j.estrella ? ' <span class="fz-star">Estrella</span>' : ''}</b>
-              <small>${posTxt(j)} · ${media(j.media)}${pts}</small>
+              <small>${posTxt(j)}${pts}</small>
               ${s.motivo ? `<small class="fz-why">${esc(s.motivo)}</small>` : ''}</button>
-            <span class="fz-price num">${j.precio} M</span>
+            <span class="fz-price num">${F.millones(j.precio)}${flecha(j.cambio)}</span>
             <button type="button" class="fz-act${s.accion === 'quitar' ? ' is-out' : ''}" data-id="${esc(j.id)}" data-accion="${s.accion}"${s.accion ? '' : ' disabled'} aria-label="${esc(`${s.texto}: ${j.nombre}`)}">${s.texto}</button>
         </li>`;
-    }).join('');
+    }).join('') || '<li class="fz-none">No hay jugadores en esta posición.</li>';
 }
 
 /* ================= Selector de jugador (hoja) ================= */
@@ -233,10 +256,10 @@ function pintarSelector() {
     const actual = estado.slots[i] ? porId[estado.slots[i]] : null;
     const pos = F.posHueco(estado.formacion, i), nPos = F.NOMBRE_POS[pos].toLowerCase();
     $('fz-sheet-title').textContent = actual ? actual.nombre : `Elige ${nPos}`;
-    const queda = F.PRESUPUESTO - F.coste(estado.slots, porId);
+    const queda = tope() - F.coste(estado.slots, porId);
     $('fz-sheet-sub').textContent = actual
-        ? `${actual.precio} M · ${cap(media(actual.media))} · Te quedan ${queda} M`
-        : `Te quedan ${queda} M de ${F.PRESUPUESTO}`;
+        ? `${F.millones(actual.precio)} · ${cap(media(actual.media))} · Te quedan ${F.millones(queda)}`
+        : `Te quedan ${F.millones(queda)} de ${F.millones(tope())}`;
     $('fz-current').innerHTML = actual ? `<div class="fz-cur">
           <button type="button" class="pick-btn" data-cap="${esc(actual.id)}" aria-pressed="${estado.capitan === actual.id}">${estado.capitan === actual.id ? 'Es tu capitán' : 'Hacer capitán'}</button>
           <button type="button" class="pick-btn fz-quitar" data-quitar="${esc(actual.id)}">Quitar</button>
@@ -246,12 +269,12 @@ function pintarSelector() {
     const candidatos = PL.filter(j => F.puede(j, pos) && j.id !== estado.slots[i]);
     $('fz-pick').innerHTML = candidatos.map(j => {
         const dentro = estado.slots.includes(j.id);
-        const r = !dentro && sancionado(j.id) ? { ok: false, motivo: `Sancionado en la jornada ${abierta().n}` } : F.colocar(estado, i, j.id, porId);
+        const r = !dentro && sancionado(j.id) ? { ok: false, motivo: `Sancionado en la jornada ${abierta().n}` } : F.colocar(estado, i, j.id, porId, tope());
         const nota = dentro ? 'Ya está en tu equipo: cambian de puesto' : r.ok ? cap(media(j.media)) : r.motivo;
         return `<li><button type="button" class="fz-opt${dentro ? ' is-in' : ''}" data-id="${esc(j.id)}"${r.ok ? '' : ' disabled'}>
             <span class="fz-dor num">${esc(j.dorsal)}</span>
             <span class="fz-who"><b>${esc(j.nombre)}${j.estrella ? ' <span class="fz-star">Estrella</span>' : ''}</b><small${r.ok ? '' : ' class="fz-why"'}>${esc(nota)}</small></span>
-            <span class="fz-price num">${j.precio} M</span>
+            <span class="fz-price num">${F.millones(j.precio)}${flecha(j.cambio)}</span>
         </button></li>`;
     }).join('') || `<li class="fz-none">No hay más jugadores que jueguen de ${nPos}.</li>`;
 }
@@ -291,16 +314,18 @@ function pintarFicha(alAbrir) {
         <div class="fz-fh-main">
           <p class="fz-fh-name"><span class="fz-badge pos-${pos}">${pos}</span><b id="fz-ficha-title">${esc(j.nombre)}</b></p>
           <p class="fz-fh-line"><span class="fz-dot ${ultima?.jugo ? 'is-ok' : 'is-off'}" aria-hidden="true"></span>${esc(estadoTxt)}</p>
-          <p class="fz-fh-line"><span class="fz-coin" aria-hidden="true">M</span>${j.precio} millones${j.estrella ? ' · Estrella' : ''}</p>
+          <p class="fz-fh-line"><span class="fz-coin" aria-hidden="true">M</span>${F.millones(j.precio).replace(' M', ' millones')} ${flecha(j.cambio)}${j.estrella ? ' · Estrella' : ''}</p>
         </div>
         <div class="fz-fh-pts">
           <p><small>Pts</small><b class="num">${puntuadas.length ? total : '–'}</b></p>
           <p class="fz-fh-media">Media <b class="num">${j.media == null ? '–' : j.media.toFixed(1).replace('.', ',')}</b></p>
         </div>`;
 
-    $('fz-ficha-pos').innerHTML = j.posiciones.length > 1
+    $('fz-ficha-pos').innerHTML = (j.historial.length > 1 ? `<p class="fz-precios" aria-label="Evolución del precio">${j.historial.map(h =>
+            `<span title="${h.tras ? esc(`Tras la J${h.tras}: ${h.jugo ? h.pts + ' pts' : 'no jugó'}`) : 'Precio de salida'}"><small>J${h.n}</small>${F.millones(h.precio)}</span>`).join('<i aria-hidden="true">→</i>')}</p>` : '')
+        + (j.posiciones.length > 1
         ? `<span>Puntúa como</span>${j.posiciones.map(p => `<button type="button" class="fz-chip" data-fpos="${p}" aria-pressed="${p === pos}">${F.NOMBRE_POS[p]}</button>`).join('')}`
-        : `<span>Juega de ${F.NOMBRE_POS[pos].toLowerCase()}</span>`;
+        : `<span>Juega de ${F.NOMBRE_POS[pos].toLowerCase()}</span>`);
 
     const maxAbs = Math.max(1, ...ns.map(k => Math.abs(F.puntosJugador(D, id, k, pos) || 0)));
     $('fz-ficha-strip').innerHTML = ns.map(k => {
@@ -343,7 +368,7 @@ function cambiar(nuevo) {
 }
 
 function fichar(i, id) {
-    const r = F.colocar(estado, i, id, porId);
+    const r = F.colocar(estado, i, id, porId, tope());
     if (!r.ok) { toast(r.motivo); return false; }
     cambiar({ slots: r.slots });
     return true;
@@ -527,18 +552,7 @@ const chipsEquipo = (e, p, n) => (e?.jugadores || []).map((id, i) => {
 
 /* ---------- Puntos de un equipo en el campo, jornada a jornada ---------- */
 const lineas = document.querySelector('#fz-pitch .fz-lines').outerHTML;
-function vistaPuntos(uid, n) {
-    if (!todos) return '<p class="fz-empty">Cargando los puntos…</p>';
-    const { equipos, js } = todos;
-    const pills = js.map(k => {
-        const e = F.equipoEnJornada(equipos, uid, k), p = e ? F.puntosEquipo(D, e, k) : null;
-        return `<button type="button" class="fz-pj${p ? ' is-done' : ''}" data-pj="${k}" data-uid="${esc(uid)}" aria-pressed="${k === n}" aria-label="Jornada ${k}${p ? ': ' + p.total + ' puntos' : ''}"><b>J${k}</b>${p ? `<small class="num">${p.total}</small>` : ''}</button>`;
-    }).join('');
-    const e = F.equipoEnJornada(equipos, uid, n), p = e ? F.puntosEquipo(D, e, n) : null;
-    const ab = abierta();
-    const titulo = !e ? `Sin equipo en la jornada ${n}`
-        : p ? `Jornada ${n} · <b class="num">${p.total} pts</b>`
-        : ab && ab.n === n ? `Jornada ${n} · se puede cambiar hasta el ${cuando(ab.cierre)}` : `Jornada ${n} · puntos pendientes`;
+function cartasCampo(e, p, n) {
     const def = F.FORMACIONES[e?.formacion] || F.FORMACIONES[F.FORMACION_INICIAL];
     const cartas = (e?.jugadores || []).map((id, i) => {
         const j = porId[id], x = p?.detalle[i], pos = F.posEnEquipo(D, e, i), [, left, y] = def.huecos[i];
@@ -553,6 +567,21 @@ function vistaPuntos(uid, n) {
               <span class="fz-pc-name">${esc(j ? j.corto : id)}</span>
             </span></button>`;
     }).join('');
+    return cartas;
+}
+function vistaPuntos(uid, n) {
+    if (!todos) return '<p class="fz-empty">Cargando los puntos…</p>';
+    const { equipos, js } = todos;
+    const pills = js.map(k => {
+        const e = F.equipoEnJornada(equipos, uid, k), p = e ? F.puntosEquipo(D, e, k) : null;
+        return `<button type="button" class="fz-pj${p ? ' is-done' : ''}" data-pj="${k}" data-uid="${esc(uid)}" aria-pressed="${k === n}" aria-label="Jornada ${k}${p ? ': ' + p.total + ' puntos' : ''}"><b>J${k}</b>${p ? `<small class="num">${p.total}</small>` : ''}</button>`;
+    }).join('');
+    const e = F.equipoEnJornada(equipos, uid, n), p = e ? F.puntosEquipo(D, e, n) : null;
+    const ab = abierta();
+    const titulo = !e ? `Sin equipo en la jornada ${n}`
+        : p ? `Jornada ${n} · <b class="num">${p.total} pts</b>`
+        : ab && ab.n === n ? `Jornada ${n} · se puede cambiar hasta el ${cuando(ab.cierre)}` : `Jornada ${n} · puntos pendientes`;
+    const cartas = cartasCampo(e, p, n);
     return `<div class="fz-pjs" role="group" aria-label="Jornada">${pills}</div>
         <p class="fz-pt-title">${titulo}</p>
         <div class="fz-pitch is-static">${lineas}${cartas || '<p class="fz-pitch-msg">No hay equipo guardado para esta jornada.</p>'}</div>
@@ -577,6 +606,7 @@ function verPestaña(t) {
     pestaña = t;
     document.querySelectorAll('#fz-tabs [data-tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
     $('fz-tab-alin').classList.toggle('hidden', t !== 'alin');
+    $('fz-tab-mercado').classList.toggle('hidden', t !== 'mercado');
     $('fz-tab-puntos').classList.toggle('hidden', t !== 'puntos');
     pintarMisPuntos();
 }
@@ -699,6 +729,41 @@ $('fz-mejores-j').addEventListener('click', e => {
 });
 pintarMejores();
 
+/* ---------- Equipo ideal de la jornada ---------- */
+let idealN = puntuadas[puntuadas.length - 1] ?? null;
+function pintarIdeal() {
+    const box = $('fz-ideal'), pills = $('fz-ideal-j'), meta = $('fz-ideal-meta');
+    if (idealN == null) { pills.innerHTML = ''; box.innerHTML = `<p class="fz-empty">El equipo ideal sale tras la jornada ${F.PRIMERA_JORNADA}.</p>`; return; }
+    pills.innerHTML = puntuadas.map(n => `<button type="button" class="fz-chip" data-ij="${n}" aria-pressed="${n === idealN}">Jornada ${n}</button>`).join('');
+    const n = idealN, e = F.equipoIdeal(D, n, PL), p = e && F.puntosEquipo(D, e, n);
+    if (!e) { box.innerHTML = '<p class="fz-empty">Sin datos de esta jornada.</p>'; return; }
+    // lo que costaba cada uno en esa jornada
+    const costeEn = e.jugadores.reduce((s, id) => s + (porId[id].historial.find(h => h.n === n)?.precio ?? porId[id].precio), 0);
+    const def = F.FORMACIONES[e.formacion];
+    meta.textContent = `Jornada ${n} · ${marcadorDe(D.PARTIDOS[n])}`;
+    box.innerHTML = `<div class="fz-ideal-grid">
+        <div class="fz-pitch is-static">${lineas}${cartasCampo(e, p, n)}</div>
+        <div class="fz-ideal-info">
+          <p class="fz-ideal-total"><b class="num">${p.total}</b><span>puntos</span></p>
+          <dl>
+            <div><dt>Formación</dt><dd>${esc(e.formacion)} · ${esc(def.nombre)}</dd></div>
+            <div><dt>Capitán</dt><dd>${esc(porId[e.capitan].nombre)} (x2)</dd></div>
+            <div><dt>Habría costado</dt><dd>${F.millones(costeEn)}${costeEn > F.PRESUPUESTO ? ` · ${F.millones(costeEn - F.PRESUPUESTO)} más del presupuesto` : ' · cabía en el presupuesto'}</dd></div>
+          </dl>
+          <ol class="fz-ideal-list">${e.jugadores.map((id, i) => {
+              const pos = def.huecos[i][0], x = p.detalle[i];
+              return `<li><button type="button" data-ficha="${esc(id)}" data-pos="${pos}" data-n="${n}"><span class="fz-badge pos-${pos}">${pos}</span><b>${esc(porId[id].nombre)}${id === e.capitan ? ' <i>C</i>' : ''}</b><span class="num">${x.pts}</span></button></li>`;
+          }).join('')}</ol>
+          <p class="meta">Los cinco que más puntos dieron, cada uno en un puesto donde juega y en la formación que más suma. Sin límite de presupuesto.</p>
+        </div>
+      </div>`;
+}
+$('fz-ideal-j').addEventListener('click', e => {
+    const b = e.target.closest('[data-ij]'); if (!b) return;
+    idealN = Number(b.dataset.ij); pintarIdeal();
+});
+pintarIdeal();
+
 /* ================= Todo junto ================= */
 function pintarEquipo() {
     pintarCampo(); pintarPresupuesto(); pintarMercado(); pintarGuardar();
@@ -749,7 +814,20 @@ $('fz-mercado').addEventListener('click', e => {
     const b = e.target.closest('[data-accion]'); if (!b || b.disabled || !abierta()) return;
     const j = porId[b.dataset.id]; if (!j) return;
     if (b.dataset.accion === 'quitar') quitar(j.id);
-    else if (b.dataset.accion === 'fichar') { const h = F.huecoLibre(estado, j); if (h >= 0) fichar(h, j.id); }
+    else if (b.dataset.accion === 'fichar') {
+        const h = F.huecoLibre(estado, j);
+        if (h >= 0 && fichar(h, j.id)) {
+            const faltan = estado.slots.filter(x => !x).length;
+            toast(`${j.corto} fichado de ${F.NOMBRE_POS[F.posHueco(estado.formacion, h)].toLowerCase()}${faltan ? ` · faltan ${faltan}` : ' · equipo completo'}`);
+        }
+    }
+});
+$('fz-mercado-tools').addEventListener('click', e => {
+    const b = e.target.closest('[data-mpos]'); if (!b) return;
+    mercadoPos = b.dataset.mpos; pintarMercado();
+});
+$('fz-mercado-tools').addEventListener('change', e => {
+    if (e.target.id === 'fz-orden') { mercadoOrden = e.target.value; pintarMercado(); }
 });
 $('fz-pick').addEventListener('click', e => {
     const b = e.target.closest('.fz-opt'); if (!b || b.disabled || activo == null) return;

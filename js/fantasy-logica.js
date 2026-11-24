@@ -6,13 +6,19 @@ export const PRESUPUESTO = 47;             // millones ficticios para los 5 juga
 export const PRIMERA_JORNADA = 4;          // el fantasy empieza a contar en esta jornada
 export const TAMANO = 5;                   // 1 portero + 4 jugadores de campo
 
-// Los dos que más marcan valen 15 M: con uno de ellos te caben los demás que quieras,
-// con los dos no llegas a completar el equipo.
+// Precio de salida (el de la primera jornada del fantasy): los dos que más marcan valen 15 M;
+// el resto, su media de las jornadas anteriores redondeada, entre 6 y 9 M. Quien no tenía media empieza en 6.
 export const ESTRELLAS = { 'alejandro-cuevas': 15, 'alfa-junior-umaro': 15 };
-// El resto cuesta su media redondeada, entre 6 y 9 M. Quien aún no tiene media empieza en 6.
 export const PRECIO_MIN = 6;
 export const PRECIO_MAX = 9;
 export const PRECIO_NUEVO = 6;
+// Después, el precio cambia tras cada jornada según los puntos que hizo (en su posición principal):
+//   20 o más +1,5 · 16 a 19 +1 · 12 a 15 +0,5 · 8 a 11 se queda igual · 4 a 7 −0,5 · 3 o menos −1 · no jugó −0,5
+// Nunca baja de 4 M ni sube de 20 M.
+export const TRAMOS = [[20, 1.5], [16, 1], [12, 0.5], [8, 0], [4, -0.5], [-Infinity, -1]];
+export const SIN_JUGAR = -0.5;
+export const PRECIO_SUELO = 4;
+export const PRECIO_TECHO = 20;
 
 // Puntos por jornada (si no juega, 0). La base es la nota del partido; encima se suman el resultado
 // y lo que hizo, que depende de la posición en la que está alineado (portero y central puntúan como defensas).
@@ -70,26 +76,58 @@ export const posHueco = (formacion, i) => (FORMACIONES[formacion] || FORMACIONES
 export const puede = (j, pos) => !!j && j.posiciones.includes(pos);
 
 const redondear = n => Math.round(n);
+const limitar = (n, a, b) => Math.min(b, Math.max(a, n));
 
-export function precioDe(j) {
+// Millones con coma: 8 → "8 M", 8.5 → "8,5 M"
+export const millones = n => (Number.isInteger(n) ? String(n) : n.toFixed(1).replace('.', ',')) + ' M';
+
+function precioSalida(j) {
     if (ESTRELLAS[j.id]) return ESTRELLAS[j.id];
-    const base = typeof j.media === 'number' ? redondear(j.media) : PRECIO_NUEVO;
-    return Math.min(PRECIO_MAX, Math.max(PRECIO_MIN, base));
+    const notas = Object.entries(j.jornadas || {})
+        .filter(([n, r]) => Number(n) < PRIMERA_JORNADA && typeof r?.nota === 'number').map(([, r]) => r.nota);
+    const base = notas.length ? redondear(notas.reduce((a, b) => a + b, 0) / notas.length) : PRECIO_NUEVO;
+    return limitar(base, PRECIO_MIN, PRECIO_MAX);
+}
+
+// Cuánto cambia el precio de un jugador tras la jornada n (null si aún no tiene datos)
+export function variacion(D, id, n) {
+    const d = desglose(D, id, n);
+    if (!d) return null;
+    if (!d.jugo) return SIN_JUGAR;
+    return TRAMOS.find(([desde]) => d.total >= desde)[1];
+}
+
+// Historial de precios: [{ n (jornada para la que vale), precio, cambio, pts, jugo }]. El último es el precio actual.
+export function historialPrecio(D, j) {
+    const h = [{ n: PRIMERA_JORNADA, precio: precioSalida(j), cambio: null }];
+    const js = Object.keys(D?.PARTIDOS || {}).map(Number).filter(n => n >= PRIMERA_JORNADA).sort((a, b) => a - b);
+    for (const n of js) {
+        const v = variacion(D, j.id, n), d = desglose(D, j.id, n);
+        if (v == null) continue;
+        const precio = limitar(h[h.length - 1].precio + v, PRECIO_SUELO, PRECIO_TECHO);
+        h.push({ n: n + 1, tras: n, precio, cambio: precio - h[h.length - 1].precio, pts: d.total, jugo: d.jugo });
+    }
+    return h;
 }
 
 // Plantilla del fantasy a partir de window.TINELLERS
 export function plantilla(D) {
-    return (D?.JUGADORES || []).map(j => ({
-        id: j.id,
-        nombre: j.nombre,
-        corto: CORTOS[j.id] || j.nombre.split(' ')[0],
-        dorsal: j.dorsal,
-        portero: !!j.portero,
-        posiciones: posicionesDe(j),
-        media: typeof j.media === 'number' ? j.media : null,
-        precio: precioDe(j),
-        estrella: !!ESTRELLAS[j.id]
-    })).sort((a, b) => b.precio - a.precio || (b.media ?? 0) - (a.media ?? 0) || a.nombre.localeCompare(b.nombre, 'es'));
+    return (D?.JUGADORES || []).map(j => {
+        const historial = historialPrecio(D, j), ult = historial[historial.length - 1];
+        return {
+            id: j.id,
+            nombre: j.nombre,
+            corto: CORTOS[j.id] || j.nombre.split(' ')[0],
+            dorsal: j.dorsal,
+            portero: !!j.portero,
+            posiciones: posicionesDe(j),
+            media: typeof j.media === 'number' ? j.media : null,
+            precio: ult.precio,
+            cambio: ult.cambio,            // lo que subió o bajó en la última jornada (null si aún no hubo)
+            historial,
+            estrella: !!ESTRELLAS[j.id]
+        };
+    }).sort((a, b) => b.precio - a.precio || (b.media ?? 0) - (a.media ?? 0) || a.nombre.localeCompare(b.nombre, 'es'));
 }
 
 export const jornadaPuntuada = (D, n) => !!D?.PARTIDOS?.[n];
@@ -147,7 +185,7 @@ function minimoParaCompletar(formacion, slots, porId) {
 
 // ¿Se puede poner al jugador `id` en el hueco `slot`? Si ya está en otro hueco, se intercambian
 // (si cada uno puede jugar en el puesto del otro). Devuelve { ok, slots, motivo }.
-export function colocar(estado, slot, id, porId) {
+export function colocar(estado, slot, id, porId, tope = PRESUPUESTO) {
     const j = porId[id];
     if (!j) return { ok: false, motivo: 'Jugador desconocido' };
     const pos = posHueco(estado.formacion, slot);
@@ -166,12 +204,12 @@ export function colocar(estado, slot, id, porId) {
     slots[slot] = id;
     const otraEstrella = j.estrella && slots.some(x => x && x !== id && porId[x]?.estrella);
     const gasto = coste(slots, porId);
-    if (gasto + minimoParaCompletar(estado.formacion, slots, porId) > PRESUPUESTO) {
-        const queda = PRESUPUESTO - coste(estado.slots.map((x, i) => (i === slot ? null : x)), porId);
+    if (gasto + minimoParaCompletar(estado.formacion, slots, porId) > tope) {
+        const queda = tope - coste(estado.slots.map((x, i) => (i === slot ? null : x)), porId);
         return {
             ok: false,
             motivo: otraEstrella ? 'Jandro y Alfa no caben juntos en el presupuesto'
-                : gasto > PRESUPUESTO ? `No te llega: te quedan ${queda} M`
+                : gasto > tope ? `No te llega: te quedan ${millones(queda)}`
                 : 'Con él no te llegaría para completar el equipo'
         };
     }
@@ -202,7 +240,7 @@ export function cambiarFormacion(estado, nueva, porId) {
 }
 
 // Problemas que impiden guardar (lista vacía = equipo válido)
-export function problemas(estado, porId) {
+export function problemas(estado, porId, tope = PRESUPUESTO) {
     const p = [];
     if (!FORMACIONES[estado.formacion]) { p.push('Elige una formación'); return p; }
     const faltan = estado.slots.filter(x => !x).length;
@@ -214,7 +252,7 @@ export function problemas(estado, porId) {
     });
     if (new Set(estado.slots.filter(Boolean)).size !== estado.slots.filter(Boolean).length) p.push('Hay un jugador repetido');
     if (Object.keys(ESTRELLAS).every(id => estado.slots.includes(id))) p.push('Jandro y Alfa no pueden ir juntos');
-    if (!faltan && coste(estado.slots, porId) > PRESUPUESTO) p.push(`Te pasas del presupuesto (${coste(estado.slots, porId)} de ${PRESUPUESTO} M)`);
+    if (!faltan && coste(estado.slots, porId) > tope) p.push(`Te pasas del presupuesto (${millones(coste(estado.slots, porId))} de ${millones(tope)})`);
     if (!faltan && !estado.slots.includes(estado.capitan)) p.push('Elige capitán');
     return p;
 }
@@ -255,6 +293,38 @@ export function desglose(D, id, n, pos = posPrincipal(D, id)) {
     if (r.amarillas) filas.push({ clave: 'amarillas', texto: 'Tarjeta amarilla', cantidad: r.amarillas, pts: r.amarillas * PUNTOS.amarilla });
     if (r.rojas) filas.push({ clave: 'rojas', texto: 'Tarjeta roja', cantidad: r.rojas, pts: r.rojas * PUNTOS.roja });
     return { jugo: true, pos, grupo, datos: r, filas, total: filas.reduce((s, x) => s + x.pts, 0) };
+}
+
+/* ---------- Equipo ideal de una jornada ---------- */
+// Los cinco que más puntos habrían dado, cada uno en un puesto donde juega, probando todas las formaciones.
+// El que más puntúa es el capitán (doble). Sin límite de presupuesto. null si la jornada no tiene datos.
+export function equipoIdeal(D, n, PL) {
+    if (!jornadaPuntuada(D, n)) return null;
+    const pts = {};
+    for (const j of PL) for (const p of j.posiciones) pts[j.id + '|' + p] = desglose(D, j.id, n, p)?.total ?? 0;
+    let mejor = null;
+    for (const [formacion, def] of Object.entries(FORMACIONES)) {
+        const huecos = def.huecos.map(h => h[0]);
+        const slots = Array(TAMANO).fill(null), usados = new Set();
+        (function probar(i, suma, top) {
+            if (i === TAMANO) {
+                const total = suma + top;
+                if (!mejor || total > mejor.total) mejor = { formacion, jugadores: slots.slice(), total };
+                return;
+            }
+            for (const j of PL) {
+                if (usados.has(j.id) || !puede(j, huecos[i])) continue;
+                const v = pts[j.id + '|' + huecos[i]];
+                usados.add(j.id); slots[i] = j.id;
+                probar(i + 1, suma + v, Math.max(top, v));
+                usados.delete(j.id); slots[i] = null;
+            }
+        })(0, 0, -Infinity);
+    }
+    if (!mejor) return null;
+    const def = FORMACIONES[mejor.formacion];
+    const capitan = mejor.jugadores.reduce((c, id, i) => (pts[id + '|' + def.huecos[i][0]] > pts[c.id + '|' + def.huecos[c.i][0]] ? { id, i } : c), { id: mejor.jugadores[0], i: 0 }).id;
+    return { formacion: mejor.formacion, jugadores: mejor.jugadores, capitan, total: mejor.total };
 }
 
 /* ---------- Clasificación ---------- */
