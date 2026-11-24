@@ -61,7 +61,7 @@ if (conFirebase) {
         // Avisos por correo: el usuario decide si quiere recibirlos (avisos/{uid})
         aviso: async uid => { const d = await S.getDoc(S.doc(db, 'avisos', uid)); return d.exists() ? d.data() : null; },
         guardarAviso: (uid, a) => S.setDoc(S.doc(db, 'avisos', uid), { ...a, actualizado: S.serverTimestamp() }),
-        // El administrador deja registrada la hora de cierre de cada jornada (fichas quinielas/jN, de cuando había quiniela);
+        // El administrador deja registrada la hora de cierre de cada jornada (colección «quinielas»: el nombre es heredado, no se cambia para no romper las reglas de Firebase);
         // las reglas de Firestore la usan para rechazar cambios fuera de plazo.
         activarJornadas: () => Promise.all(jornadas.map(j => S.setDoc(S.doc(db, 'quinielas', 'j' + j.n), {
             n: j.n, partido: `${j.local} - ${j.visitante}`,

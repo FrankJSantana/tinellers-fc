@@ -8,35 +8,10 @@
 <meta name="theme-color" content="#070d26">
 <link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="style.css?v=20261111m">
+<link rel="stylesheet" href="style.css?v=20261111n">
 </head>
 <body id="top">
-<a class="sr-only skip" href="#main">Saltar al contenido</a>
-<header class="site-head">
-  <div class="wrap bar">
-    <a class="brand" href="index.html" aria-label="Tinellers FC, inicio"><img src="img/escudo-tinellers-96.webp" alt="" width="96" height="106"><span>Tinellers FC</span></a>
-    <nav class="nav" aria-label="Principal">
-      <a href="partidos.html">Partidos</a>
-      <a href="clasificacion.html">Clasificación</a>
-      <a href="noticias.html">Noticias</a>
-      <a href="estadisticas.html">Estadísticas</a>
-      <a href="jugador.html">Jugadores</a>
-      <a href="quienes-somos.html">Club</a>
-      <a class="btn" href="fantasy.html">Fantasy</a>
-    </nav>
-    <button class="menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false"><span></span></button>
-  </div>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html" aria-current="page">Inicio</a>
-    <a href="partidos.html">Partidos</a>
-    <a href="clasificacion.html">Clasificación</a>
-    <a href="noticias.html">Noticias</a>
-    <a href="estadisticas.html">Estadísticas</a>
-    <a href="jugador.html">Jugadores</a>
-    <a href="quienes-somos.html">Club</a>
-    <a class="btn" href="fantasy.html">Fantasy</a>
-  </div>
-</header>
+<script src="js/layout.js?v=20261111a" data-part="header"></script>
 <main id="main">
 <section class="hero" aria-labelledby="h1">
   <div class="hero-field">
@@ -144,60 +119,24 @@
   </div>
 </section>
 
-<section class="goals" aria-labelledby="h-goals">
-  <div class="wrap goals-grid">
-    <div class="goals-left">
-      <div data-r>
-        <h2 id="h-goals">Goles de la temporada</h2>
-        <p class="note">Quince goles en tres jornadas: trece de cinco jugadores y dos en propia puerta. Cuatro encajados.</p>
-      </div>
-      <div data-r>
-        <p class="total-num">15</p>
-        <p class="total-cap">goles a favor tras la jornada 3</p>
-      </div>
-    </div>
-    <div class="slip" data-r>
-      <table>
-        <caption class="sr-only">Goleadores por jornada</caption>
-        <tbody>
-          <tr><th scope="rowgroup" colspan="2">Jornada 1 · Balkans FC 2–3</th></tr>
-          <tr><td class="lead">Alfa Junior Umaro</td><td>1</td></tr>
-          <tr><td class="lead">Luis Núñez</td><td>1</td></tr>
-          <tr><td class="lead">Piero Malasquez</td><td>1</td></tr>
-          <tr><th scope="rowgroup" colspan="2">Jornada 2 · La Banda del Patio 6–2</th></tr>
-          <tr><td class="lead">Alfa Junior Umaro</td><td>2</td></tr>
-          <tr><td class="lead">Alejandro Cuevas</td><td>2</td></tr>
-          <tr><td class="lead">Piero Malasquez</td><td>1</td></tr>
-          <tr><td class="lead">Junior De Jesus</td><td>1</td></tr>
-          <tr><th scope="rowgroup" colspan="2">Jornada 3 · Cocidos Madrileños FC 0–6</th></tr>
-          <tr><td class="lead">Alejandro Cuevas</td><td>3</td></tr>
-          <tr><td class="lead">Alfa Junior Umaro</td><td>1</td></tr>
-          <tr><td class="lead">En propia puerta</td><td>2</td></tr>
-          <tr class="sum-gap"><td colspan="2"></td></tr>
-          <tr class="sum"><td class="lead">Total</td><td>15</td></tr>
-        </tbody>
-      </table>
-      <a class="more slip-link" href="estadisticas.html">Estadísticas completas <span aria-hidden="true">→</span></a>
-    </div>
-  </div>
-</section>
+<section class="goals" aria-labelledby="h-goals" data-stats="goles"></section>
 
 <section class="section" aria-labelledby="h-news">
   <div class="wrap">
     <div class="sec-head" data-r><h2 id="h-news">Últimas noticias</h2><a class="more" href="noticias.html">Todas las noticias <span aria-hidden="true">→</span></a></div>
     <div class="news-grid">
-      <a class="news-main" href="noticias.html#cronica-j3" data-r>
-        <div class="nm-visual" aria-hidden="true"><span class="nm-rival" style="text-align:right">Cocidos Madrileños</span><span class="nm-score">0–6</span><img class="" src="img/escudo-tinellers-320.webp" alt="" width="320" height="354"></div>
+      <a class="news-main" href="noticias.html#cronica-j5" data-r>
+        <div class="nm-visual" aria-hidden="true"><span class="nm-rival" style="text-align:right">El Club de Carl</span><span class="nm-score">2–6</span><img class="" src="img/escudo-tinellers-320.webp" alt="" width="320" height="354"></div>
         <div class="nm-text">
-          <h3>Goleada 0–6 en casa de Cocidos Madrileños</h3>
-          <p class="meta">Crónica · Jornada 3 · 8 de noviembre</p>
-          <p>Triplete de Alejandro Cuevas, gol de Alfa Umaro y portería a cero de Arian Burguillo. Tres de tres y segundos, empatados a puntos con el líder.</p>
+          <h3>Goleada 2–6 en casa de El Club de Carl</h3>
+          <p class="meta">Crónica · Jornada 5 · 22 de noviembre</p>
+          <p>Triplete y asistencia del capitán Luis Núñez, doblete de Alfa Umaro y gol de Alejandro Cuevas. De vuelta a la victoria tras caer ante La Trese.</p>
         </div>
       </a>
       <ul class="news-list">
-        <li data-r><a href="noticias.html#mvp-j3"><h3>Alejandro Cuevas, MVP de la jornada 3</h3><p class="meta">MVP · Jornada 3 · 8 de noviembre</p><p>Tres goles ante Cocidos Madrileños: ya suma cinco en dos partidos.</p></a></li>
-        <li data-r><a href="noticias.html#gilbert"><h3>Gilbert Natanael De Jesus, nuevo en la plantilla</h3><p class="meta">Club · Jornada 3 · 8 de noviembre</p><p>El nuevo dorsal 99 entró en su primera convocatoria. Juega de central o por banda.</p></a></li>
-        <li data-r><a href="noticias.html#convocatoria-j3"><h3>Convocatoria para la jornada 3</h3><p class="meta">Convocatoria · Jornada 3 · 8 de noviembre</p><p>Diez convocados para visitar a Cocidos Madrileños, con Gilbert en su primera lista.</p></a></li>
+        <li data-r><a href="noticias.html#mvp-j5"><h3>Luis Núñez, MVP de la jornada 5</h3><p class="meta">MVP · Jornada 5 · 22 de noviembre</p><p>Tres goles y una asistencia: participó en cuatro de los seis goles.</p></a></li>
+        <li data-r><a href="noticias.html#cronica-j4"><h3>Primera derrota: 1–4 ante La Trese FC</h3><p class="meta">Crónica · Jornada 4 · 15 de noviembre</p><p>Se acaba la racha de tres victorias ante el líder.</p></a></li>
+        <li data-r><a href="noticias.html#mvp-j3"><h3>Alejandro Cuevas, MVP de la jornada 3</h3><p class="meta">MVP · Jornada 3 · 8 de noviembre</p><p>Tres goles ante Cocidos Madrileños.</p></a></li>
       </ul>
     </div>
   </div>
@@ -211,21 +150,11 @@
 </section>
 
 </main>
-<footer class="site-foot">
-  <div class="wrap foot-cols">
-    <div class="fcol" data-r><p class="fh">Club</p><a href="quienes-somos.html">Quiénes somos</a><a href="jugador.html">Jugadores</a><a href="noticias.html">Noticias</a></div>
-    <div class="fcol" data-r><p class="fh">Competición</p><a href="partidos.html">Partidos</a><a href="clasificacion.html">Clasificación</a><a href="partidos.html#resultados">Resultados</a><a href="estadisticas.html">Estadísticas</a></div>
-    <div class="fcol" data-r><p class="fh">Comunidad</p><a href="fantasy.html">Fantasy</a></div>
-    <div class="fcol" data-r><p class="fh">Dónde jugamos</p><p>Ciudad Lineal, Madrid</p><p>Domingos a las 19:00</p><p>Liga municipal de fútbol 7</p></div>
-  </div>
-  <div class="wrap foot-mid"><div data-r><img class="" src="img/escudo-tinellers-320.webp" alt="Escudo de Tinellers FC" width="320" height="354"></div><h2 class="foot-motto" data-r>El escudo, la cerveza y el césped</h2></div>
-  <div class="wrap foot-mark">
-    <p class="mark" aria-hidden="true" data-r>Tinellers FC</p>
-    <div class="legal"><p>© 2026 Tinellers FC. Web creada por Franklin Jiménez Santana.</p><a href="privacidad.html">Privacidad</a> · <a href="#top">Volver arriba</a></div>
-  </div>
-</footer>
-<script src="js/liga-datos.js?v=20261110j3"></script>
-<script src="js/liga.js?v=20261110f"></script>
+<script src="js/layout.js?v=20261111a" data-part="footer"></script>
+<script src="js/liga-datos.js?v=20261124a"></script>
+<script src="js/liga.js?v=20261124a"></script>
+<script src="js/jugadores-datos.js?v=20261124a"></script>
+<script src="js/estadisticas.js?v=20261111e"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

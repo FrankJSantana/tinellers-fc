@@ -1,6 +1,6 @@
-// js/calendario.js — partidos de la quiniela. Para abrir una jornada nueva, añade un bloque
-// copiando el de la jornada 3 y cambiando los datos. Las apuestas de cada jornada se cierran
-// solas 24 horas antes de la hora del partido.
+// js/calendario.js — jornadas del Fantasy y de la asistencia. Para abrir una jornada nueva, añade un bloque
+// copiando el de la jornada 3 y cambiando los datos. Los equipos del Fantasy de cada jornada se cierran
+// solos 24 horas antes de la hora del partido.
 //
 //   n            número de jornada
 //   local        equipo que juega en casa       visitante  equipo de fuera

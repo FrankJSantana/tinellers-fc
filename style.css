@@ -1,7 +1,7 @@
 /* ==========================================================
    TINELLERS FC — web oficial
    Estructura de club profesional: cabecera con escudo, centro de
-   partido, calendario, goles, noticias, quiniela y pie de club.
+   partido, calendario, goles, noticias y pie de club.
    Colores del escudo: azul marino, azul, rojo y blanco.
    ========================================================== */
 
@@ -253,7 +253,7 @@ h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); li
 .meta { font-size: var(--s-body); font-weight: 500; color: var(--muted); }
 .news-list .meta, .nm-text .meta { order: 3; }
 
-/* Quiniela: la palabra es el botón */
+/* Banda de la palabra: enlace al Fantasy */
 .word-band { display: block; position: relative; min-height: 60svh; background: var(--red); color: var(--white); text-decoration: none; overflow: hidden; }
 .word-band .wb-note { position: absolute; z-index: 2; left: var(--gut); top: 28px; max-width: 34ch; font-size: var(--s-lead); line-height: 1.3; font-weight: 500; }
 .word-band svg { position: absolute; z-index: 2; right: var(--gut); top: 28px; width: 48px; height: 48px; transition: transform 240ms var(--ease); }
@@ -430,34 +430,17 @@ h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); li
 .story-link { display: inline; background: var(--navy); color: var(--white); padding: 0 0.15em; text-decoration: none; box-decoration-break: clone; -webkit-box-decoration-break: clone; transition: background-color 160ms; }
 .story-link:hover { background: var(--red); }
 
-/* Quiniela */
-.section--tight { padding-bottom: 0; }
-.section--tight .sec-head { margin-bottom: 28px; }
-.match--compact { grid-template-columns: 1fr minmax(260px, 320px) 1fr; min-height: 0; }
-.match--compact .mp { align-items: center; justify-content: center; text-align: center; gap: 14px; padding-block: 32px; }
-.match--compact .mp-crest { position: static; translate: none; height: 150px; max-width: 80%; }
-.match--compact .mp-foot { margin-top: 0; justify-content: center; }
-.match--compact .mp-name b { font-size: var(--s-head); }
-.match--compact .seam { position: static; translate: none; width: auto; display: flex; flex-direction: column; justify-content: center; }
-.bet-layout { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--gap); align-items: start; }
-.bet-left { display: flex; flex-direction: column; gap: var(--gap); position: sticky; top: calc(var(--head-h) + 16px); }
+/* Tarjetas, formularios y avisos */
 .card { background: var(--white); padding: clamp(24px, 3vw, 40px); }
-.card h3, .bets h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; line-height: 1; }
-.card .hint { color: var(--muted); margin: 10px 0 22px; }
-.card--blue { background: var(--blue); color: var(--white); }
-.card--blue .hint { color: var(--white); }
+.card h3 { font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; line-height: 1; }
 .field { width: 100%; min-height: 54px; padding: 0 16px; background: var(--white); color: var(--ink); border: 2px solid var(--navy); border-radius: 0; font-size: 1.0625rem; }
-.card--blue .field { border-color: var(--white); }
 .field:focus { outline: 3px solid var(--red); outline-offset: 2px; }
 .legend { display: block; font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; margin-bottom: 10px; }
-.form-gap > * + * { margin-top: 24px; }
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .pick-btn { min-height: 52px; padding: 0 22px; background: var(--paper-2); color: var(--ink); border: 0; font-family: var(--display); font-weight: 700; font-size: var(--s-lead); text-transform: uppercase; transition: transform 160ms var(--ease), background-color 160ms, color 160ms; }
 .pick-btn:hover { background: #d2d9e8; }
 .pick-btn:active { transform: scale(0.96); }
 .pick-btn[aria-pressed="true"] { background: var(--blue); color: var(--white); }
-.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.opt-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .user-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .who { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .avatar { width: 52px; height: 52px; flex: none; background: var(--navy); color: var(--white); font-family: var(--display); font-weight: 800; font-size: var(--s-lead); display: flex; align-items: center; justify-content: center; object-fit: cover; }
@@ -465,11 +448,7 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .who small { display: block; font-size: var(--s-small); color: inherit; }
 .link-btn { background: none; border: 0; padding: 10px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; color: inherit; }
 .error { color: var(--red); font-weight: 600; min-height: 1.5em; margin-top: 12px; }
-.bets .sec-head { margin-bottom: 16px; }
 
-.bets .data { min-width: 520px; }
-.bets .data td:first-child, .bets .data th:first-child { text-align: left; position: static; }
-.bets-empty { padding: 48px 24px; text-align: center; color: var(--muted); }
 .hidden { display: none !important; }
 .toast { position: fixed; left: 50%; bottom: 24px; z-index: 90; transform: translate(-50%, 12px) scale(0.97); opacity: 0; visibility: hidden; pointer-events: none; background: var(--navy); color: var(--white); padding: 16px 28px; font-weight: 600; box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5); /* taste-skill-ignore */ transition: opacity 200ms var(--ease), transform 200ms var(--ease); }
 .toast.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
@@ -592,17 +571,12 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
     .rp-board .team { font-size: var(--s-small); }
 }
 
-/* Quiniela por jornadas */
+/* Selector de jornadas */
 .jornadas { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
 .jornadas .pick-btn { flex: none; }
 .jornadas .pick-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 64px; padding: 10px 18px; text-align: left; }
 .jornadas .pick-btn small { font-family: var(--text); font-weight: 500; font-size: var(--s-small); text-transform: none; }
-.jornadas .pick-btn.is-closed small { color: var(--red); }
-.jornadas .pick-btn[aria-pressed="true"].is-closed small { color: var(--white); }
 .cierre { margin-bottom: 24px; font-weight: 600; }
-.cierre.is-closed { color: var(--red); }
-.count-label { margin-top: 18px; font-size: var(--s-small); color: var(--on-dark); }
-.count-label + .count { margin-top: 8px; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
 

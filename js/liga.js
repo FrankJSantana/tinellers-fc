@@ -22,7 +22,12 @@
     })).sort((a, b) => a.j - b.j || a.inicio - b.inicio);
     const equipos = [...new Set(P.flatMap(m => [m.local, m.visitante]))];
     const nuestros = P.filter(m => m.local === US || m.visitante === US).sort((a, b) => a.inicio - b.inicio);
-    const ultimaJ = Math.max(0, ...P.filter(m => m.jugado).map(m => m.j));
+    // Última jornada con algún resultado (para el visor de jornadas) y última jornada COMPLETA:
+    // la clasificación solo cuenta jornadas con todos sus resultados, para no mezclar equipos con
+    // partidos de más mientras faltan resultados de otros campos.
+    const ultimaJugada = Math.max(0, ...P.filter(m => m.jugado).map(m => m.j));
+    let ultimaJ = 0;
+    while (ultimaJ < ultimaJugada && P.filter(m => m.j === ultimaJ + 1).every(m => m.jugado)) ultimaJ++;
 
     // Resultado desde el punto de vista de un equipo: 'G' ganado, 'E' empatado, 'P' perdido
     const res = (m, e) => {
@@ -208,7 +213,7 @@
         const lista = visor.querySelector('.jz-list'), etiq = visor.querySelector('.jz-label');
         const prev = visor.querySelector('[data-jz="prev"]'), next = visor.querySelector('[data-jz="next"]');
         const total = Math.max(...P.map(m => m.j));
-        let actual = Math.max(1, ultimaJ || 1);
+        let actual = Math.max(1, ultimaJugada || 1);
         const pintar = () => {
             const ms = P.filter(m => m.j === actual);
             const fechas = [...new Set(ms.map(m => dia(m.inicio)))];
