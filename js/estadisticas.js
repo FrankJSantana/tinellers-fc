@@ -47,8 +47,8 @@
 
     /* ---------- Tabla de la plantilla ---------- */
     const celda = v => v > 0 ? `<td class="hi num" data-v="${v}">${v}</td>` : '<td class="zero num" data-v="0">–</td>';
-    const amarillas = n => n > 0
-        ? `<td data-v="${n}">${Array(n).fill(`<span class="yellow" role="img" aria-label="${n === 1 ? 'Una tarjeta amarilla' : n + ' tarjetas amarillas'}"></span>`).join('')}</td>`
+    const tarjetas = (n, r = 0) => n + r > 0
+        ? `<td data-v="${n + r * 2}">${Array(n).fill(`<span class="yellow" role="img" aria-label="Tarjeta amarilla"></span>`).join('')}${Array(r).fill(`<span class="red-card" role="img" aria-label="Tarjeta roja"></span>`).join('')}</td>`
         : '<td data-v="0"><span class="zero">–</span></td>';
 
     // Etiqueta roja si el jugador fue sancionado en la última jornada en que lo estuvo
@@ -71,7 +71,7 @@
         <td class="num" data-v="${t.pj}">${t.pj}</td>
         ${media}
         ${celda(t.goles)}${celda(t.asistencias)}${celda(t.paradas)}${celda(t.mvp)}
-        ${amarillas(t.amarillas)}
+        ${tarjetas(t.amarillas, t.rojas || 0)}
       </tr>`;
         }).join('\n');
     }

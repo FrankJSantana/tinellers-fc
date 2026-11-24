@@ -4,7 +4,7 @@
 // Las reglas del juego (precios, presupuesto y puntos) están en js/fantasy-logica.js.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261103c';
-import * as F from './fantasy-logica.js?v=20261124c';
+import * as F from './fantasy-logica.js?v=20261124d';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
@@ -180,9 +180,18 @@ function pintarPresupuesto() {
     $('fz-faltan').textContent = faltan ? (faltan === 1 ? 'Falta 1 jugador' : `Faltan ${faltan} jugadores`) : 'Equipo completo';
 }
 
+const problemasConSancion = () => {
+    const n = abierta()?.n, p = F.problemas(estado, porId);
+    estado.slots.forEach(id => { if (id && sancionado(id, n)) p.push(`${porId[id]?.corto || id} está sancionado en la jornada ${n}: cámbialo`); });
+    return p;
+};
+
 /* ================= Mercado ================= */
+// Sancionado para la jornada abierta (en jugadores-datos.js: jornadas[n] = { estado: 'Sancionado' })
+const sancionado = (id, n = abierta()?.n) => n != null && D.JUGADORES.find(x => x.id === id)?.jornadas?.[n]?.estado === 'Sancionado';
 function enMercado(j) {
     if (estado.slots.includes(j.id)) return { accion: 'quitar', texto: 'Quitar' };
+    if (sancionado(j.id)) return { accion: '', texto: 'Fichar', motivo: `Sancionado en la jornada ${abierta().n}` };
     const h = F.huecoLibre(estado, j);
     if (h < 0) return estado.slots.every(Boolean) ? { accion: '', texto: 'Fichar' }      // equipo lleno: lo explica la cabecera
         : { accion: '', texto: 'Fichar', motivo: `Sin hueco de ${j.posiciones.map(p => F.NOMBRE_POS[p].toLowerCase()).join(' ni de ')} en esta formación` };
@@ -236,8 +245,8 @@ function pintarSelector() {
         <p class="fz-pick-title">Cambiar por otro ${nPos}</p>` : `<p class="fz-pick-title">Jugadores que juegan de ${nPos}</p>`;
     const candidatos = PL.filter(j => F.puede(j, pos) && j.id !== estado.slots[i]);
     $('fz-pick').innerHTML = candidatos.map(j => {
-        const r = F.colocar(estado, i, j.id, porId);
         const dentro = estado.slots.includes(j.id);
+        const r = !dentro && sancionado(j.id) ? { ok: false, motivo: `Sancionado en la jornada ${abierta().n}` } : F.colocar(estado, i, j.id, porId);
         const nota = dentro ? 'Ya está en tu equipo: cambian de puesto' : r.ok ? cap(media(j.media)) : r.motivo;
         return `<li><button type="button" class="fz-opt${dentro ? ' is-in' : ''}" data-id="${esc(j.id)}"${r.ok ? '' : ' disabled'}>
             <span class="fz-dor num">${esc(j.dorsal)}</span>
@@ -311,7 +320,7 @@ function pintarFicha(alAbrir) {
           <thead><tr><th scope="col">Cantidad</th><th scope="col">Estadística</th><th scope="col">Puntos</th></tr></thead>
           <tbody>${d.filas.map(f => `<tr><td class="num">${esc(f.cantidad)}</td><th scope="row">${esc(f.texto)}</th><td class="num ${tono(f.pts)}">${signo(f.pts)}</td></tr>`).join('')}</tbody>
         </table>` : `<p class="fz-nojugo"><b>${esc(d.estado)}</b>No suma puntos esta jornada.</p>`}
-        <p class="fz-reglas-pos"><b>Como ${F.NOMBRE_POS[pos].toLowerCase()}:</b> ${resumenPos(pos)}. Además suma su nota redondeada, +${F.PUNTOS.victoria} si ganamos (+${F.PUNTOS.empate} si empatamos), titular +${F.PUNTOS.titular} y MVP +${F.PUNTOS.mvp}${F.GRUPO[pos] === 'DEF' ? '; encajar 2 o más goles resta 1 por gol' : ''}. Si es tu capitán, todo por dos.</p>
+        <p class="fz-reglas-pos"><b>Como ${F.NOMBRE_POS[pos].toLowerCase()}:</b> ${resumenPos(pos)}. Además suma su nota redondeada, +${F.PUNTOS.victoria} si ganamos (+${F.PUNTOS.empate} si empatamos), titular +${F.PUNTOS.titular} y MVP +${F.PUNTOS.mvp}; amarilla ${signo(F.PUNTOS.amarilla)} y roja ${signo(F.PUNTOS.roja)}${F.GRUPO[pos] === 'DEF' ? '; encajar 2 o más goles resta 1 por gol' : ''}. Si es tu capitán, todo por dos.</p>
         ${(D.JUGADORES || []).some(x => x.id === id) ? `<a class="more" href="jugador.html?id=${encodeURIComponent(id)}">Ficha completa del jugador <span aria-hidden="true">→</span></a>` : ''}`;
     $('fz-ficha-foot').innerHTML = P ? `<span>Total jornada ${n}</span><b class="num">${d.total}</b>` : '';
     $('fz-ficha-foot').classList.toggle('hidden', !P);
@@ -348,12 +357,12 @@ function quitar(id) {
 function pintarGuardar() {
     const j = abierta();
     const btn = $('fz-guardar');
-    const prob = F.problemas(estado, porId);
+    const prob = problemasConSancion();
     const cambios = !igual(estado, guardado);
     let texto, off = false;
     if (!j) { texto = 'Temporada terminada'; off = true; }
     else if (guardando) { texto = 'Guardando…'; off = true; }
-    else if (usuario && guardado && !cambios) { texto = 'Equipo guardado'; off = true; }
+    else if (usuario && guardado && !cambios && !prob.some(x => x.includes('sancionado'))) { texto = 'Equipo guardado'; off = true; }
     else if (prob.length) { texto = prob[0]; off = true; }
     else if (!usuario) { texto = api.local ? 'Entrar y guardar' : 'Entrar con Google y guardar'; }
     else { texto = guardado ? 'Guardar cambios' : 'Guardar equipo'; }
@@ -432,7 +441,7 @@ const cancelado = e => ['auth/popup-closed-by-user', 'auth/cancelled-popup-reque
 
 async function guardar() {
     const j = abierta();
-    if (!j || guardando || F.problemas(estado, porId).length) return;
+    if (!j || guardando || problemasConSancion().length) return;
     $('fz-error').textContent = '';
     if (!usuario) {
         if (api.local) {

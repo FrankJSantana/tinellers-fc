@@ -7,7 +7,8 @@
 //   Nada más: la temporada (pj, goles, asistencias, paradas, mvp, amarillas), la media de cada jugador, los líderes,
 //   la tabla y los goles de estadisticas.html y de la portada se calculan solos al final de este archivo.
 // Datos opcionales de cada jornada: titular (true/false), tiros (a puerta, sin contar los goles), paradas (porteros),
-// amarillas. El Fantasy puntúa con la nota, el resultado, titular, goles, asistencias, tiros, mvp y los goles encajados ("gc").
+// amarillas, rojas. Una sanción para una jornada futura se apunta ya: 6: { estado: 'Sancionado' } (el fantasy no deja ficharlo).
+// El Fantasy puntúa con la nota, el resultado, titular, goles, asistencias, tiros, mvp, tarjetas y los goles encajados ("gc").
 // "analisis" es el texto que explica la nota; cada elemento de la lista es un párrafo (vacío = «Análisis próximamente»).
 // "media": si la escribes a mano manda sobre el cálculo (ahora solo en Nacho, que no tiene nota desde la jornada 2).
 window.TINELLERS = {
@@ -74,7 +75,7 @@ window.TINELLERS = {
         2: { nota: 7.09, goles: 0, mvp: false, analisis: ["Titular de medio recuperador. Buen partido comparado con la jornada 1: imperial en el medio campo pese a la altura del rival, ganó balones aéreos, fue un tanque en los duelos físicos y se entendió bien con su lateral, Nacho. Diez minutos perfectos para lo que se le pidió. A mejorar: se cansa muy pronto y le falta hablar más."] },
         3: { nota: 6.23, goles: 0, asistencias: 0, mvp: false, analisis: ["Nota con el nuevo sistema: 5,78 de base sobre 8,5 (posicionamiento 7, solidez defensiva 8, comunicación 4,5, aportación ofensiva 8, decisiones con balón 6,5) y +0,45 de bonus: 1 autogol del rival provocado (+0,20) y portería a cero (+0,25)."] },
         4: { titular: true, nota: 5.20, goles: 0, mvp: false, analisis: [] },
-        5: { titular: true, nota: 8.40, goles: 0, asistencias: 2, mvp: false, analisis: [] }
+        5: { titular: true, nota: 8.40, goles: 0, asistencias: 2, amarillas: 1, mvp: false, analisis: [] }
       }
     },
     {
@@ -104,7 +105,8 @@ window.TINELLERS = {
         2: { nota: 8.71, goles: 1, mvp: false, analisis: ["Titular de central. Buen partido, a ratos desapercibido. Hizo de capitán de la defensa, lideró el posicionamiento de los laterales y nunca dejó el área al descubierto. Marcó el gol que abrió el marcador, con buena aceleración. Defensa impecable, nada que criticar."] },
         3: { nota: 8.13, goles: 0, asistencias: 1, mvp: false, analisis: ["Nota con el nuevo sistema: 7,23 de base sobre 8,5 (posicionamiento 9, solidez defensiva 8, comunicación 7,5, aportación ofensiva 9, decisiones con balón 9) y +0,90 de bonus: 1 asistencia (+0,40) y portería a cero (+0,50)."] },
         4: { titular: true, nota: 5.00, goles: 0, mvp: false, analisis: [] },
-        5: { titular: true, nota: 6.63, goles: 0, mvp: false, analisis: [] }
+        5: { titular: true, nota: 6.63, goles: 0, rojas: 1, mvp: false, analisis: [] },
+        6: { estado: 'Sancionado' }   // tarjeta roja en la J5: no puede jugar la J6
       }
     },
     {
@@ -168,7 +170,7 @@ window.TINELLERS = {
         const suma = k => jugadas.reduce((a, r) => a + (r[k] || 0), 0);
         j.temporada = {
             pj: jugadas.length, goles: suma('goles'), asistencias: suma('asistencias'),
-            paradas: suma('paradas'), mvp: jugadas.filter(r => r.mvp).length, amarillas: suma('amarillas')
+            paradas: suma('paradas'), mvp: jugadas.filter(r => r.mvp).length, amarillas: suma('amarillas'), rojas: suma('rojas')
         };
         if (typeof j.media !== 'number') {
             const notas = jugadas.map(r => r.nota).filter(n => typeof n === 'number');

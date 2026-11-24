@@ -32,7 +32,7 @@ var TABLA = {
   tiros2: { DEF: 3, BAN: 2, MED: 2, DEL: 1 },
   porteria0: { DEF: 4, BAN: 3, MED: 2, DEL: 1 }
 };
-var PUNTOS = { titular: 1, mvp: 5, victoria: 2, empate: 1, capitan: 2 };
+var PUNTOS = { titular: 1, mvp: 5, victoria: 2, empate: 1, amarilla: -1, roja: -3, capitan: 2 };
 // Posición principal de cada jugador (para equipos guardados con una formación antigua)
 var POS_PRINCIPAL = {
   'arian-burguillo': 'POR', 'gilbert-natanael-de-jesus': 'CEN', 'junior-de-jesus': 'DEL', 'luis-nunez': 'MED',
@@ -128,7 +128,8 @@ function puntosJugador_(T, id, n, pos) {
   var nota = typeof r.nota === 'number' ? Math.round(r.nota) : 0;
   var res = P.gf > P.gc ? PUNTOS.victoria : P.gf === P.gc ? PUNTOS.empate : 0;
   return nota + res + (r.titular === true ? PUNTOS.titular : 0) + TABLA.gol[g] * (r.goles || 0) + TABLA.asistencia[g] * (r.asistencias || 0) +
-    TABLA.tiros2[g] * Math.floor((r.tiros || 0) / 2) + enc + (r.mvp ? PUNTOS.mvp : 0);
+    TABLA.tiros2[g] * Math.floor((r.tiros || 0) / 2) + enc + (r.mvp ? PUNTOS.mvp : 0) +
+    PUNTOS.amarilla * (r.amarillas || 0) + PUNTOS.roja * (r.rojas || 0);
 }
 function puntosEquipo_(T, e, n) {
   if (!e) return null;

@@ -23,6 +23,7 @@ export const PRECIO_NUEVO = 6;
 //   Cada 2 tiros a puerta: defensa +3, banda y medio +2, delantero +1
 //   Portería a cero: defensa +4, banda +3, medio +2, delantero +1
 //   Goles encajados (solo portero y central): 2 o más → −1 por gol
+//   Tarjeta amarilla −1 · tarjeta roja −3
 // El capitán puntúa doble.
 export const GRUPO = { POR: 'DEF', CEN: 'DEF', BAN: 'BAN', MED: 'MED', DEL: 'DEL' };
 export const NOMBRE_GRUPO = { DEF: 'Defensa', BAN: 'Banda', MED: 'Medio', DEL: 'Delantero' };
@@ -32,7 +33,7 @@ export const TABLA = {
     tiros2:     { DEF: 3, BAN: 2, MED: 2, DEL: 1 },
     porteria0:  { DEF: 4, BAN: 3, MED: 2, DEL: 1 }
 };
-export const PUNTOS = { titular: 1, mvp: 5, victoria: 2, empate: 1, porGolEncajado: -1, desdeGoles: 2, capitan: 2 };
+export const PUNTOS = { titular: 1, mvp: 5, victoria: 2, empate: 1, amarilla: -1, roja: -3, porGolEncajado: -1, desdeGoles: 2, capitan: 2 };
 
 // Nombre corto para el campo (si no está aquí, el primer nombre)
 export const CORTOS = { 'alejandro-cuevas': 'Jandro' };
@@ -251,6 +252,8 @@ export function desglose(D, id, n, pos = posPrincipal(D, id)) {
         { clave: 'encajados', texto: gc === 0 ? 'Portería a cero' : 'Goles encajados', cantidad: gc ?? '–', pts: gc == null ? 0 : puntosEncajados(gc, grupo) },
         { clave: 'mvp', texto: 'MVP', cantidad: r.mvp ? 'Sí' : 'No', pts: r.mvp ? PUNTOS.mvp : 0 }
     ];
+    if (r.amarillas) filas.push({ clave: 'amarillas', texto: 'Tarjeta amarilla', cantidad: r.amarillas, pts: r.amarillas * PUNTOS.amarilla });
+    if (r.rojas) filas.push({ clave: 'rojas', texto: 'Tarjeta roja', cantidad: r.rojas, pts: r.rojas * PUNTOS.roja });
     return { jugo: true, pos, grupo, datos: r, filas, total: filas.reduce((s, x) => s + x.pts, 0) };
 }
 
