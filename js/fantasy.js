@@ -4,7 +4,7 @@
 // Las reglas del juego (precios, presupuesto y puntos) están en js/fantasy-logica.js.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261103c';
-import * as F from './fantasy-logica.js?v=20261110p';
+import * as F from './fantasy-logica.js?v=20261124b';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
@@ -311,7 +311,7 @@ function pintarFicha(alAbrir) {
           <thead><tr><th scope="col">Cantidad</th><th scope="col">Estadística</th><th scope="col">Puntos</th></tr></thead>
           <tbody>${d.filas.map(f => `<tr><td class="num">${esc(f.cantidad)}</td><th scope="row">${esc(f.texto)}</th><td class="num ${tono(f.pts)}">${signo(f.pts)}</td></tr>`).join('')}</tbody>
         </table>` : `<p class="fz-nojugo"><b>${esc(d.estado)}</b>No suma puntos esta jornada.</p>`}
-        <p class="fz-reglas-pos"><b>Como ${F.NOMBRE_POS[pos].toLowerCase()}:</b> ${resumenPos(pos)}. Titular +${F.PUNTOS.titular}, MVP +${F.PUNTOS.mvp}; encajar 2 o más goles resta 1 por gol. Si es tu capitán, todo por dos.</p>
+        <p class="fz-reglas-pos"><b>Como ${F.NOMBRE_POS[pos].toLowerCase()}:</b> ${resumenPos(pos)}. Además suma su nota redondeada, +${F.PUNTOS.victoria} si ganamos (+${F.PUNTOS.empate} si empatamos), titular +${F.PUNTOS.titular} y MVP +${F.PUNTOS.mvp}${F.GRUPO[pos] === 'DEF' ? '; encajar 2 o más goles resta 1 por gol' : ''}. Si es tu capitán, todo por dos.</p>
         ${(D.JUGADORES || []).some(x => x.id === id) ? `<a class="more" href="jugador.html?id=${encodeURIComponent(id)}">Ficha completa del jugador <span aria-hidden="true">→</span></a>` : ''}`;
     $('fz-ficha-foot').innerHTML = P ? `<span>Total jornada ${n}</span><b class="num">${d.total}</b>` : '';
     $('fz-ficha-foot').classList.toggle('hidden', !P);

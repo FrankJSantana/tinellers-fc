@@ -14,13 +14,15 @@ export const PRECIO_MIN = 6;
 export const PRECIO_MAX = 9;
 export const PRECIO_NUEVO = 6;
 
-// Puntos por jornada (si no juega, 0). Lo que vale cada acción depende de la posición en la que
-// está alineado: el portero y el central puntúan como defensas.
+// Puntos por jornada (si no juega, 0). La base es la nota del partido; encima se suman el resultado
+// y lo que hizo, que depende de la posición en la que está alineado (portero y central puntúan como defensas).
+//   Nota del partido: su nota redondeada (0 a 10) · Resultado: victoria +2, empate +1, derrota 0
 //   Titular +1 · MVP +5
 //   Gol: defensa +5, banda y medio +4, delantero +3
 //   Asistencia: defensa +4, banda y medio +3, delantero +2
 //   Cada 2 tiros a puerta: defensa +3, banda y medio +2, delantero +1
-//   Goles encajados: 0 → defensa +4, banda +3, medio +2, delantero +1; 1 → nada; 2 o más → −1 por gol
+//   Portería a cero: defensa +4, banda +3, medio +2, delantero +1
+//   Goles encajados (solo portero y central): 2 o más → −1 por gol
 // El capitán puntúa doble.
 export const GRUPO = { POR: 'DEF', CEN: 'DEF', BAN: 'BAN', MED: 'MED', DEL: 'DEL' };
 export const NOMBRE_GRUPO = { DEF: 'Defensa', BAN: 'Banda', MED: 'Medio', DEL: 'Delantero' };
@@ -30,7 +32,7 @@ export const TABLA = {
     tiros2:     { DEF: 3, BAN: 2, MED: 2, DEL: 1 },
     porteria0:  { DEF: 4, BAN: 3, MED: 2, DEL: 1 }
 };
-export const PUNTOS = { titular: 1, mvp: 5, porGolEncajado: -1, desdeGoles: 2, capitan: 2 };
+export const PUNTOS = { titular: 1, mvp: 5, victoria: 2, empate: 1, porGolEncajado: -1, desdeGoles: 2, capitan: 2 };
 
 // Nombre corto para el campo (si no está aquí, el primer nombre)
 export const CORTOS = { 'alejandro-cuevas': 'Jandro' };
@@ -223,7 +225,7 @@ export const capitanPorDefecto = (slots, porId) =>
 // Puntos por goles encajados según la posición
 export function puntosEncajados(gc, grupo) {
     if (gc === 0) return TABLA.porteria0[grupo];
-    if (gc >= PUNTOS.desdeGoles) return PUNTOS.porGolEncajado * gc;
+    if (gc >= PUNTOS.desdeGoles && grupo === 'DEF') return PUNTOS.porGolEncajado * gc;
     return 0;
 }
 
@@ -237,7 +239,11 @@ export function desglose(D, id, n, pos = posPrincipal(D, id)) {
     if (!r || r.estado) return { jugo: false, estado: r?.estado || 'No jugó', pos, grupo, filas: [], total: 0 };
     const goles = r.goles || 0, asis = r.asistencias || 0, tiros = r.tiros || 0;
     const gc = typeof P.gc === 'number' ? P.gc : null;
+    const nota = typeof r.nota === 'number' ? r.nota : null;
+    const resultado = P.gf > P.gc ? 'Victoria' : P.gf === P.gc ? 'Empate' : 'Derrota';
     const filas = [
+        { clave: 'nota', texto: 'Nota del partido', cantidad: nota == null ? '–' : nota.toFixed(2).replace('.', ','), pts: nota == null ? 0 : Math.round(nota) },
+        { clave: 'resultado', texto: resultado, cantidad: P.local === false ? `${P.gc}–${P.gf}` : `${P.gf}–${P.gc}`, pts: resultado === 'Victoria' ? PUNTOS.victoria : resultado === 'Empate' ? PUNTOS.empate : 0 },
         { clave: 'titular', texto: 'Titular', cantidad: r.titular === true ? 'Sí' : r.titular === false ? 'No' : '–', pts: r.titular === true ? PUNTOS.titular : 0 },
         { clave: 'goles', texto: 'Goles', cantidad: goles, pts: goles * TABLA.gol[grupo] },
         { clave: 'asistencias', texto: 'Asistencias', cantidad: asis, pts: asis * TABLA.asistencia[grupo] },

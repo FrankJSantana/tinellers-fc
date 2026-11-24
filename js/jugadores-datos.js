@@ -7,7 +7,7 @@
 //   Nada más: la temporada (pj, goles, asistencias, paradas, mvp, amarillas), la media de cada jugador, los líderes,
 //   la tabla y los goles de estadisticas.html y de la portada se calculan solos al final de este archivo.
 // Datos opcionales de cada jornada: titular (true/false), tiros (a puerta, sin contar los goles), paradas (porteros),
-// amarillas. El Fantasy puntúa con titular, goles, asistencias, tiros, mvp y los goles encajados ("gc" del partido).
+// amarillas. El Fantasy puntúa con la nota, el resultado, titular, goles, asistencias, tiros, mvp y los goles encajados ("gc").
 // "analisis" es el texto que explica la nota; cada elemento de la lista es un párrafo (vacío = «Análisis próximamente»).
 // "media": si la escribes a mano manda sobre el cálculo (ahora solo en Nacho, que no tiene nota desde la jornada 2).
 window.TINELLERS = {
@@ -44,7 +44,7 @@ window.TINELLERS = {
         2: { nota: 9.90, goles: 2, asistencias: 1, mvp: false, analisis: ["Titular los 50 minutos, con 2 goles y 1 asistencia. Se inventó él solo sus goles, con buen regate, presión, posicionamiento y tiro. Partido súper completo, nada que criticar: 10/10 para el míster."] },
         3: { nota: 8.07, goles: 1, asistencias: 0, mvp: false, analisis: ["Nota con el nuevo sistema: 6,97 de base sobre 8,5 (posicionamiento 6, solidez defensiva 9, comunicación 7, aportación ofensiva 10, decisiones con balón 9) y +1,10 de bonus: 1 gol (+0,50), 1 autogol del rival provocado (+0,20) y portería a cero (+0,40)."] },
         4: { titular: true, nota: 6.40, goles: 1, mvp: false, analisis: [] },
-        5: { titular: true, nota: 7.90, goles: 2, mvp: false, analisis: [] }
+        5: { titular: true, nota: 7.90, goles: 2, asistencias: 1, mvp: false, analisis: [] }
       }
     },
     {
@@ -74,7 +74,7 @@ window.TINELLERS = {
         2: { nota: 7.09, goles: 0, mvp: false, analisis: ["Titular de medio recuperador. Buen partido comparado con la jornada 1: imperial en el medio campo pese a la altura del rival, ganó balones aéreos, fue un tanque en los duelos físicos y se entendió bien con su lateral, Nacho. Diez minutos perfectos para lo que se le pidió. A mejorar: se cansa muy pronto y le falta hablar más."] },
         3: { nota: 6.23, goles: 0, asistencias: 0, mvp: false, analisis: ["Nota con el nuevo sistema: 5,78 de base sobre 8,5 (posicionamiento 7, solidez defensiva 8, comunicación 4,5, aportación ofensiva 8, decisiones con balón 6,5) y +0,45 de bonus: 1 autogol del rival provocado (+0,20) y portería a cero (+0,25)."] },
         4: { titular: true, nota: 5.20, goles: 0, mvp: false, analisis: [] },
-        5: { titular: true, nota: 8.40, goles: 0, mvp: false, analisis: [] }
+        5: { titular: true, nota: 8.40, goles: 0, asistencias: 2, mvp: false, analisis: [] }
       }
     },
     {
@@ -145,7 +145,7 @@ window.TINELLERS = {
         2: { nota: 9.36, goles: 2, asistencias: 1, mvp: false, analisis: ["Suplente en mediapunta, delantero y lateral, volviendo de una lesión (el míster no la tuvo en cuenta en la nota). De lateral y mediapunta, sin presión: en defensa se sentía uno menos, pero en ofensiva marcó el ritmo de todo el equipo, dio transición con los laterales y salía con facilidad de presiones de cuatro. De delantero, peligro en cada balón que tocaba: 2 goles, con auténticos golazos, y 1 asistencia en menos de 20 minutos. Dio capitanía dentro y fuera del campo. La nota se resiente solo por la falta de presión."] },
         3: { nota: 8.64, goles: 3, asistencias: 0, tiros: 2, mvp: true, analisis: ["Nota con el nuevo sistema: 7,14 de base sobre 8,5 (posicionamiento 7,5, solidez defensiva 6, comunicación 10, aportación ofensiva 9,5, decisiones con balón 9) y +1,50 de bonus (tope; las estadísticas suman 1,60): 3 goles (+1,20), 2 tiros a puerta (+0,30) y portería a cero (+0,10)."] },
         4: { titular: false, nota: 5.30, goles: 0, mvp: false, analisis: [] },
-        5: { titular: false, nota: 6.80, goles: 1, mvp: false, analisis: [] }
+        5: { titular: false, nota: 6.80, goles: 1, asistencias: 1, mvp: false, analisis: [] }
       }
     },
     {
