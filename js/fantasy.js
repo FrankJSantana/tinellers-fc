@@ -4,7 +4,7 @@
 // Las reglas del juego (precios, presupuesto y puntos) están en js/fantasy-logica.js.
 import { firebaseConfig } from './firebase-config.js';
 import { JORNADAS, HORAS_CIERRE } from './calendario.js?v=20261103c';
-import * as F from './fantasy-logica.js?v=20261124b';
+import * as F from './fantasy-logica.js?v=20261124c';
 
 // Correos que pueden activar jornadas en la base de datos (deben coincidir con firestore.rules)
 const ADMINS = ['fjimenezsantana1@gmail.com', 'santana282004@gmail.com'];
@@ -606,18 +606,41 @@ async function pintarClasificacion() {
         : 'Todavía nadie ha hecho su equipo';
     if (!filas.length) { box.innerHTML = '<p class="fz-empty">Todavía nadie ha hecho su equipo. ¡Sé el primero!</p>'; return; }
 
-    const col = ultima ? `J${ultima}` : 'Jornada';
+    todos.ultima = ultima; todos.ab = ab;
+    pintarRanking();
+}
+
+// Vista de la clasificación: 'total' (general) o el número de una jornada ya puntuada
+let rankVer = 'total';
+function pintarRanking() {
+    const box = $('fz-clasif'), vista = $('fz-vista');
+    if (!todos || !todos.filas.length) { vista.innerHTML = ''; return; }
+    const { ultima, ab } = todos;
+    const hechas = todos.js.filter(n => F.jornadaPuntuada(D, n));
+    if (rankVer !== 'total' && !hechas.includes(rankVer)) rankVer = 'total';
+    vista.innerHTML = hechas.length ? [['total', 'General'], ...hechas.map(n => [n, `Jornada ${n}`])]
+        .map(([v, t]) => `<button type="button" class="fz-chip" data-rank="${v}" aria-pressed="${v === rankVer}">${t}</button>`).join('') : '';
+    let filas = todos.filas;
+    if (rankVer !== 'total') {
+        const n = rankVer, pts = f => f.porJornada[n] ?? null;
+        filas = filas.filter(f => pts(f) != null).slice()
+            .sort((a, b) => pts(b) - pts(a) || a.nombre.localeCompare(b.nombre, 'es'))
+            .map((f, i, arr) => ({ ...f, _pos: i > 0 && pts(arr[i - 1]) === pts(f) ? null : i + 1 }));
+        let ult = 1; filas.forEach(f => { if (f._pos == null) f._pos = ult; else ult = f._pos; });
+    }
+    const jor = rankVer !== 'total';
+    const col = jor ? `J${rankVer}` : ultima ? `J${ultima}` : 'Jornada';
     const abiertos = new Set([...box.querySelectorAll('details[open]')].map(d => d.dataset.uid));
-    box.innerHTML = `<div class="fz-rank-head" aria-hidden="true"><span>Pos</span><span>Participante</span><span>${col}</span><span>Total</span></div>
-      <ol class="fz-rank">${filas.map(f => {
+    box.innerHTML = `<div class="fz-rank-head${jor ? ' is-jornada' : ''}" aria-hidden="true"><span>Pos</span><span>Participante</span>${jor ? '' : `<span>${col}</span>`}<span>${jor ? `Puntos J${rankVer}` : 'Total'}</span></div>
+      <ol class="fz-rank${jor ? ' is-jornada' : ''}">${filas.map(f => {
         const yo = usuario && f.uid === usuario.id;
         const hist = f.historial.filter(h => h.n < f.jornadaEquipo).reverse();
         return `<li class="fz-r${yo ? ' is-me' : ''}"><details data-uid="${esc(f.uid)}"${abiertos.has(f.uid) ? ' open' : ''}>
             <summary>
-              <span class="fz-pos num">${ultima ? f.pos + 'º' : '–'}</span>
+              <span class="fz-pos num">${jor ? f._pos + 'º' : ultima ? f.pos + 'º' : '–'}</span>
               <span class="fz-mgr">${avatar(f.avatar, f.nombre)}<b>${esc(f.nombre)}</b>${yo ? '<small>Tú</small>' : ''}</span>
-              <span class="fz-last num">${f.ultima ?? '–'}</span>
-              <span class="fz-total num">${ultima ? f.total : '–'}</span>
+              ${jor ? '' : `<span class="fz-last num">${f.ultima ?? '–'}</span>`}
+              <span class="fz-total num">${jor ? f.porJornada[rankVer] : ultima ? f.total : '–'}</span>
             </summary>
             <div class="fz-team">
               <p>${ab ? `Equipo para la jornada ${f.jornadaEquipo}` : `Último equipo (jornada ${f.jornadaEquipo})`}${f.equipo?.formacion && F.FORMACIONES[f.equipo.formacion] ? ` · ${esc(f.equipo.formacion)}` : ''}</p>
@@ -628,6 +651,44 @@ async function pintarClasificacion() {
           </details></li>`;
     }).join('')}</ol>`;
 }
+$('fz-vista').addEventListener('click', e => {
+    const b = e.target.closest('[data-rank]'); if (!b) return;
+    rankVer = b.dataset.rank === 'total' ? 'total' : Number(b.dataset.rank); pintarRanking();
+});
+
+/* ---------- Los mejores de la jornada: jugadores reales por puntos de fantasy ---------- */
+let mejoresN = puntuadas[puntuadas.length - 1] ?? null;
+function pintarMejores() {
+    const box = $('fz-mejores'), pills = $('fz-mejores-j'), meta = $('fz-mejores-meta');
+    if (mejoresN == null) { pills.innerHTML = ''; box.innerHTML = `<p class="fz-empty">Los puntos empiezan con la jornada ${F.PRIMERA_JORNADA}.</p>`; return; }
+    pills.innerHTML = puntuadas.map(n => `<button type="button" class="fz-chip" data-mj="${n}" aria-pressed="${n === mejoresN}">Jornada ${n}</button>`).join('');
+    const n = mejoresN, P = D.PARTIDOS[n];
+    const fotoDe = id => D.JUGADORES.find(x => x.id === id)?.foto;
+    const lista = PL.map(j => ({ j: { ...j, foto: fotoDe(j.id) }, d: F.desglose(D, j.id, n, j.posiciones[0]) }))
+        .filter(x => x.d && x.d.jugo).sort((a, b) => b.d.total - a.d.total || a.j.nombre.localeCompare(b.j.nombre, 'es'));
+    meta.textContent = `Jornada ${n} · ${marcadorDe(P)} · puntos en su posición principal`;
+    let pos = 0, prev = null;
+    box.innerHTML = `<ol class="fz-best">${lista.map(({ j, d }, i) => {
+        if (d.total !== prev) { pos = i + 1; prev = d.total; }
+        const etiqueta = f => {
+            const c = f.cantidad, uno = c === 1;
+            return f.clave === 'goles' ? `${c} ${uno ? 'gol' : 'goles'}` : f.clave === 'asistencias' ? `${c} ${uno ? 'asistencia' : 'asistencias'}`
+                : f.clave === 'tiros' ? `${c} tiros a puerta` : f.clave === 'encajados' ? (f.pts > 0 ? 'portería a cero' : `${c} encajados`) : f.clave === 'mvp' ? 'MVP' : f.texto.toLowerCase();
+        };
+        const claves = d.filas.filter(f => f.pts && !['nota', 'resultado', 'titular'].includes(f.clave)).map(f => `${etiqueta(f)} ${signo(f.pts)}`);
+        return `<li class="${pos <= 3 ? 'is-top is-top' + pos : ''}"><button type="button" data-ficha="${esc(j.id)}" data-pos="${j.posiciones[0]}" data-n="${n}">
+            <span class="fz-best-pos num">${pos}º</span>
+            ${j.foto ? `<img class="fz-best-foto" src="${esc(j.foto)}" alt="" width="400" height="400" loading="lazy">` : `<span class="fz-best-foto fz-kit${j.portero ? ' is-gk' : ''}">${camiseta(j.dorsal)}</span>`}
+            <span class="fz-best-name"><b>${esc(j.nombre)}</b><small><span class="fz-badge pos-${j.posiciones[0]}">${j.posiciones[0]}</span>Nota ${d.datos.nota == null ? '–' : d.datos.nota.toFixed(2).replace('.', ',')}${claves.length ? ' · ' + claves.join(' · ') : ''}</small></span>
+            <span class="fz-best-pts num ${tono(d.total)}">${d.total}<small>pts</small></span>
+          </button></li>`;
+    }).join('')}</ol>`;
+}
+$('fz-mejores-j').addEventListener('click', e => {
+    const b = e.target.closest('[data-mj]'); if (!b) return;
+    mejoresN = Number(b.dataset.mj); pintarMejores();
+});
+pintarMejores();
 
 /* ================= Todo junto ================= */
 function pintarEquipo() {

@@ -442,3 +442,46 @@ html:has(.fz-sheet[open]) { overflow: hidden; }
     @starting-style { .fz-sheet[open] { opacity: 1; transform: translateY(100%); } }
 }
 .fz-ffoot.hidden { display: none; }
+
+/* ---------- Clasificación: general o por jornada ---------- */
+.fz-vista { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.fz-vista .fz-chip { background: var(--paper-2); color: var(--ink); }
+.fz-vista .fz-chip[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+@media (hover: hover) and (pointer: fine) { .fz-vista .fz-chip:not([aria-pressed="true"]):hover { background: #dfe3ee; } }
+.fz-rank-head.is-jornada, .fz-rank.is-jornada summary { grid-template-columns: 64px minmax(0, 1fr) 120px; }
+
+/* ---------- Los mejores de la jornada ---------- */
+.fz-best { display: grid; gap: 8px; }
+.fz-best button { width: 100%; display: grid; grid-template-columns: 52px 56px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 18px; border: 0; background: var(--white); color: inherit; text-align: left; font: inherit; transition: background-color 160ms ease, transform 160ms var(--ease); }
+.fz-best button:active { transform: scale(0.99); }
+@media (hover: hover) and (pointer: fine) { .fz-best button:hover b { color: var(--red); } }
+.fz-best-pos { font-family: var(--display); font-weight: 800; font-size: 1.5rem; color: var(--muted); }
+.fz-best-foto { width: 56px; height: 56px; object-fit: cover; display: grid; place-items: center; background: var(--navy-2); }
+.fz-best-foto svg { width: 40px; }
+.fz-best-foto path { fill: var(--white); stroke: var(--navy); stroke-width: 2.5; stroke-linejoin: round; }
+.fz-best-foto text { fill: var(--navy); font-family: var(--display); font-weight: 800; font-size: 21px; }
+.fz-best-foto.is-gk path { fill: var(--red); stroke: var(--white); }
+.fz-best-foto.is-gk text { fill: var(--white); }
+.fz-best-name { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.fz-best-name b { font-family: var(--display); font-weight: 700; font-size: 1.25rem; text-transform: uppercase; line-height: 1.05; transition: color 160ms ease; }
+.fz-best-name small { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: var(--s-small); color: var(--muted); }
+.fz-best-name .fz-badge { min-width: 0; padding: 2px 6px 1px; font-size: 0.75rem; }
+.fz-best-pts { display: flex; align-items: baseline; gap: 4px; font-family: var(--display); font-weight: 800; font-size: 2rem; line-height: 1; }
+.fz-best-pts small { font-size: 0.875rem; font-weight: 700; color: var(--muted); }
+.fz-best-pts.is-up { color: var(--up); }
+.fz-best-pts.is-down { color: var(--down); }
+.fz-best .is-top button { background: var(--navy); color: var(--white); }
+.fz-best .is-top .fz-best-name small, .fz-best .is-top .fz-best-pts small { color: var(--on-dark); }
+.fz-best .is-top .fz-best-pts { color: var(--white); }
+.fz-best .is-top1 .fz-best-pos { color: #f2c14e; }
+.fz-best .is-top2 .fz-best-pos { color: #d7dbe6; }
+.fz-best .is-top3 .fz-best-pos { color: #d79a62; }
+@media (max-width: 700px) {
+    .fz-best button { grid-template-columns: 34px 44px minmax(0, 1fr) auto; gap: 10px; padding: 10px 12px; }
+    .fz-best-foto { width: 44px; height: 44px; }
+    .fz-best-foto svg { width: 32px; }
+    .fz-best-pos { font-size: 1.125rem; }
+    .fz-best-name b { font-size: 1.0625rem; }
+    .fz-best-pts { font-size: 1.5rem; }
+    .fz-rank-head.is-jornada, .fz-rank.is-jornada summary { grid-template-columns: 44px minmax(0, 1fr) 72px; }
+}
