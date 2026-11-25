@@ -393,6 +393,7 @@ function pintarGuardar() {
     else { texto = guardado ? 'Guardar cambios' : 'Guardar equipo'; }
     btn.textContent = texto;
     btn.disabled = off;
+    pintarBarra(texto, off, cambios);
     btn.classList.toggle('is-saved', !!(j && usuario && guardado && !cambios && !guardando));
 
     let msg;
@@ -610,6 +611,46 @@ function verPestaña(t) {
     $('fz-tab-puntos').classList.toggle('hidden', t !== 'puntos');
     pintarMisPuntos();
 }
+
+/* ================= Móvil: menú inferior tipo app ================= */
+// En pantallas estrechas solo se ve una pantalla a la vez (Equipo, Mercado, Puntos, Ranking o Más).
+// En escritorio el atributo no oculta nada y todo sigue a la vista.
+const VISTAS = ['equipo', 'mercado', 'puntos', 'clasif', 'mas'];
+const PESTAÑA_DE = { equipo: 'alin', mercado: 'mercado', puntos: 'puntos' };
+let vista = 'equipo', masVer = 'mejores';
+const esApp = () => matchMedia('(max-width: 900px)').matches;
+function verVista(v, { scroll = true } = {}) {
+    if (!VISTAS.includes(v)) v = 'equipo';
+    vista = v;
+    document.body.dataset.fzv = v;
+    document.body.dataset.fzm = masVer;
+    document.querySelectorAll('#fz-nav [data-v]').forEach(b => { if (b.dataset.v === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    document.querySelectorAll('#fz-mas [data-m]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === masVer)));
+    if (PESTAÑA_DE[v] && esApp()) verPestaña(PESTAÑA_DE[v]);
+    history.replaceState(null, '', v === 'equipo' ? location.pathname + location.search : '#' + v);
+    pintarGuardar();
+    if (scroll && esApp()) scrollTo({ top: 0, behavior: 'instant' });
+}
+function pintarBarra(texto, off, cambios) {
+    const bar = $('fz-savebar'); if (!bar) return;
+    // Solo en el mercado: así ves lo que te queda y guardas sin volver al campo
+    const ver = esApp() && vista === 'mercado' && usuario;
+    bar.classList.toggle('hidden', !ver);
+    if (!ver) return;
+    const queda = tope() - F.coste(estado.slots, porId), faltan = estado.slots.filter(x => !x).length;
+    $('fz-savebar-txt').innerHTML = `<b>${queda >= 0 ? F.millones(queda) : '−' + F.millones(-queda)}</b> ${queda >= 0 ? 'libres' : 'de más'}${faltan ? ` · faltan ${faltan}` : ''}`;
+    const b = $('fz-savebar-btn');
+    b.textContent = off && !cambios && !faltan ? '✓ Guardado' : off ? (faltan ? 'Incompleto' : 'Revisar') : (usuario ? 'Guardar' : 'Entrar');
+    b.disabled = off;
+    b.title = texto;
+}
+$('fz-nav').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) verVista(b.dataset.v); });
+$('fz-mas').addEventListener('click', e => {
+    const b = e.target.closest('[data-m]'); if (!b) return;
+    masVer = b.dataset.m; verVista('mas');
+});
+$('fz-savebar-btn').addEventListener('click', () => $('fz-guardar').click());
+matchMedia('(max-width: 900px)').addEventListener('change', () => { if (!esApp()) verPestaña(pestaña); verVista(vista, { scroll: false }); });
 
 // Ventana con el equipo de cualquier participante
 const eqDlg = $('fz-eq');
@@ -848,6 +889,7 @@ $('fz-salir').addEventListener('click', () => { tocado = false; api.logout(); })
 // Arranque
 pintarCabecera();
 pintarEquipo();
+verVista(location.hash.slice(1) || 'equipo', { scroll: false });
 jAbierta = abierta()?.n ?? null;
 setInterval(async () => {
     pintarCabecera();

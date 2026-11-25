@@ -521,3 +521,93 @@ html:has(.fz-sheet[open]) { overflow: hidden; }
     .fz-market .fz-price { display: grid; justify-items: end; gap: 2px; }
     .fz-market .fz-trend { margin-left: 0; }
 }
+
+/* ================= Móvil y tableta: fantasy como una app =================
+   Menú fijo abajo y una sola pantalla a la vez (body[data-fzv]). En escritorio no cambia nada. */
+.fz-nav, .fz-mas, .fz-savebar { display: none; }
+@media (max-width: 900px) {
+    :root { --nav-h: 64px; }
+    html { overflow-x: hidden; }
+    body { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
+
+    /* Cabecera compacta: título y cierre en una franja */
+    .page-head .ph-grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding-block: 14px 16px; }
+    .page-head h1 { font-size: 2.25rem !important; line-height: 1; }
+    .page-head .ph-sub { display: none; }
+    .fz-deadline { order: 0 !important; text-align: right !important; }
+    .fz-deadline .pp-num { font-size: 2.25rem !important; letter-spacing: -0.02em; }
+    .fz-deadline .pp-cap { margin-top: 4px; font-size: 0.8125rem; }
+    .fz-deadline .pp-cap b { font-size: 0.8125rem; }
+    .fz-deadline .pp-cap span { margin-top: 2px; font-size: 0.8125rem; }
+
+    /* Secciones sin tanto aire */
+    main .section { padding-block: 20px 28px; }
+    main .sec-head { margin-bottom: 14px; gap: 4px 16px; }
+    main .sec-head h2 { font-size: 1.75rem; }
+    .fz-tabs { display: none; }               /* lo sustituye el menú de abajo */
+    .site-foot { display: none; }
+    body[data-fzv="mas"] .site-foot { display: grid; min-height: 0; padding-bottom: 24px; }
+
+    /* Qué se ve en cada pantalla */
+    body[data-fzv] .fz-ranking, body[data-fzv] .fz-mejores-sec, body[data-fzv] .fz-ideal-sec { display: none; }
+    body[data-fzv="clasif"] .fz-section { display: none; }
+    body[data-fzv="clasif"] .fz-ranking { display: block; }
+    body[data-fzv="mas"] .fz-section { display: none; }
+    body[data-fzv="mas"][data-fzm="mejores"] .fz-mejores-sec,
+    body[data-fzv="mas"][data-fzm="ideal"] .fz-ideal-sec { display: block; }
+    body[data-fzv="mas"][data-fzm="reglas"] .fz-section { display: block; }
+    body[data-fzv="mas"][data-fzm="reglas"] .fz-section .sec-head,
+    body[data-fzv="mas"][data-fzm="reglas"] .fz-main,
+    body[data-fzv="mas"][data-fzm="reglas"] .fz-gate,
+    body[data-fzv="mas"][data-fzm="reglas"] .fz-save { display: none; }
+    body[data-fzv]:not([data-fzv="mas"]) .fz-rules,
+    body[data-fzv="mercado"] .fz-save, body[data-fzv="puntos"] .fz-save { display: none; }
+    body[data-fzv="mercado"] .fz-section .sec-head, body[data-fzv="puntos"] .fz-section .sec-head { display: none; }
+
+    /* Submenú de «Más» */
+    body[data-fzv="mas"] .fz-mas {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+        position: sticky; top: var(--head-h); z-index: 20;
+        padding: 12px 16px; background: var(--paper); border-bottom: 1px solid var(--paper-2);
+    }
+    .fz-mas::-webkit-scrollbar { display: none; }
+    .fz-mas button {
+        min-height: 44px; padding: 4px 6px; border: 0; background: var(--white); color: var(--ink);
+        font-family: var(--display); font-weight: 700; font-size: 0.9375rem; line-height: 1.05; text-transform: uppercase;
+    }
+    .fz-mas button[aria-pressed="true"] { background: var(--navy); color: var(--white); }
+
+    /* Menú inferior */
+    .fz-nav {
+        display: grid; grid-template-columns: repeat(5, 1fr);
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+        height: calc(var(--nav-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom);
+        background: var(--navy); box-shadow: 0 -6px 20px rgba(5, 9, 30, 0.25);
+    }
+    .fz-nav button {
+        position: relative; display: grid; place-items: center; align-content: center; gap: 3px;
+        border: 0; background: none; color: rgba(255, 255, 255, 0.62);
+        font-family: var(--display); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.02em; text-transform: uppercase;
+        -webkit-tap-highlight-color: transparent; transition: color 160ms ease;
+    }
+    .fz-nav svg { width: 24px; height: 24px; }
+    .fz-nav button[aria-current] { color: var(--white); }
+    .fz-nav button[aria-current]::before { content: ""; position: absolute; top: 0; left: 22%; right: 22%; height: 3px; background: var(--red); }
+    .fz-nav button:active { transform: scale(0.94); }
+
+    /* Barra de guardar en el mercado */
+    .fz-savebar:not(.hidden) {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        position: fixed; left: 0; right: 0; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); z-index: 55;
+        padding: 10px 16px; background: var(--white); border-top: 1px solid var(--paper-2); box-shadow: 0 -4px 14px rgba(5, 9, 30, 0.12);
+    }
+    .fz-savebar p { font-size: 0.9375rem; color: var(--muted); }
+    .fz-savebar p b { font-family: var(--display); font-weight: 800; font-size: 1.25rem; color: var(--ink); }
+    .fz-savebar .btn { min-height: 42px; padding: 0 18px; }
+    body[data-fzv="mercado"] .fz-market { padding-bottom: 72px; }
+
+    .fz-guardar { white-space: normal; min-height: 56px; height: auto; padding-block: 10px; line-height: 1.1; }
+
+    /* El aviso flotante no tapa el menú */
+    .toast { bottom: calc(var(--nav-h) + 76px + env(safe-area-inset-bottom)) !important; }
+}

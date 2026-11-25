@@ -12,7 +12,7 @@
 <link rel="icon" href="img/escudo-tinellers-96.png" type="image/png">
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="style.css?v=20261124d">
-<link rel="stylesheet" href="fantasy.css?v=20261124e">
+<link rel="stylesheet" href="fantasy.css?v=20261125a">
 </head>
 <body id="top">
 <script src="js/layout.js?v=20261111a" data-part="header"></script>
@@ -31,6 +31,11 @@
 </section>
 
 
+<div class="fz-mas" id="fz-mas" role="group" aria-label="Más opciones">
+  <button type="button" data-m="mejores" aria-pressed="true">Mejores de la jornada</button>
+  <button type="button" data-m="ideal" aria-pressed="false">Equipo ideal</button>
+  <button type="button" data-m="reglas" aria-pressed="false">Cómo se juega</button>
+</div>
 <section class="section fz-section" aria-labelledby="h-equipo">
   <div class="wrap">
     <div class="sec-head" data-r><h2 id="h-equipo">Tu equipo</h2><p class="meta" id="fz-para">Jornada 4 · Tinellers FC – La Trese FC · Dom 15 nov</p></div>
@@ -166,6 +171,19 @@
   </div>
 </section>
 </main>
+<!-- Menú inferior tipo app (solo móvil y tableta) -->
+<nav class="fz-nav" id="fz-nav" aria-label="Fantasy">
+  <button type="button" data-v="equipo" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4zM4 12h16M12 4v4M12 16v4M9.5 12a2.5 2.5 0 0 0 5 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Equipo</span></button>
+  <button type="button" data-v="mercado"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7h18l-1.5 12h-15zM8 7a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mercado</span></button>
+  <button type="button" data-v="puntos"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 20V11M12 20V4M19 20v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Puntos</span></button>
+  <button type="button" data-v="clasif"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Ranking</span></button>
+  <button type="button" data-v="mas"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Más</span></button>
+</nav>
+<div class="fz-savebar hidden" id="fz-savebar" aria-live="polite">
+  <p id="fz-savebar-txt"></p>
+  <button type="button" class="btn" id="fz-savebar-btn">Guardar</button>
+</div>
+
 
 <dialog class="fz-sheet" id="fz-sheet" aria-labelledby="fz-sheet-title">
   <div class="fz-sheet-head">
@@ -201,6 +219,6 @@
 <script src="js/layout.js?v=20261111a" data-part="footer"></script>
 <script src="js/main.js"></script>
 <script src="js/jugadores-datos.js?v=20261124d"></script>
-<script type="module" src="js/fantasy.js?v=20261124e"></script>
+<script type="module" src="js/fantasy.js?v=20261125a"></script>
 </body>
 </html>
